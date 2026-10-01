@@ -1,0 +1,6 @@
+@import "tailwindcss" source(none);
+
+@source "../../templates";
+@source "../../src";
+@source "../../content";
+@source "../../public/assets/js";

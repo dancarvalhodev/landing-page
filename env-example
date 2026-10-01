@@ -1,0 +1,9 @@
+CONTAINER_NAME=landing_
+
+PORT_CADDY=8080
+
+HOST_UID=1000
+HOST_GID=1000
+
+APP_ENV=development
+SITE_URL=http://localhost:8080
