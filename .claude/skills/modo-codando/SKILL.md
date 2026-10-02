@@ -68,7 +68,14 @@ anteriores.
   caminho. Registre no relatório o que ficou sem rodar.
 - **Desvios do plano são decisão do dev.** Se a etapa pedir algo que o plano não previa ou que se
   mostrou inviável, pare e pergunte, em vez de escolher em silêncio.
-- **Não faça commit, push nem abra PR** a menos que a etapa ou o dev peçam.
+- **O git é do dev.** Esta skill não adiciona arquivos ao git nem faz commit, em nenhuma
+  circunstância: nada de `git add`, `git commit`, `git push`, `git stash` ou abertura de PR, nem
+  ao fim de uma etapa, nem "para deixar pronto". Versionar é um processo manual do dev, feito
+  por ele depois de conferir a etapa, e mantê-lo fora da skill evita gasto excessivo de tokens
+  com operações que ele faz em segundos. Isso vale mesmo que o plano cite commits ou PRs entre
+  as etapas: nesse ponto, pare e avise que é a vez dele. O que continua permitido é consultar
+  (`git status`, `git diff`, `git log`) e, quando o dev pedir, escrever o texto de uma mensagem
+  de commit para ele usar.
 
 ## 5. Entregar a etapa
 
