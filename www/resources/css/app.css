@@ -4,3 +4,101 @@
 @source "../../src";
 @source "../../content";
 @source "../../public/assets/js";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+    font-family: "Bricolage Grotesque";
+    font-style: normal;
+    font-weight: 200 800;
+    font-display: swap;
+    src: url("/assets/fonts/bricolage-grotesque-latin-wght-normal.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "DM Sans";
+    font-style: normal;
+    font-weight: 100 1000;
+    font-display: swap;
+    src: url("/assets/fonts/dm-sans-latin-wght-normal.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "JetBrains Mono";
+    font-style: normal;
+    font-weight: 100 800;
+    font-display: swap;
+    src: url("/assets/fonts/jetbrains-mono-latin-wght-normal.woff2") format("woff2");
+}
+
+@theme {
+    --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Bricolage Grotesque", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+    --color-brand-orange: #f97316;
+    --color-brand-rose: #e11d48;
+    --color-brand-purple: #9333ea;
+    --color-brand-orange-deep: #c2410c;
+    --color-brand-rose-deep: #be123c;
+
+    --radius-box: 0.5rem;
+}
+
+/* Cores que mudam com o tema: os templates usam bg-page, text-ink etc. e não precisam de dark:. */
+:root {
+    --page: #fff8f1;
+    --surface: #ffffff;
+    --ink: #2a1408;
+    --muted: #6b574c;
+    --line: #f1dccb;
+    --accent: #c2410c;
+    --accent-soft: #ffedd5;
+}
+
+.dark {
+    --page: #1a0d0a;
+    --surface: #2a1612;
+    --ink: #fff4ec;
+    --muted: #c9aa9b;
+    --line: #4a2a20;
+    --accent: #fdba74;
+    --accent-soft: #4a2413;
+}
+
+@theme inline {
+    --color-page: var(--page);
+    --color-surface: var(--surface);
+    --color-ink: var(--ink);
+    --color-muted: var(--muted);
+    --color-line: var(--line);
+    --color-accent: var(--accent);
+    --color-accent-soft: var(--accent-soft);
+}
+
+@utility bg-brand {
+    background-image: linear-gradient(90deg, var(--color-brand-orange-deep), var(--color-brand-rose-deep));
+}
+
+@utility text-brand {
+    background-image: linear-gradient(
+        90deg,
+        var(--color-brand-orange),
+        var(--color-brand-rose) 55%,
+        var(--color-brand-purple)
+    );
+    background-clip: text;
+    color: transparent;
+}
+
+@layer base {
+    body {
+        @apply bg-page font-sans text-ink antialiased;
+    }
+
+    h1,
+    h2,
+    h3 {
+        @apply font-display font-extrabold tracking-tight;
+    }
+}

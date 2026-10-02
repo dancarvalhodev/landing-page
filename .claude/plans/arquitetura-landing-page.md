@@ -232,8 +232,8 @@ infra/
 Uma etapa só é marcada `[x]` depois da confirmação do dev.
 
 - [x] 1. Docker de desenvolvimento — confirmada em 2026-10-01
-- [ ] 2. Base do app — entregue, aguardando conferência
-- [ ] 3. Identidade visual
+- [x] 2. Base do app — confirmada em 2026-10-02
+- [ ] 3. Identidade visual — direção "Pôr do sol" escolhida; entregue, aguardando conferência
 - [ ] 4. Conteúdo e i18n
 - [ ] 5. Home
 - [ ] 6. Blog

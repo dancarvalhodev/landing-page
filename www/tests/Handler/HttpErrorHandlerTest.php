@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Handler;
 
+use App\Config;
 use App\Handler\HttpErrorHandler;
+use App\Twig\AssetExtension;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
@@ -35,11 +37,12 @@ final class HttpErrorHandlerTest extends TestCase
 
     private function handle(RuntimeException $exception, bool $displayErrorDetails): ResponseInterface
     {
-        $handler = new HttpErrorHandler(
-            new CallableResolver(),
-            new ResponseFactory(),
-            Twig::create(dirname(__DIR__, 2) . '/templates'),
-        );
+        $rootDir = dirname(__DIR__, 2);
+
+        $twig = Twig::create($rootDir . '/templates');
+        $twig->addExtension(new AssetExtension(new Config($rootDir, 'development')));
+
+        $handler = new HttpErrorHandler(new CallableResolver(), new ResponseFactory(), $twig);
 
         $requestFactory = new ServerRequestFactory();
         $request = $requestFactory->createServerRequest('GET', '/');

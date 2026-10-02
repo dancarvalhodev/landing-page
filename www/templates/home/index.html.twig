@@ -2,7 +2,9 @@
 
 {% block content %}
 <main>
-    <h1>landing-page</h1>
-    <p>PHP {{ php_version }} via Caddy.</p>
+    <h1 class="sr-only">landing-page</h1>
+    {{ include('home/_identity_sample.html.twig', {theme: ''}) }}
+    {{ include('home/_identity_sample.html.twig', {theme: 'dark'}) }}
+    <p class="bg-page px-6 pb-6 text-sm text-muted">PHP {{ php_version }} via Caddy.</p>
 </main>
 {% endblock %}

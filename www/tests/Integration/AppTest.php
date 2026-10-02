@@ -25,7 +25,17 @@ final class AppTest extends TestCase
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame('text/html; charset=UTF-8', $response->getHeaderLine('Content-Type'));
-        self::assertStringContainsString('<h1>landing-page</h1>', (string) $response->getBody());
+        self::assertStringContainsString('landing-page</h1>', (string) $response->getBody());
+    }
+
+    public function testPagesLoadTheStylesheetWithAVersion(): void
+    {
+        $response = $this->request('GET', '/');
+
+        self::assertMatchesRegularExpression(
+            '#<link rel="stylesheet" href="/assets/css/app\.css\?v=\d+">#',
+            (string) $response->getBody(),
+        );
     }
 
     public function testUnknownPathRendersNotFoundPage(): void
