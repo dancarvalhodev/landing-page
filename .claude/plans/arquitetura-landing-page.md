@@ -7,7 +7,9 @@ contém apenas `README.md` e `CLAUDE.md`. O objetivo é um site de portfólio pe
 recrutadores e clientes a entrar em contato. A arquitetura deriva da entrevista e das decisões
 do usuário:
 
-- **PHP sem framework** (linguagem de domínio do usuário), **versão 8.5**.
+- **PHP 8.5** (linguagem de domínio do usuário) com o microframework **Slim 4** para roteamento
+  e PSRs, montado como no repositório `dancarvalhodev/wecker`. Decisão tomada durante a etapa 2,
+  no lugar do roteador próprio previsto inicialmente.
 - **Tudo roda em Docker**, seguindo o template `dancarvalhodev/docker-nginx`, com o Nginx
   trocado por **Caddy**. A imagem PHP é **construída neste repositório** a partir do Dockerfile
   `dancarvalhodev/dockerfile-php-alpine/8.5` (não há tag 8.5 publicada no Docker Hub).
@@ -31,7 +33,7 @@ do usuário:
 
 ## Abordagem recomendada
 
-Aplicação **PHP puro com front controller**, sem banco de dados: o conteúdo são arquivos Markdown,
+Aplicação **PHP com Slim 4**, sem banco de dados: o conteúdo são arquivos Markdown,
 compilados para um índice em cache durante o build da imagem. Dois contêineres por ambiente —
 `caddy` (arquivos estáticos + FastCGI) e `php` (PHP-FPM) — iguais em desenvolvimento, prévia e
 produção. MySQL e Redis do template ficam de fora: não há dados nem sessões.
@@ -39,7 +41,8 @@ produção. MySQL e Redis do template ficam de fora: não há dados nem sessões
 | Camada | Escolha | Por quê |
 |---|---|---|
 | Linguagem | **PHP 8.5-FPM (Alpine)**, `strict_types`, autoload PSR-4 via Composer | Dockerfile do usuário |
-| Estrutura | Front controller + roteador próprio + templates PHP nativos | Meia dúzia de rotas não justifica framework |
+| Estrutura | **Slim 4** + PHP-DI (contêiner com autowiring, via `php-di/slim-bridge`) | Roteamento e requisição/resposta seguindo as PSRs (7, 11, 15), no mesmo padrão do wecker |
+| Templates | **Twig 3** via `slim/twig-view` | Escape automático, herança de layout e partials prontos; biblioteca estável e padrão de mercado, já usada no wecker |
 | Markdown | `league/commonmark` (+ front matter, tabelas, âncoras em títulos) | Padrão de fato em PHP |
 | Realce de código | `tempest/highlight` (integra com o CommonMark) | Realce no servidor, sem JS no cliente |
 | Estilo | **Tailwind CSS v4** via CLI standalone (sem Node), tokens em `@theme` | Pedido do usuário; o binário único evita uma toolchain Node |
@@ -50,8 +53,8 @@ produção. MySQL e Redis do template ficam de fora: não há dados nem sessões
 | Qualidade | PHPUnit, PHPStan, PHP-CS-Fixer (PER-CS) | Padrão do ecossistema |
 | CI/CD | **GitHub Actions** → imagens no **GHCR** → `docker compose` na VM | Repositório já está no GitHub |
 
-Dependências PHP de produção: `league/commonmark`, `symfony/yaml` (front matter) e
-`tempest/highlight`.
+Dependências PHP de produção: `slim/slim`, `slim/psr7`, `php-di/php-di`, `php-di/slim-bridge`,
+`twig/twig`, `slim/twig-view`, `league/commonmark`, `symfony/yaml` (front matter) e `tempest/highlight`.
 
 ### Estrutura do repositório
 
@@ -74,17 +77,20 @@ config/
 logs/
 www/                        # a aplicação
   public/
-    index.php               # front controller
+    index.php               # front controller: lê a Config e roda o Main
     assets/                 # css/app.css (gerado), js/, fonts/
     media/blog/<slug>/      # prints dos artigos
+  bootstrap/Main.php        # monta o contêiner, o app Slim, os middlewares e as rotas
+  config/                   # definições do contêiner (twig.php, handler.php)
+  routes/web.php            # todas as rotas do site
   src/                      # namespace App\
-    Kernel.php
-    Http/                   # Router, Request, Response
+    Config.php              # pasta raiz e APP_ENV (obrigatório e validado)
+    Controller/             # AbstractController, Home, Blog (lista, artigo, tag, busca), Sitemap
+    Handler/                # HttpErrorHandler: páginas 404 e 500
+    Middleware/             # CanonicalPathMiddleware: barra final e barras duplicadas
     Content/                # ContentRepository, MarkdownParser, Post, Project, Validator
     I18n/                   # Locale, Translator, UrlGenerator
-    View/                   # Renderer + helper de escape e()
-    Controller/             # Home, Blog (lista, artigo, tag, busca), Sitemap
-  templates/                # layout.php, home/ (uma partial por seção), blog/, partials/
+  templates/                # Twig: layout/base.html.twig, home/ (uma partial por seção), blog/, errors/
   content/
     blog/{pt,en}/<slug>.md
     projects/{pt,en}/<slug>.md
@@ -113,8 +119,8 @@ infra/
     com `WORKDIR /app`.
   - `dev`: `base` como está (Xdebug ativo); o código entra por bind mount de `./www`.
   - `prod`: remove o ini do Xdebug, aplica `php.prod.ini`, copia `www/`, roda
-    `composer install --no-dev --classmap-authoritative` e `php bin/build.php`. Conteúdo inválido
-    faz o build da imagem falhar.
+    `composer install --no-dev --classmap-authoritative` e `php bin/build.php`, que também
+    compila os templates Twig para `var/cache/twig`. Conteúdo inválido faz o build da imagem falhar.
 - **`bin/caddy/Dockerfile`**: estágio `assets` roda o Tailwind com `--minify` sobre `templates/`
   e `content/`; o estágio final é `caddy:alpine` com `www/public/` e o CSS gerado embutidos.
 - **Caddyfile do app** (tradução do `default.conf`): `root * /app/public`, `php_fastcgi php:9000`,
@@ -132,18 +138,21 @@ infra/
 ### Decisões de aplicação
 
 - **Fluxo da requisição:** Caddy serve o que existe em `public/`; o resto vai a `index.php` →
-  `Kernel` → `Router` → controller → `Renderer` → `Response` (com `ETag` e `Cache-Control`).
+  `Main` → middlewares do Slim (erros, caminho canônico) → rota em `routes/web.php` →
+  controller → template Twig → resposta PSR-7 (com `ETag` e `Cache-Control`).
 - **Conteúdo e cache:** `bin/build.php` lê Markdown/YAML, valida o front matter (título, data,
   tags, `draft`, `translationKey`; projetos com categoria e tecnologias), converte para HTML e
   grava `var/cache/content.php` (`return [...]`), mantido em memória pelo OPcache. Em
   desenvolvimento o `ContentRepository` regenera o cache quando algo em `content/` muda.
-- **i18n:** PT na raiz (`/`), EN em `/en/`; o roteador extrai o idioma do prefixo. O seletor de
+- **i18n:** PT na raiz (`/`), EN em `/en`; as mesmas rotas são registradas na raiz e em um grupo
+  `/en` do Slim, e o idioma chega ao controller como atributo da requisição. O seletor de
   idioma usa `translationKey`: leva à tradução se existir, senão ao índice do blog do outro
   idioma. `hreflang` só para pares existentes.
 - **Rotas:** `/`, `/blog`, `/blog/<slug>`, `/blog/tag/<tag>`, `/sitemap.xml` e equivalentes em
   `/en/…`. A busca é o parâmetro `q` na listagem.
-- **Templates:** PHP nativo com layout + partials; toda saída passa por `e()`, exceto o HTML do
-  Markdown, que vem do próprio repositório.
+- **Templates:** Twig, com `extends`/`block` para o layout e `include` para as partials. O escape
+  é automático; a única exceção é o HTML do Markdown, impresso com o filtro `raw` porque vem do
+  próprio repositório. Fora de `development`, os templates compilados ficam em `var/cache/twig`.
 - **Tema e visual:** tokens de cor/tipografia em `@theme`; modo escuro por classe no `<html>`
   (variante `dark:`), seguindo `prefers-color-scheme` e com a escolha salva em `localStorage`;
   script inline no `<head>` evita flash. O tema do Giscus acompanha o do site.
@@ -176,8 +185,9 @@ infra/
 
 1. **Docker de desenvolvimento:** `docker-compose.yml`, `env-example`, `bin/php`, `bin/caddy`,
    `bin/tailwind`, `config/`, `.gitignore`; `docker compose up` servindo um `index.php` mínimo.
-2. **Base do app:** `composer.json` (PSR-4, scripts `build`, `test`, `stan`, `cs`), `Kernel`,
-   `Router`, `Renderer`, página 404.
+2. **Base do app:** `composer.json` (PSR-4, scripts `test`, `stan`, `cs`), Slim 4 com PHP-DI no
+   padrão do wecker (`bootstrap/Main.php`, `config/`, `routes/web.php`), Twig, `Config`,
+   `HttpErrorHandler` e páginas 404 e 500. O script `build` entra na etapa 4.
 3. **Identidade visual:** propor 2–3 direções vibrantes (paleta, tipografia, gradientes) e validar
    com o usuário antes dos templates; registrar os tokens em `www/resources/css/app.css`.
 4. **Conteúdo e i18n:** `ContentRepository`, `MarkdownParser`, `Validator`, `bin/build.php`,
@@ -193,6 +203,11 @@ infra/
     prévia); proteção da `master` exigindo PR e CI verde.
 11. **Documentação:** atualizar `CLAUDE.md` e `README.md` com comandos, arquitetura e como
     publicar um artigo.
+12. **Spec do projeto:** com o código já pronto, escrever a especificação completa a partir do que
+    foi de fato construído (e não do que este plano previa): requisitos, arquitetura, rotas,
+    modelo de conteúdo e front matter, i18n, front-end, ambiente Docker, infraestrutura, fluxo de
+    publicação e convenções de código. Os arquivos ficam em `.claude/specs/`, em Markdown, com texto
+    em português claro e completo, sem jargão desnecessário nem escrita excessivamente formal.
 
 ## Verificação
 
@@ -200,8 +215,8 @@ infra/
   `/en/`; alternar idioma num artigo com e sem tradução; alternar tema e recarregar (sem flash);
   filtrar projetos; buscar no blog; abrir uma tag; conferir realce de código, 404 e Giscus.
   Editar um template e confirmar que o Tailwind em watch regenera o CSS.
-- `docker compose exec php composer test` (roteador, idioma/tradução, validação de front matter,
-  busca), `composer stan`, `composer cs` e `composer build` sem erros; um teste isolado com
+- `docker compose exec php composer test` (rotas e erros, idioma/tradução, validação de front
+  matter, busca), `composer stan`, `composer cs` e `composer build` sem erros; um teste isolado com
   `docker compose exec php vendor/bin/phpunit --filter <nome>`.
 - Build de produção local: `docker compose -f docker-compose.prod.yml build`; um front matter
   inválido deve fazer o build falhar; na imagem `prod`, `php -m` não lista Xdebug.
@@ -216,8 +231,8 @@ infra/
 
 Uma etapa só é marcada `[x]` depois da confirmação do dev.
 
-- [ ] 1. Docker de desenvolvimento — arquivos escritos, não testados; aguardando conferência
-- [ ] 2. Base do app
+- [x] 1. Docker de desenvolvimento — confirmada em 2026-10-01
+- [ ] 2. Base do app — entregue, aguardando conferência
 - [ ] 3. Identidade visual
 - [ ] 4. Conteúdo e i18n
 - [ ] 5. Home
@@ -227,3 +242,4 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [ ] 9. Infra
 - [ ] 10. CI/CD
 - [ ] 11. Documentação
+- [ ] 12. Spec do projeto

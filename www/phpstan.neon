@@ -1,0 +1,9 @@
+parameters:
+    level: 8
+    paths:
+        - bootstrap
+        - config
+        - public
+        - routes
+        - src
+        - tests
