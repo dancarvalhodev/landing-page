@@ -11,6 +11,6 @@ final class HomeController extends AbstractController
 {
     public function index(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        return $this->render($response, 'home/index.html.twig', ['php_version' => PHP_VERSION]);
+        return $this->render($request, $response, 'home/index.html.twig', ['php_version' => PHP_VERSION]);
     }
 }

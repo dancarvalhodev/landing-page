@@ -16,16 +16,28 @@ final class AppTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->main = new Main(new Config(dirname(__DIR__, 2), 'production'));
+        $this->main = new Main(new Config(dirname(__DIR__, 2), 'production', 'https://meusite.com'));
     }
 
-    public function testHomeRespondsOk(): void
+    public function testHomeRespondsInPortuguese(): void
     {
         $response = $this->request('GET', '/');
+        $body = (string) $response->getBody();
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame('text/html; charset=UTF-8', $response->getHeaderLine('Content-Type'));
-        self::assertStringContainsString('landing-page</h1>', (string) $response->getBody());
+        self::assertStringContainsString('<html lang="pt-BR">', $body);
+        self::assertStringContainsString('<a href="/en" hreflang="en"', $body);
+    }
+
+    public function testEnglishHomeRespondsInEnglish(): void
+    {
+        $response = $this->request('GET', '/en');
+        $body = (string) $response->getBody();
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertStringContainsString('<html lang="en">', $body);
+        self::assertStringContainsString('<a href="/" hreflang="pt-BR"', $body);
     }
 
     public function testPagesLoadTheStylesheetWithAVersion(): void
@@ -46,12 +58,30 @@ final class AppTest extends TestCase
         self::assertStringContainsString('Página não encontrada', (string) $response->getBody());
     }
 
+    public function testUnknownEnglishPathRendersNotFoundPageInEnglish(): void
+    {
+        $response = $this->request('GET', '/en/does-not-exist');
+        $body = (string) $response->getBody();
+
+        self::assertSame(404, $response->getStatusCode());
+        self::assertStringContainsString('Page not found', $body);
+        self::assertStringContainsString('<a href="/en" class', $body);
+    }
+
     public function testTrailingSlashRedirectsKeepingQuery(): void
     {
         $response = $this->request('GET', '/blog/?q=php');
 
         self::assertSame(301, $response->getStatusCode());
         self::assertSame('/blog?q=php', $response->getHeaderLine('Location'));
+    }
+
+    public function testEnglishHomeWithTrailingSlashRedirects(): void
+    {
+        $response = $this->request('GET', '/en/');
+
+        self::assertSame(301, $response->getStatusCode());
+        self::assertSame('/en', $response->getHeaderLine('Location'));
     }
 
     public function testDoubleSlashNeverRedirectsToAnotherHost(): void

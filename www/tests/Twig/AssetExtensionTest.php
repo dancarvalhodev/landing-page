@@ -14,7 +14,7 @@ final class AssetExtensionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->extension = new AssetExtension(new Config(dirname(__DIR__, 2), 'development'));
+        $this->extension = new AssetExtension(new Config(dirname(__DIR__, 2), 'development', 'http://localhost:8080'));
     }
 
     public function testExistingFileGetsVersionFromModificationTime(): void

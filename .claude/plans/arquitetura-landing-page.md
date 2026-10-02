@@ -89,7 +89,7 @@ www/                        # a aplicação
     Handler/                # HttpErrorHandler: páginas 404 e 500
     Middleware/             # CanonicalPathMiddleware: barra final e barras duplicadas
     Content/                # ContentRepository, MarkdownParser, Post, Project, Validator
-    I18n/                   # Locale, Translator, UrlGenerator
+    I18n/                   # Locale, InterfaceTexts, UrlGenerator
   templates/                # Twig: layout/base.html.twig, home/ (uma partial por seção), blog/, errors/
   content/
     blog/{pt,en}/<slug>.md
@@ -144,8 +144,9 @@ infra/
   tags, `draft`, `translationKey`; projetos com categoria e tecnologias), converte para HTML e
   grava `var/cache/content.php` (`return [...]`), mantido em memória pelo OPcache. Em
   desenvolvimento o `ContentRepository` regenera o cache quando algo em `content/` muda.
-- **i18n:** PT na raiz (`/`), EN em `/en`; as mesmas rotas são registradas na raiz e em um grupo
-  `/en` do Slim, e o idioma chega ao controller como atributo da requisição. O seletor de
+- **i18n:** PT na raiz (`/`), EN em `/en`; as mesmas rotas são registradas uma vez por
+  idioma, e o idioma é lido do começo do caminho (`Locale::fromPath`), o que também vale para as
+  páginas de erro. Os templates recebem um objeto `i18n` com `text()`, `url()` e `switchUrl()`. O seletor de
   idioma usa `translationKey`: leva à tradução se existir, senão ao índice do blog do outro
   idioma. `hreflang` só para pares existentes.
 - **Rotas:** `/`, `/blog`, `/blog/<slug>`, `/blog/tag/<tag>`, `/sitemap.xml` e equivalentes em
@@ -190,8 +191,13 @@ infra/
    `HttpErrorHandler` e páginas 404 e 500. O script `build` entra na etapa 4.
 3. **Identidade visual:** propor 2–3 direções vibrantes (paleta, tipografia, gradientes) e validar
    com o usuário antes dos templates; registrar os tokens em `www/resources/css/app.css`.
-4. **Conteúdo e i18n:** `ContentRepository`, `MarkdownParser`, `Validator`, `bin/build.php`,
-   `Translator`, `UrlGenerator`; migrar os textos do currículo/LinkedIn para `content/`.
+4. **Conteúdo e i18n**, dividida em três a pedido do dev:
+   - **4a. i18n:** `Locale`, `InterfaceTexts`, `UrlGenerator`, rotas em `/en`, textos de interface em
+     `lang/`.
+   - **4b. Motor de conteúdo:** `ContentRepository`, `MarkdownParser`, `Validator`, cache e
+     `bin/build.php`, com conteúdo de exemplo.
+   - **4c. Textos reais:** trocar o conteúdo de exemplo pelos dados do LinkedIn do dev
+     (https://www.linkedin.com/in/daniel-carvalho-02578a15a/).
 5. **Home:** seções, filtro de projetos, tema claro/escuro, animações.
 6. **Blog:** lista, artigo, tags, busca, realce de código, Giscus.
 7. **SEO:** metadados, JSON-LD, sitemap, `robots.txt`, imagem de compartilhamento.
@@ -233,8 +239,10 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 
 - [x] 1. Docker de desenvolvimento — confirmada em 2026-10-01
 - [x] 2. Base do app — confirmada em 2026-10-02
-- [ ] 3. Identidade visual — direção "Pôr do sol" escolhida; entregue, aguardando conferência
-- [ ] 4. Conteúdo e i18n
+- [x] 3. Identidade visual — direção "Pôr do sol"; confirmada em 2026-10-02
+- [ ] 4a. i18n — entregue, aguardando conferência
+- [ ] 4b. Motor de conteúdo
+- [ ] 4c. Textos reais
 - [ ] 5. Home
 - [ ] 6. Blog
 - [ ] 7. SEO

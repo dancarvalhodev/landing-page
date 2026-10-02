@@ -1,10 +1,11 @@
 {% extends 'layout/base.html.twig' %}
 
-{% block title %}Erro interno{% endblock %}
+{% block title %}{{ i18n.text('error.500.title') }}{% endblock %}
 
 {% block content %}
-<main>
-    <h1>500</h1>
-    <p>Algo deu errado. Tente novamente em instantes.</p>
+<main class="mx-auto max-w-2xl px-6 py-16">
+    <p class="text-brand inline-block font-display text-7xl font-extrabold">500</p>
+    <h1 class="mt-2 text-3xl">{{ i18n.text('error.500.title') }}</h1>
+    <p class="mt-3 text-muted">{{ i18n.text('error.500.message') }}</p>
 </main>
 {% endblock %}

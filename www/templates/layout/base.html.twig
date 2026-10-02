@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="{{ i18n.htmlLang }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
+<header class="bg-page px-6 py-4 text-right text-sm">
+    <a href="{{ i18n.switchUrl }}" hreflang="{{ i18n.switchHtmlLang }}" lang="{{ i18n.switchHtmlLang }}" class="font-bold text-accent">{{ i18n.text('language.switch') }}</a>
+</header>
 {% block content %}{% endblock %}
 </body>
 </html>

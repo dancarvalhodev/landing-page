@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use App\I18n\LocalizerFactory;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Exception\HttpException;
@@ -18,6 +19,7 @@ final class HttpErrorHandler extends ErrorHandler
         CallableResolverInterface $callableResolver,
         ResponseFactoryInterface $responseFactory,
         private readonly Twig $twig,
+        private readonly LocalizerFactory $localizerFactory,
     ) {
         parent::__construct($callableResolver, $responseFactory);
     }
@@ -51,8 +53,10 @@ final class HttpErrorHandler extends ErrorHandler
 
     private function errorPage(int $status, string $template): ResponseInterface
     {
+        $data = ['i18n' => $this->localizerFactory->fromRequest($this->request)];
+
         $response = $this->responseFactory->createResponse($status);
-        $response = $this->twig->render($response, $template);
+        $response = $this->twig->render($response, $template, $data);
 
         return $response->withHeader('Content-Type', 'text/html; charset=UTF-8');
     }

@@ -47,6 +47,7 @@ final class Main
         $builder->useAutowiring(true);
 
         $builder->addDefinitions([Config::class => $this->config]);
+        $builder->addDefinitions($rootDir . '/config/i18n.php');
         $builder->addDefinitions($rootDir . '/config/twig.php');
         $builder->addDefinitions($rootDir . '/config/handler.php');
 

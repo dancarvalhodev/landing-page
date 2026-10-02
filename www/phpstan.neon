@@ -3,6 +3,7 @@ parameters:
     paths:
         - bootstrap
         - config
+        - lang
         - public
         - routes
         - src
