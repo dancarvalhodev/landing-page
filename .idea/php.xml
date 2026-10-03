@@ -101,6 +101,7 @@
       <path value="$PROJECT_DIR$/www/vendor/league/commonmark" />
       <path value="$PROJECT_DIR$/www/vendor/nette/utils" />
       <path value="$PROJECT_DIR$/www/vendor/nette/schema" />
+      <path value="$PROJECT_DIR$/www/vendor/tempest/highlight" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.5" />

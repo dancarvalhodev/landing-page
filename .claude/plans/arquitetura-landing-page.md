@@ -269,8 +269,8 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 5. Home (todas as subetapas) — confirmada em 2026-10-03
 - [x] 6a. Blog — lista e artigo — confirmada em 2026-10-03
 - [x] 6c. Blog — tags — confirmada em 2026-10-03
-- [ ] 6d. Blog — busca — entregue, aguardando conferência
-- [ ] 6e. Blog — realce de código
+- [x] 6d. Blog — busca — confirmada em 2026-10-03
+- [ ] 6e. Blog — realce de código — entregue, aguardando conferência
 - [ ] 6f. Blog — Giscus
 - [ ] 7. SEO
 - [ ] 8. Descrições profissionais

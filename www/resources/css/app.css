@@ -154,12 +154,43 @@
         @apply mt-4 list-inside list-disc space-y-1;
     }
 
+    /* O tempest/highlight não embrulha o bloco em <code>, só o <pre>: a fonte vai direto aqui. */
     .article pre {
-        @apply mt-4 overflow-x-auto rounded-box bg-surface p-4 ring-1 ring-line ring-inset;
+        @apply mt-4 overflow-x-auto rounded-box bg-surface p-4 font-mono text-sm ring-1 ring-line ring-inset;
     }
 
+    /* Código em linha (fora de um bloco), ex.: `composer test`. */
     .article code {
-        @apply font-mono text-sm;
+        @apply rounded bg-accent-soft px-1 py-0.5 font-mono text-sm;
+    }
+
+    /* Cores do realce de sintaxe (classes hl-* do tempest/highlight), nos tons da identidade visual. */
+    .hl-keyword {
+        color: var(--accent);
+        font-weight: 700;
+    }
+
+    .hl-type {
+        color: var(--color-brand-purple);
+    }
+
+    .hl-value,
+    .hl-literal {
+        color: var(--color-brand-rose);
+    }
+
+    .hl-number {
+        color: var(--color-brand-orange);
+    }
+
+    .hl-comment {
+        color: var(--muted);
+        font-style: italic;
+    }
+
+    .hl-operator,
+    .hl-generic {
+        color: var(--muted);
     }
 
     .article table {

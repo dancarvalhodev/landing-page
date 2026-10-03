@@ -89,6 +89,7 @@
       <excludeFolder url="file://$MODULE_DIR$/www/vendor/nette/schema" />
       <excludeFolder url="file://$MODULE_DIR$/www/vendor/nette/utils" />
       <excludeFolder url="file://$MODULE_DIR$/www/vendor/symfony/yaml" />
+      <excludeFolder url="file://$MODULE_DIR$/www/vendor/tempest/highlight" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

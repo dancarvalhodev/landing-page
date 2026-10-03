@@ -82,6 +82,7 @@ final class ContentRepositoryTest extends TestCase
         $post = $this->content->posts(Locale::Pt)[0];
 
         self::assertSame('ola-mundo', $post['slug']);
-        self::assertStringContainsString('<code class="language-php">', (string) $post['html']);
+        self::assertStringContainsString('<pre data-lang="php"', (string) $post['html']);
+        self::assertStringContainsString('<span class="hl-keyword">class</span>', (string) $post['html']);
     }
 }

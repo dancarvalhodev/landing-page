@@ -12,6 +12,7 @@ use League\CommonMark\Extension\FrontMatter\FrontMatterExtension;
 use League\CommonMark\Extension\FrontMatter\Output\RenderedContentWithFrontMatter;
 use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use League\CommonMark\MarkdownConverter;
+use Tempest\Highlight\CommonMark\HighlightExtension;
 
 final readonly class ContentRepository
 {
@@ -29,6 +30,7 @@ final readonly class ContentRepository
         $environment->addExtension(new CommonMarkCoreExtension());
         $environment->addExtension(new GithubFlavoredMarkdownExtension());
         $environment->addExtension(new FrontMatterExtension());
+        $environment->addExtension(new HighlightExtension());
 
         $this->markdown = new MarkdownConverter($environment);
     }
