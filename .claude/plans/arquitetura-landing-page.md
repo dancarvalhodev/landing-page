@@ -33,8 +33,8 @@ do usuário:
 
 ## Abordagem recomendada
 
-Aplicação **PHP com Slim 4**, sem banco de dados: o conteúdo são arquivos Markdown,
-compilados para um índice em cache durante o build da imagem. Dois contêineres por ambiente —
+Aplicação **PHP com Slim 4**, sem banco de dados: todo o conteúdo são arquivos Markdown (etiqueta em YAML no topo, texto embaixo),
+lidos direto do disco a cada requisição (MVP: sem cache até haver necessidade medida). Dois contêineres por ambiente —
 `caddy` (arquivos estáticos + FastCGI) e `php` (PHP-FPM) — iguais em desenvolvimento, prévia e
 produção. MySQL e Redis do template ficam de fora: não há dados nem sessões.
 
@@ -46,7 +46,7 @@ produção. MySQL e Redis do template ficam de fora: não há dados nem sessões
 | Markdown | `league/commonmark` (+ front matter, tabelas, âncoras em títulos) | Padrão de fato em PHP |
 | Realce de código | `tempest/highlight` (integra com o CommonMark) | Realce no servidor, sem JS no cliente |
 | Estilo | **Tailwind CSS v4** via CLI standalone (sem Node), tokens em `@theme` | Pedido do usuário; o binário único evita uma toolchain Node |
-| Busca e tags | No servidor, sobre o índice em cache (`/blog?q=`, `/blog/tag/<tag>`) | Funciona sem JS; volume pequeno |
+| Busca e tags | No servidor, sobre a lista de artigos (`/blog?q=`, `/blog/tag/<tag>`) | Funciona sem JS; volume pequeno |
 | Comentários | **Giscus** (GitHub Discussions) | Nada para hospedar ou moderar |
 | Filtro de projetos / tema / animações | JS puro pequeno + utilitários Tailwind (`motion-safe:`) | Não justifica biblioteca |
 | Servidor web | **Caddy** | Substitui o Nginx do template; HTTPS automático |
@@ -88,17 +88,17 @@ www/                        # a aplicação
     Controller/             # AbstractController, Home, Blog (lista, artigo, tag, busca), Sitemap
     Handler/                # HttpErrorHandler: páginas 404 e 500
     Middleware/             # CanonicalPathMiddleware: barra final e barras duplicadas
-    Content/                # ContentRepository, MarkdownParser, Post, Project, Validator
+    Content/                # ContentRepository: lê os arquivos Markdown de content/
     I18n/                   # Locale, InterfaceTexts, UrlGenerator
   templates/                # Twig: layout/base.html.twig, home/ (uma partial por seção), blog/, errors/
   content/
     blog/{pt,en}/<slug>.md
     projects/{pt,en}/<slug>.md
-    data/{pt,en}/           # profile.yaml, experience.yaml, testimonials.yaml
+    site.md                 # nome, e-mail, redes sociais (só etiqueta, sem corpo)
+    pt.md, en.md            # perfil, experiência, habilidades e depoimentos; o corpo é o "sobre"
   lang/{pt,en}.php          # textos de interface
   resources/css/app.css     # entrada do Tailwind (@theme com os tokens)
-  bin/build.php             # valida o conteúdo e gera var/cache/content.php
-  var/cache/                # ignorado pelo git
+  var/cache/                # cache do Twig, ignorado pelo git
   tests/
   composer.json
 infra/
@@ -107,7 +107,7 @@ infra/
   edge/Caddyfile
   README.md                 # passo a passo OCI + DNS
 .github/workflows/
-  ci.yml                    # CS, PHPStan, PHPUnit, bin/build.php
+  ci.yml                    # CS, PHPStan, PHPUnit (os testes também leem o conteúdo real)
   preview.yml               # PR → imagens :pr-<n> → sobe a pilha de prévia
   deploy.yml                # merge na master → imagens :<sha> → sobe a produção
 ```
@@ -119,8 +119,7 @@ infra/
     com `WORKDIR /app`.
   - `dev`: `base` como está (Xdebug ativo); o código entra por bind mount de `./www`.
   - `prod`: remove o ini do Xdebug, aplica `php.prod.ini`, copia `www/`, roda
-    `composer install --no-dev --classmap-authoritative` e `php bin/build.php`, que também
-    compila os templates Twig para `var/cache/twig`. Conteúdo inválido faz o build da imagem falhar.
+    `composer install --no-dev --classmap-authoritative`.
 - **`bin/caddy/Dockerfile`**: estágio `assets` roda o Tailwind com `--minify` sobre `templates/`
   e `content/`; o estágio final é `caddy:alpine` com `www/public/` e o CSS gerado embutidos.
 - **Caddyfile do app** (tradução do `default.conf`): `root * /app/public`, `php_fastcgi php:9000`,
@@ -140,10 +139,11 @@ infra/
 - **Fluxo da requisição:** Caddy serve o que existe em `public/`; o resto vai a `index.php` →
   `Main` → middlewares do Slim (erros, caminho canônico) → rota em `routes/web.php` →
   controller → template Twig → resposta PSR-7 (com `ETag` e `Cache-Control`).
-- **Conteúdo e cache:** `bin/build.php` lê Markdown/YAML, valida o front matter (título, data,
-  tags, `draft`, `translationKey`; projetos com categoria e tecnologias), converte para HTML e
-  grava `var/cache/content.php` (`return [...]`), mantido em memória pelo OPcache. Em
-  desenvolvimento o `ContentRepository` regenera o cache quando algo em `content/` muda.
+- **Conteúdo (MVP):** uma única classe, `ContentRepository`, lê os arquivos de `content/` a cada
+  requisição, converte o Markdown em HTML e devolve arrays simples. Os campos obrigatórios
+  (artigo: `title`, `description`, `date`; projeto: `title`, `summary`, `order`) são conferidos
+  pelos testes, que leem o conteúdo real: um arquivo incompleto derruba o CI antes do deploy. Sem
+  cache, sem rascunhos e sem validação no código até haver necessidade.
 - **i18n:** PT na raiz (`/`), EN em `/en`; as mesmas rotas são registradas uma vez por
   idioma, e o idioma é lido do começo do caminho (`Locale::fromPath`), o que também vale para as
   páginas de erro. Os templates recebem um objeto `i18n` com `text()`, `url()` e `switchUrl()`. O seletor de
@@ -188,14 +188,14 @@ infra/
    `bin/tailwind`, `config/`, `.gitignore`; `docker compose up` servindo um `index.php` mínimo.
 2. **Base do app:** `composer.json` (PSR-4, scripts `test`, `stan`, `cs`), Slim 4 com PHP-DI no
    padrão do wecker (`bootstrap/Main.php`, `config/`, `routes/web.php`), Twig, `Config`,
-   `HttpErrorHandler` e páginas 404 e 500. O script `build` entra na etapa 4.
+   `HttpErrorHandler` e páginas 404 e 500.
 3. **Identidade visual:** propor 2–3 direções vibrantes (paleta, tipografia, gradientes) e validar
    com o usuário antes dos templates; registrar os tokens em `www/resources/css/app.css`.
 4. **Conteúdo e i18n**, dividida em três a pedido do dev:
    - **4a. i18n:** `Locale`, `InterfaceTexts`, `UrlGenerator`, rotas em `/en`, textos de interface em
      `lang/`.
-   - **4b. Motor de conteúdo:** `ContentRepository`, `MarkdownParser`, `Validator`, cache e
-     `bin/build.php`, com conteúdo de exemplo.
+   - **4b. Leitura de conteúdo (MVP):** `ContentRepository` lendo os arquivos Markdown de `content/`,
+     com conteúdo de exemplo.
    - **4c. Textos reais:** trocar o conteúdo de exemplo pelos dados do LinkedIn do dev
      (https://www.linkedin.com/in/daniel-carvalho-02578a15a/).
 5. **Home:** seções, filtro de projetos, tema claro/escuro, animações.
@@ -221,11 +221,11 @@ infra/
   `/en/`; alternar idioma num artigo com e sem tradução; alternar tema e recarregar (sem flash);
   filtrar projetos; buscar no blog; abrir uma tag; conferir realce de código, 404 e Giscus.
   Editar um template e confirmar que o Tailwind em watch regenera o CSS.
-- `docker compose exec php composer test` (rotas e erros, idioma/tradução, validação de front
-  matter, busca), `composer stan`, `composer cs` e `composer build` sem erros; um teste isolado com
+- `docker compose exec php composer test` (rotas e erros, idioma, leitura do conteúdo real,
+  busca), `composer stan` e `composer cs` sem erros; um teste isolado com
   `docker compose exec php vendor/bin/phpunit --filter <nome>`.
-- Build de produção local: `docker compose -f docker-compose.prod.yml build`; um front matter
-  inválido deve fazer o build falhar; na imagem `prod`, `php -m` não lista Xdebug.
+- Build de produção local: `docker compose -f docker-compose.prod.yml build`; na imagem `prod`,
+  `php -m` não lista Xdebug.
 - Lighthouse (mobile) na home e em um artigo: performance, acessibilidade e SEO ≥ 95.
 - Validar o JSON-LD `Person` no Rich Results Test e a prévia do link no LinkedIn Post Inspector.
 - Abrir um PR de teste: a prévia aparece em `preview.<domínio>`, pede senha e envia `noindex`;
@@ -240,8 +240,8 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 1. Docker de desenvolvimento — confirmada em 2026-10-01
 - [x] 2. Base do app — confirmada em 2026-10-02
 - [x] 3. Identidade visual — direção "Pôr do sol"; confirmada em 2026-10-02
-- [ ] 4a. i18n — entregue, aguardando conferência
-- [ ] 4b. Motor de conteúdo
+- [x] 4a. i18n — confirmada em 2026-10-02
+- [ ] 4b. Leitura de conteúdo (MVP) — refeita mais simples; aguardando conferência
 - [ ] 4c. Textos reais
 - [ ] 5. Home
 - [ ] 6. Blog

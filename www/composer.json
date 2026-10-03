@@ -5,11 +5,13 @@
     "license": "proprietary",
     "require": {
         "php": "^8.5",
+        "league/commonmark": "^2.10",
         "php-di/php-di": "^7",
         "php-di/slim-bridge": "^3",
         "slim/psr7": "^1",
         "slim/slim": "^4",
         "slim/twig-view": "^3",
+        "symfony/yaml": "^8.1",
         "twig/twig": "^3"
     },
     "autoload": {

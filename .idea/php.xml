@@ -95,6 +95,12 @@
       <path value="$PROJECT_DIR$/www/vendor/php-di/php-di" />
       <path value="$PROJECT_DIR$/www/vendor/twig/twig" />
       <path value="$PROJECT_DIR$/www/vendor/slim/twig-view" />
+      <path value="$PROJECT_DIR$/www/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/www/vendor/dflydev/dot-access-data" />
+      <path value="$PROJECT_DIR$/www/vendor/league/config" />
+      <path value="$PROJECT_DIR$/www/vendor/league/commonmark" />
+      <path value="$PROJECT_DIR$/www/vendor/nette/utils" />
+      <path value="$PROJECT_DIR$/www/vendor/nette/schema" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.5" />

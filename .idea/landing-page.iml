@@ -83,6 +83,12 @@
       <excludeFolder url="file://$MODULE_DIR$/www/vendor/symfony/string" />
       <excludeFolder url="file://$MODULE_DIR$/www/vendor/theseer/tokenizer" />
       <excludeFolder url="file://$MODULE_DIR$/www/vendor/twig/twig" />
+      <excludeFolder url="file://$MODULE_DIR$/www/vendor/dflydev/dot-access-data" />
+      <excludeFolder url="file://$MODULE_DIR$/www/vendor/league/commonmark" />
+      <excludeFolder url="file://$MODULE_DIR$/www/vendor/league/config" />
+      <excludeFolder url="file://$MODULE_DIR$/www/vendor/nette/schema" />
+      <excludeFolder url="file://$MODULE_DIR$/www/vendor/nette/utils" />
+      <excludeFolder url="file://$MODULE_DIR$/www/vendor/symfony/yaml" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

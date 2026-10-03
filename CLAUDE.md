@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Explorar o código e rodar comandos
+
+- **CodeGraph primeiro.** O repositório é indexado (`.codegraph/` na raiz). Para entender ou localizar código, use `codegraph_explore` (MCP, passando `projectPath`) ou `codegraph explore "<símbolos ou pergunta>"` antes de qualquer `grep`, `find`, `sed` ou leitura de arquivo.
+- **Evite comandos compostos.** Nada de `cd ... && sed ...`, `cd ... && grep ...` ou cadeias com `&&`, `;` e `|` juntando ações diferentes. Prefira um comando por chamada, com caminhos absolutos, e as ferramentas dedicadas (Read, Edit, Write) para ler e alterar arquivos.
+
 ## Repository state
 
 This repository is a fresh scaffold for a landing page. As of the initial commit it contains only `README.md` (a title, no content) — there is no source code, package manifest, framework, build tooling, linter, or test setup yet.
