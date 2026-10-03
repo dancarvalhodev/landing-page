@@ -118,6 +118,11 @@
         @apply bg-page font-sans text-ink antialiased;
     }
 
+    /* Transição única pra tudo: cor (troca de tema) e opacidade/posição (entrada por rolagem). */
+    * {
+        @apply motion-safe:transition-all motion-safe:duration-400;
+    }
+
     h1,
     h2,
     h3 {
