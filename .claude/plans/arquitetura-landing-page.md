@@ -200,6 +200,10 @@ infra/
      (https://www.linkedin.com/in/daniel-carvalho-02578a15a/).
 5. **Home:** seções, filtro de projetos, tema claro/escuro, animações.
 6. **Blog:** lista, artigo, tags, busca, realce de código, Giscus.
+   - **6b. Descrições profissionais:** com a home e o blog já mostrando o conteúdo, revisar com o
+     dev e reescrever todos os textos profissionais em `content/`, nos dois idiomas: a descrição
+     de cada experiência (hoje P21 e Cubo têm o mesmo texto provisório), a chamada, a apresentação,
+     o "sobre" e a descrição de cada projeto. Só com informações dadas pelo dev; nada inventado.
 7. **SEO:** metadados, JSON-LD, sitemap, `robots.txt`, imagem de compartilhamento.
 8. **Imagens de produção:** estágios `prod`, `docker-compose.prod.yml`, `php.prod.ini`.
 9. **Infra:** `infra/cloud-init.yaml`, `infra/edge/`, `infra/README.md`. A criação da conta/VM na
@@ -241,10 +245,11 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 2. Base do app — confirmada em 2026-10-02
 - [x] 3. Identidade visual — direção "Pôr do sol"; confirmada em 2026-10-02
 - [x] 4a. i18n — confirmada em 2026-10-02
-- [ ] 4b. Leitura de conteúdo (MVP) — refeita mais simples; aguardando conferência
-- [ ] 4c. Textos reais
+- [x] 4b. Leitura de conteúdo (MVP) — confirmada em 2026-10-02
+- [ ] 4c. Textos reais — entregue, aguardando conferência
 - [ ] 5. Home
 - [ ] 6. Blog
+- [ ] 6b. Descrições profissionais
 - [ ] 7. SEO
 - [ ] 8. Imagens de produção
 - [ ] 9. Infra

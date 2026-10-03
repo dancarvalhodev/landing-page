@@ -1,6 +1,6 @@
 ---
 name: Daniel Carvalho
-email: voce@exemplo.com
+email: danielcarvalhodev@gmail.com
 social:
   - label: GitHub
     url: https://github.com/dancarvalhodev

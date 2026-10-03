@@ -1,25 +1,57 @@
 ---
-role: PHP Developer (sample)
-headline: I build systems that last.
-intro: Short sample introduction, to be replaced with the real data.
+role: Software Engineer · Full Stack
+headline: I turn ideas into solutions.
+intro: Full stack developer based in Itaúna, Brazil, working with PHP, JavaScript, Docker, Linux and API integrations.
+location: Itaúna, Minas Gerais, Brazil
 
 jobs:
-  - role: Sample role
-    company: Sample company
-    period: 2022 — present
-    description: What was done in this role, in one or two sentences.
+  - role: Systems Analyst
+    company: P21 Sistemas
+    period: Apr 2022 — present
+    description: Systems Analyst Backend with PHP as main language
+  - role: Software Developer
+    company: Cubo Comunicação e Marketing
+    period: Dec 2020 — Apr 2022
+    description: Systems Analyst Backend with PHP as main language
+  - role: Technical Support
+    company: PROBO Informática
+    period: Oct 2018 — Nov 2020
+    description: Customer support, computer mapping, troubleshooting the ERP, analysing system errors and testing the system and the database.
 
 skills:
   - group: Back end
-    items: [PHP, Slim, PostgreSQL]
+    items: [PHP, Laminas, Zend Framework 2, MySQL, API integration]
+  - group: Front end
+    items: [HTML, CSS, JavaScript (ES6+)]
   - group: Infrastructure
-    items: [Docker, Linux]
+    items: [Docker, Docker Compose, Linux]
+  - group: Practices
+    items: [Refactoring]
 
-testimonials:
-  - quote: Sample testimonial, to be replaced with a real one or removed.
-    author: Sample person
-    role: Role, Company
+education:
+  - course: Associate degree in Systems Analysis and Development
+    school: UNINTER Centro Universitário Internacional
+    period: 2019 — 2022
+  - course: Technical course in Web Development
+    school: CEFET-MG
+    period: 2018 — 2019
+  - course: Technical course in Electronics
+    school: SENAI Itaúna CETEF Marcelino Corradi
+    period: 2014 — 2015
+
+certifications:
+  - Scrum Gathering Rio 2024 (attendance)
+  - "OKR: Methodology and Application"
+  - Integrating PHP e-commerce with the Cielo API
+  - Effective Communication and Human Relations
+  - Complete Web Design
+
+testimonials: []
 ---
 
-Sample paragraph about the professional background. It accepts **Markdown**,
-such as emphasis and [links](https://github.com/dancarvalhodev).
+I am a web developer passionate about technology and about turning ideas into real solutions.
+I work with HTML, CSS, JavaScript, PHP, MySQL, Docker and Linux, as well as frameworks such as
+Laminas and Zend Framework 2.
+
+I believe continuous learning and constant improvement are an essential part of professional
+growth. Every new project is a chance to evolve, as a person and as a developer.

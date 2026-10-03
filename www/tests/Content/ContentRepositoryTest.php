@@ -25,7 +25,7 @@ final class ContentRepositoryTest extends TestCase
         $profile = $this->content->profile(Locale::En);
 
         self::assertIsString($profile['role']);
-        self::assertStringContainsString('<strong>Markdown</strong>', (string) $profile['html']);
+        self::assertStringContainsString('<p>I am a web developer', (string) $profile['html']);
     }
 
     public function testEveryPostHasTheFieldsThePagesNeed(): void
