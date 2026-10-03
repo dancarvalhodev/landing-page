@@ -11,6 +11,8 @@
         {{ post.date|date(i18n.locale.value == 'pt' ? 'd/m/Y' : 'M j, Y') }}
     </time>
 
+    {{ include('blog/_tags.html.twig', {tags: post.tags, i18n: i18n}) }}
+
     <div class="article mt-6 text-ink">{{ post.html|raw }}</div>
 </main>
 {% endblock %}

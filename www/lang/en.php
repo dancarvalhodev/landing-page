@@ -11,6 +11,8 @@ return [
 
     'blog.title' => 'Blog',
     'blog.back' => 'Back to blog',
+    'blog.empty' => 'No articles found.',
+    'blog.tag.title' => 'Articles tagged with',
 
     'home.hero.contact' => 'Get in touch',
     'home.hero.projects' => 'View projects',

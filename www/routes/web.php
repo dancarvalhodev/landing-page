@@ -11,6 +11,7 @@ return function (App $app): void {
     foreach (Locale::cases() as $locale) {
         $app->get($locale->homePath(), [HomeController::class, 'index']);
         $app->get($locale->pathPrefix() . '/blog', [BlogController::class, 'index']);
+        $app->get($locale->pathPrefix() . '/blog/tag/{tag}', [BlogController::class, 'tag']);
         $app->get($locale->pathPrefix() . '/blog/{slug}', [BlogController::class, 'show']);
     }
 };

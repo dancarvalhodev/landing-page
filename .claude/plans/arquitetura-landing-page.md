@@ -267,8 +267,8 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 5c. Home — tema claro/escuro — confirmada em 2026-10-03
 - [x] 5d. Home — animações sutis — confirmada em 2026-10-03
 - [x] 5. Home (todas as subetapas) — confirmada em 2026-10-03
-- [ ] 6a. Blog — lista e artigo — entregue, aguardando conferência
-- [ ] 6c. Blog — tags
+- [x] 6a. Blog — lista e artigo — confirmada em 2026-10-03
+- [ ] 6c. Blog — tags — entregue, aguardando conferência
 - [ ] 6d. Blog — busca
 - [ ] 6e. Blog — realce de código
 - [ ] 6f. Blog — Giscus

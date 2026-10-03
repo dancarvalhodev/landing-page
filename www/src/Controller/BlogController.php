@@ -34,6 +34,22 @@ final class BlogController extends AbstractController
         ]);
     }
 
+    public function tag(ServerRequestInterface $request, ResponseInterface $response, string $tag): ResponseInterface
+    {
+        $locale = $this->locale($request);
+
+        $posts = array_values(array_filter(
+            $this->content->posts($locale),
+            fn(array $post): bool => in_array($tag, $post['tags'] ?? [], true),
+        ));
+
+        return $this->render($request, $response, 'blog/tag.html.twig', [
+            'tag' => $tag,
+            'posts' => $posts,
+            'switchUrl' => $this->urls->path($locale->other(), '/blog'),
+        ]);
+    }
+
     public function show(ServerRequestInterface $request, ResponseInterface $response, string $slug): ResponseInterface
     {
         $locale = $this->locale($request);
