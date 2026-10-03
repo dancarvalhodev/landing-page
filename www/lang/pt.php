@@ -13,6 +13,8 @@ return [
     'blog.back' => 'Voltar ao blog',
     'blog.empty' => 'Nenhum artigo encontrado.',
     'blog.tag.title' => 'Artigos marcados com',
+    'blog.search.placeholder' => 'Buscar artigos...',
+    'blog.search.submit' => 'Buscar',
 
     'home.hero.contact' => 'Fale comigo',
     'home.hero.projects' => 'Ver projetos',

@@ -27,9 +27,11 @@ final class BlogController extends AbstractController
     public function index(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $locale = $this->locale($request);
+        $query = trim((string) ($request->getQueryParams()['q'] ?? ''));
 
         return $this->render($request, $response, 'blog/index.html.twig', [
-            'posts' => $this->content->posts($locale),
+            'posts' => $this->search($this->content->posts($locale), $query),
+            'q' => $query,
             'switchUrl' => $this->urls->path($locale->other(), '/blog'),
         ]);
     }
@@ -63,6 +65,23 @@ final class BlogController extends AbstractController
             'post' => $post,
             'switchUrl' => $this->switchUrlFor($locale, $post),
         ]);
+    }
+
+    /**
+     * @param list<array<mixed>> $posts
+     * @return list<array<mixed>>
+     */
+    private function search(array $posts, string $query): array
+    {
+        if ($query === '') {
+            return $posts;
+        }
+
+        return array_values(array_filter($posts, function (array $post) use ($query): bool {
+            $haystack = $post['title'] . ' ' . $post['description'] . ' ' . implode(' ', $post['tags'] ?? []);
+
+            return mb_stripos($haystack, $query) !== false;
+        }));
     }
 
     /**

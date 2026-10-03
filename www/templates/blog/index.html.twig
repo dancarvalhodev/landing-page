@@ -6,6 +6,17 @@
 <main class="mx-auto max-w-2xl px-6 py-16 text-ink">
     <h1 class="text-3xl">{{ i18n.text('blog.title') }}</h1>
 
+    <form method="get" action="{{ i18n.url('/blog') }}" class="mt-6 flex gap-2">
+        <input
+            type="search"
+            name="q"
+            value="{{ q }}"
+            placeholder="{{ i18n.text('blog.search.placeholder') }}"
+            class="w-full rounded-box bg-surface px-4 py-2 text-sm ring-1 ring-line ring-inset"
+        >
+        <button type="submit" class="rounded-box bg-brand px-4 py-2 text-sm font-bold text-white">{{ i18n.text('blog.search.submit') }}</button>
+    </form>
+
     {{ include('blog/_posts.html.twig', {posts: posts, i18n: i18n}) }}
 </main>
 {% endblock %}
