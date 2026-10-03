@@ -2,9 +2,13 @@
 
 {% block content %}
 <main>
-    <h1 class="sr-only">landing-page</h1>
-    {{ include('home/_identity_sample.html.twig', {theme: ''}) }}
-    {{ include('home/_identity_sample.html.twig', {theme: 'dark'}) }}
-    <p class="bg-page px-6 pb-6 text-sm text-muted">PHP {{ php_version }} via Caddy.</p>
+    {{ include('home/_hero.html.twig', {profile: profile, i18n: i18n}) }}
+    {{ include('home/_about.html.twig', {profile: profile, i18n: i18n}) }}
+    {{ include('home/_projects.html.twig', {projects: projects, i18n: i18n}) }}
+    {{ include('home/_experience.html.twig', {profile: profile, i18n: i18n}) }}
+    {% if profile.testimonials is not empty %}
+        {{ include('home/_testimonials.html.twig', {testimonials: profile.testimonials, i18n: i18n}) }}
+    {% endif %}
+    {{ include('home/_contact.html.twig', {site: site, i18n: i18n}) }}
 </main>
 {% endblock %}

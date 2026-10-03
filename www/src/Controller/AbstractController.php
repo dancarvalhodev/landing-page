@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\I18n\Locale;
 use App\I18n\LocalizerFactory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -15,6 +16,11 @@ abstract class AbstractController
         private readonly Twig $twig,
         private readonly LocalizerFactory $localizerFactory,
     ) {}
+
+    protected function locale(ServerRequestInterface $request): Locale
+    {
+        return $this->localizerFactory->fromRequest($request)->locale;
+    }
 
     /**
      * @param array<string, mixed> $data

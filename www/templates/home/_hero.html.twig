@@ -1,0 +1,13 @@
+<section id="inicio" class="bg-page px-6 py-16 text-ink">
+    <div class="mx-auto max-w-2xl">
+        <p class="text-xs font-bold tracking-widest text-accent uppercase">{{ profile.role }}</p>
+        <h1 class="mt-2 text-5xl leading-none">{{ profile.headline }}</h1>
+        <p class="mt-4 text-lg text-muted">{{ profile.intro }}</p>
+        <p class="mt-2 text-sm text-muted">{{ profile.location }}</p>
+
+        <div class="mt-6 flex flex-wrap gap-3">
+            <a href="#contato" class="bg-brand rounded-box px-5 py-2.5 font-bold text-white">{{ i18n.text('home.hero.contact') }}</a>
+            <a href="#projetos" class="rounded-box px-5 py-2.5 font-bold ring-2 ring-line ring-inset">{{ i18n.text('home.hero.projects') }}</a>
+        </div>
+    </div>
+</section>

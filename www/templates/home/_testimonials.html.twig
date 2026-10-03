@@ -1,0 +1,16 @@
+<section id="depoimentos" class="bg-page px-6 py-16 text-ink">
+    <div class="mx-auto max-w-2xl">
+        <h2 class="text-3xl">{{ i18n.text('home.testimonials.title') }}</h2>
+
+        <div class="mt-6 grid gap-5">
+            {% for testimonial in testimonials %}
+                <blockquote class="rounded-box bg-surface p-5 ring-1 ring-line ring-inset">
+                    <p class="text-sm text-muted">“{{ testimonial.quote }}”</p>
+                    <footer class="mt-3 text-sm font-bold">
+                        {{ testimonial.author }}{% if testimonial.role %}<span class="font-normal text-muted"> — {{ testimonial.role }}</span>{% endif %}
+                    </footer>
+                </blockquote>
+            {% endfor %}
+        </div>
+    </div>
+</section>

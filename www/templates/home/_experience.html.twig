@@ -1,0 +1,44 @@
+<section id="experiencia" class="bg-page px-6 py-16 text-ink">
+    <div class="mx-auto max-w-2xl">
+        <h2 class="text-3xl">{{ i18n.text('home.experience.title') }}</h2>
+
+        <ol class="mt-6 space-y-6 border-l-2 border-line pl-5">
+            {% for job in profile.jobs %}
+                <li>
+                    <p class="text-xs font-semibold text-muted">{{ job.period }}</p>
+                    <h3 class="mt-1 text-lg">{{ job.role }} · {{ job.company }}</h3>
+                    <p class="mt-1 text-sm text-muted">{{ job.description }}</p>
+                </li>
+            {% endfor %}
+        </ol>
+
+        <h3 class="mt-10 text-xl">{{ i18n.text('home.experience.skills') }}</h3>
+        <div class="mt-4 space-y-3">
+            {% for group in profile.skills %}
+                <p class="text-sm">
+                    <span class="font-bold">{{ group.group }}:</span>
+                    <span class="text-muted">{{ group.items|join(', ') }}</span>
+                </p>
+            {% endfor %}
+        </div>
+
+        <h3 class="mt-10 text-xl">{{ i18n.text('home.experience.education') }}</h3>
+        <ul class="mt-4 space-y-3">
+            {% for entry in profile.education %}
+                <li class="text-sm">
+                    <span class="font-bold">{{ entry.course }}</span>
+                    <span class="text-muted"> — {{ entry.school }} ({{ entry.period }})</span>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if profile.certifications is not empty %}
+            <h3 class="mt-10 text-xl">{{ i18n.text('home.experience.certifications') }}</h3>
+            <ul class="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-accent">
+                {% for certification in profile.certifications %}
+                    <li class="rounded-full bg-accent-soft px-3 py-1">{{ certification }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</section>

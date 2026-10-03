@@ -198,7 +198,13 @@ infra/
      com conteúdo de exemplo.
    - **4c. Textos reais:** trocar o conteúdo de exemplo pelos dados do LinkedIn do dev
      (https://www.linkedin.com/in/daniel-carvalho-02578a15a/).
-5. **Home:** seções, filtro de projetos, tema claro/escuro, animações.
+5. **Home**, dividida em quatro a pedido do dev:
+   - **5a. Seções com conteúdo real:** sobre, projetos, experiência e habilidades, depoimentos e
+     contato, no lugar da amostra de identidade visual.
+   - **5b. Filtro de projetos:** JS puro sobre os cartões da 5a.
+   - **5c. Tema claro/escuro:** toggle, persistência em `localStorage`, script no `<head>` para
+     evitar flash.
+   - **5d. Animações sutis:** `motion-safe:`, pequenas transições ao rolar.
 6. **Blog:** lista, artigo, tags, busca, realce de código, Giscus.
    - **6b. Descrições profissionais:** com a home e o blog já mostrando o conteúdo, revisar com o
      dev e reescrever todos os textos profissionais em `content/`, nos dois idiomas: a descrição
@@ -246,8 +252,11 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 3. Identidade visual — direção "Pôr do sol"; confirmada em 2026-10-02
 - [x] 4a. i18n — confirmada em 2026-10-02
 - [x] 4b. Leitura de conteúdo (MVP) — confirmada em 2026-10-02
-- [ ] 4c. Textos reais — entregue, aguardando conferência
-- [ ] 5. Home
+- [x] 4c. Textos reais — confirmada em 2026-10-03
+- [ ] 5a. Home — seções com conteúdo real — entregue, aguardando conferência
+- [ ] 5b. Home — filtro de projetos
+- [ ] 5c. Home — tema claro/escuro
+- [ ] 5d. Home — animações sutis
 - [ ] 6. Blog
 - [ ] 6b. Descrições profissionais
 - [ ] 7. SEO
