@@ -205,21 +205,30 @@ infra/
    - **5c. Tema claro/escuro:** toggle, persistência em `localStorage`, script no `<head>` para
      evitar flash.
    - **5d. Animações sutis:** `motion-safe:`, pequenas transições ao rolar.
-6. **Blog:** lista, artigo, tags, busca, realce de código, Giscus.
-   - **6b. Descrições profissionais:** com a home e o blog já mostrando o conteúdo, revisar com o
-     dev e reescrever todos os textos profissionais em `content/`, nos dois idiomas: a descrição
-     de cada experiência (hoje P21 e Cubo têm o mesmo texto provisório), a chamada, a apresentação,
-     o "sobre" e a descrição de cada projeto. Só com informações dadas pelo dev; nada inventado.
+6. **Blog**, dividida em cinco a pedido do dev:
+   - **6a. Lista e artigo:** rotas, controllers e templates para `/blog` e `/blog/<slug>`, usando o
+     `ContentRepository::posts()` já existente desde a etapa 4b.
+   - **6c. Tags:** `/blog/tag/<tag>`, listando os artigos daquela tag.
+   - **6d. Busca:** parâmetro `q` na listagem (`/blog?q=`), no servidor.
+   - **6e. Realce de código:** `tempest/highlight` integrado ao CommonMark.
+   - **6f. Giscus:** comentários via GitHub Discussions, tema acompanhando o claro/escuro do site.
 7. **SEO:** metadados, JSON-LD, sitemap, `robots.txt`, imagem de compartilhamento.
-8. **Imagens de produção:** estágios `prod`, `docker-compose.prod.yml`, `php.prod.ini`.
-9. **Infra:** `infra/cloud-init.yaml`, `infra/edge/`, `infra/README.md`. A criação da conta/VM na
-   OCI, a regra na Security List e os registros DNS (`@`, `www`, `preview`) são feitos pelo
-   usuário seguindo o passo a passo.
-10. **CI/CD:** `ci.yml`, `preview.yml`, `deploy.yml`; secrets (`SSH_KEY`, `SSH_HOST`, senha da
+8. **Descrições profissionais:** com a home e o blog já mostrando o conteúdo, revisar com o dev e
+   reescrever todos os textos profissionais em `content/`, nos dois idiomas: a descrição de cada
+   experiência (hoje P21 e Cubo têm o mesmo texto provisório), a chamada, a apresentação, o "sobre"
+   e a descrição de cada projeto. Só com informações dadas pelo dev; nada inventado.
+9. **Imagens de produção:** estágios `prod`, `docker-compose.prod.yml`, `php.prod.ini`.
+10. **Infra:** `infra/cloud-init.yaml`, `infra/edge/`, `infra/README.md`. A criação da conta/VM na
+    OCI, a regra na Security List e os registros DNS (`@`, `www`, `preview`) são feitos pelo
+    usuário seguindo o passo a passo.
+11. **CI/CD:** `ci.yml`, `preview.yml`, `deploy.yml`; secrets (`SSH_KEY`, `SSH_HOST`, senha da
     prévia); proteção da `master` exigindo PR e CI verde.
-11. **Documentação:** atualizar `CLAUDE.md` e `README.md` com comandos, arquitetura e como
+12. **Documentação:** atualizar `CLAUDE.md` e `README.md` com comandos, arquitetura e como
     publicar um artigo.
-12. **Spec do projeto:** com o código já pronto, escrever a especificação completa a partir do que
+13. **Revisão da documentação:** reler o que foi escrito na etapa 12 (e os demais documentos do
+    projeto, como os de `.claude/arch-explain/`) e corrigir o que estiver desatualizado, incompleto
+    ou confuso, com o código já pronto como referência.
+14. **Spec do projeto:** com o código já pronto, escrever a especificação completa a partir do que
     foi de fato construído (e não do que este plano previa): requisitos, arquitetura, rotas,
     modelo de conteúdo e front matter, i18n, front-end, ambiente Docker, infraestrutura, fluxo de
     publicação e convenções de código. Os arquivos ficam em `.claude/specs/`, em Markdown, com texto
@@ -256,12 +265,18 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 5a. Home — seções com conteúdo real — confirmada em 2026-10-03
 - [x] 5b. Home — filtro de projetos — confirmada em 2026-10-03
 - [x] 5c. Home — tema claro/escuro — confirmada em 2026-10-03
-- [ ] 5d. Home — animações sutis — entregue, aguardando conferência
-- [ ] 6. Blog
-- [ ] 6b. Descrições profissionais
+- [x] 5d. Home — animações sutis — confirmada em 2026-10-03
+- [x] 5. Home (todas as subetapas) — confirmada em 2026-10-03
+- [ ] 6a. Blog — lista e artigo — entregue, aguardando conferência
+- [ ] 6c. Blog — tags
+- [ ] 6d. Blog — busca
+- [ ] 6e. Blog — realce de código
+- [ ] 6f. Blog — Giscus
 - [ ] 7. SEO
-- [ ] 8. Imagens de produção
-- [ ] 9. Infra
-- [ ] 10. CI/CD
-- [ ] 11. Documentação
-- [ ] 12. Spec do projeto
+- [ ] 8. Descrições profissionais
+- [ ] 9. Imagens de produção
+- [ ] 10. Infra
+- [ ] 11. CI/CD
+- [ ] 12. Documentação
+- [ ] 13. Revisão da documentação
+- [ ] 14. Spec do projeto

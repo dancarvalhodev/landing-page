@@ -79,10 +79,12 @@ O plano tem o detalhe; aqui só o que mais pesa ao continuar.
 
 ## Pendências conhecidas
 
-- **Etapa 6b:** reescrever as descrições profissionais. Hoje P21 e Cubo têm o mesmo texto
-  provisório.
+- **Etapa 8:** reescrever as descrições profissionais. Hoje P21 e Cubo têm o mesmo texto
+  provisório. (Renumerada: era a etapa 6b, virou etapa própria depois da 7, a pedido do dev.)
 - **Artigos do blog** (`ola-mundo.md`, `hello-world.md`) ainda são de exemplo; saem antes do
   deploy se não houver artigo real.
-- **Etapa 8:** a função `asset()` do Twig não vai achar o CSS na imagem de produção (ele fica só na
+- **Etapa 9:** a função `asset()` do Twig não vai achar o CSS na imagem de produção (ele fica só na
   imagem do Caddy); precisará de outra fonte para o `?v=`.
-- **Etapa 11:** reescrever o `CLAUDE.md` com comandos e arquitetura completos.
+- **Etapa 12:** reescrever o `CLAUDE.md` com comandos e arquitetura completos.
+- **Etapa 13 (nova):** depois da 12, revisar a documentação escrita (e os `.claude/arch-explain/`)
+  antes da etapa de spec, a pedido do dev.

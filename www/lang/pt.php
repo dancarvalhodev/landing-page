@@ -6,6 +6,12 @@ return [
     'language.switch' => 'English',
     'theme.toggle' => 'Alternar tema',
 
+    'nav.home' => 'Início',
+    'nav.blog' => 'Blog',
+
+    'blog.title' => 'Blog',
+    'blog.back' => 'Voltar ao blog',
+
     'home.hero.contact' => 'Fale comigo',
     'home.hero.projects' => 'Ver projetos',
 

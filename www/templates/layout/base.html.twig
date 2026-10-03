@@ -8,9 +8,15 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
-<header class="bg-page flex items-center justify-end gap-4 px-6 py-4 text-sm">
-    <button type="button" data-theme-toggle aria-label="{{ i18n.text('theme.toggle') }}" class="text-lg leading-none">🌙</button>
-    <a href="{{ i18n.switchUrl }}" hreflang="{{ i18n.switchHtmlLang }}" lang="{{ i18n.switchHtmlLang }}" class="font-bold text-accent">{{ i18n.text('language.switch') }}</a>
+<header class="bg-page flex items-center justify-between gap-4 px-6 py-4 text-sm">
+    <nav class="flex items-center gap-4 font-bold">
+        <a href="{{ i18n.url('/') }}">{{ i18n.text('nav.home') }}</a>
+        <a href="{{ i18n.url('/blog') }}">{{ i18n.text('nav.blog') }}</a>
+    </nav>
+    <div class="flex items-center gap-4">
+        <button type="button" data-theme-toggle aria-label="{{ i18n.text('theme.toggle') }}" class="text-lg leading-none">🌙</button>
+        <a href="{{ switchUrl|default(i18n.switchUrl) }}" hreflang="{{ i18n.switchHtmlLang }}" lang="{{ i18n.switchHtmlLang }}" class="font-bold text-accent">{{ i18n.text('language.switch') }}</a>
+    </div>
 </header>
 {% block content %}{% endblock %}
 <script defer src="{{ asset('js/theme-toggle.js') }}"></script>
