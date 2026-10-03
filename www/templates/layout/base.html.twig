@@ -4,12 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}landing-page{% endblock %}</title>
+    <script src="{{ asset('js/theme-init.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
-<header class="bg-page px-6 py-4 text-right text-sm">
+<header class="bg-page flex items-center justify-end gap-4 px-6 py-4 text-sm">
+    <button type="button" data-theme-toggle aria-label="{{ i18n.text('theme.toggle') }}" class="text-lg leading-none">🌙</button>
     <a href="{{ i18n.switchUrl }}" hreflang="{{ i18n.switchHtmlLang }}" lang="{{ i18n.switchHtmlLang }}" class="font-bold text-accent">{{ i18n.text('language.switch') }}</a>
 </header>
 {% block content %}{% endblock %}
+<script defer src="{{ asset('js/theme-toggle.js') }}"></script>
 </body>
 </html>

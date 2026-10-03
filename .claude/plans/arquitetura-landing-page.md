@@ -254,8 +254,8 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 4b. Leitura de conteúdo (MVP) — confirmada em 2026-10-02
 - [x] 4c. Textos reais — confirmada em 2026-10-03
 - [x] 5a. Home — seções com conteúdo real — confirmada em 2026-10-03
-- [ ] 5b. Home — filtro de projetos — entregue, aguardando conferência
-- [ ] 5c. Home — tema claro/escuro
+- [x] 5b. Home — filtro de projetos — confirmada em 2026-10-03
+- [ ] 5c. Home — tema claro/escuro — entregue, aguardando conferência
 - [ ] 5d. Home — animações sutis
 - [ ] 6. Blog
 - [ ] 6b. Descrições profissionais

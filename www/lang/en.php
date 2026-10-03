@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 return [
     'language.switch' => 'Português',
+    'theme.toggle' => 'Toggle theme',
 
     'home.hero.contact' => 'Get in touch',
     'home.hero.projects' => 'View projects',

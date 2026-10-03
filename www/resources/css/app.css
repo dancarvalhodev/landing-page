@@ -54,16 +54,38 @@
     --line: #f1dccb;
     --accent: #c2410c;
     --accent-soft: #ffedd5;
+
+    --dark-page: #1a0d0a;
+    --dark-surface: #2a1612;
+    --dark-ink: #fff4ec;
+    --dark-muted: #c9aa9b;
+    --dark-line: #4a2a20;
+    --dark-accent: #fdba74;
+    --dark-accent-soft: #4a2413;
 }
 
+/* Sem escolha salva (nem .dark nem .light no html): segue o tema do sistema, ao vivo. */
+@media (prefers-color-scheme: dark) {
+    :root:not(.light) {
+        --page: var(--dark-page);
+        --surface: var(--dark-surface);
+        --ink: var(--dark-ink);
+        --muted: var(--dark-muted);
+        --line: var(--dark-line);
+        --accent: var(--dark-accent);
+        --accent-soft: var(--dark-accent-soft);
+    }
+}
+
+/* Escolha explícita do usuário (botão de tema), guardada em localStorage. */
 .dark {
-    --page: #1a0d0a;
-    --surface: #2a1612;
-    --ink: #fff4ec;
-    --muted: #c9aa9b;
-    --line: #4a2a20;
-    --accent: #fdba74;
-    --accent-soft: #4a2413;
+    --page: var(--dark-page);
+    --surface: var(--dark-surface);
+    --ink: var(--dark-ink);
+    --muted: var(--dark-muted);
+    --line: var(--dark-line);
+    --accent: var(--dark-accent);
+    --accent-soft: var(--dark-accent-soft);
 }
 
 @theme inline {
