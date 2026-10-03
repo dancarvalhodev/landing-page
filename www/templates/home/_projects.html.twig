@@ -2,9 +2,16 @@
     <div class="mx-auto max-w-2xl">
         <h2 class="text-3xl">{{ i18n.text('home.projects.title') }}</h2>
 
+        <div class="mt-6 flex flex-wrap gap-2" data-project-filter>
+            <button type="button" class="rounded-full bg-accent-soft px-4 py-1.5 text-sm font-semibold text-accent" data-filter="all" aria-pressed="true">{{ i18n.text('home.projects.all') }}</button>
+            {% for category in categories %}
+                <button type="button" class="rounded-full px-4 py-1.5 text-sm font-semibold text-muted ring-1 ring-line ring-inset" data-filter="{{ category }}" aria-pressed="false">{{ category }}</button>
+            {% endfor %}
+        </div>
+
         <div class="mt-6 grid gap-5">
             {% for project in projects %}
-                <article class="rounded-box bg-surface p-5 ring-1 ring-line ring-inset">
+                <article class="rounded-box bg-surface p-5 ring-1 ring-line ring-inset" data-category="{{ project.category }}">
                     <p class="text-xs font-bold tracking-widest text-accent uppercase">{{ project.category }}</p>
                     <h3 class="mt-1 text-lg">{{ project.title }}</h3>
                     <p class="mt-1 text-sm text-muted">{{ project.summary }}</p>

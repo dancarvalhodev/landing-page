@@ -4,11 +4,12 @@
 <main>
     {{ include('home/_hero.html.twig', {profile: profile, i18n: i18n}) }}
     {{ include('home/_about.html.twig', {profile: profile, i18n: i18n}) }}
-    {{ include('home/_projects.html.twig', {projects: projects, i18n: i18n}) }}
+    {{ include('home/_projects.html.twig', {projects: projects, categories: projectCategories, i18n: i18n}) }}
     {{ include('home/_experience.html.twig', {profile: profile, i18n: i18n}) }}
     {% if profile.testimonials is not empty %}
         {{ include('home/_testimonials.html.twig', {testimonials: profile.testimonials, i18n: i18n}) }}
     {% endif %}
     {{ include('home/_contact.html.twig', {site: site, i18n: i18n}) }}
 </main>
+<script defer src="{{ asset('js/project-filter.js') }}"></script>
 {% endblock %}

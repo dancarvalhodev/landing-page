@@ -11,6 +11,7 @@ return [
     'home.about.title' => 'Sobre',
 
     'home.projects.title' => 'Projetos',
+    'home.projects.all' => 'Todos',
     'home.projects.repository' => 'Ver repositório',
 
     'home.experience.title' => 'Experiência',

@@ -23,11 +23,13 @@ final class HomeController extends AbstractController
     public function index(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $locale = $this->locale($request);
+        $projects = $this->content->projects($locale);
 
         return $this->render($request, $response, 'home/index.html.twig', [
             'site' => $this->content->site(),
             'profile' => $this->content->profile($locale),
-            'projects' => $this->content->projects($locale),
+            'projects' => $projects,
+            'projectCategories' => array_values(array_unique(array_column($projects, 'category'))),
         ]);
     }
 }
