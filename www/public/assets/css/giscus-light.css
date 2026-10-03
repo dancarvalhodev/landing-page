@@ -1,0 +1,43 @@
+/* Tema do Giscus (comentários) nos tons da identidade "Pôr do sol" — claro.
+   Valores duplicados de www/resources/css/app.css (:root); atualizar os dois juntos se a
+   paleta mudar. O Giscus roda num documento à parte (iframe), por isso não dá pra usar
+   var(--page) etc. direto — essas variáveis não existem nesse documento. */
+:root {
+    color-scheme: light;
+
+    --color-canvas-default: #fff8f1;
+    --color-canvas-overlay: #ffffff;
+    --color-canvas-inset: #ffedd5;
+    --color-canvas-subtle: #ffffff;
+
+    --color-border-default: #f1dccb;
+    --color-border-muted: #f1dccb;
+    --color-neutral-muted: rgba(241, 220, 203, 0.4);
+
+    --color-accent-fg: #c2410c;
+    --color-accent-emphasis: #c2410c;
+    --color-accent-muted: rgba(194, 65, 12, 0.4);
+    --color-accent-subtle: #ffedd5;
+
+    --color-fg-default: #2a1408;
+    --color-fg-muted: #6b574c;
+    --color-fg-subtle: #6b574c;
+    --color-fg-on-emphasis: #ffffff;
+
+    --color-btn-text: #2a1408;
+    --color-btn-bg: #ffffff;
+    --color-btn-border: #f1dccb;
+    --color-btn-hover-bg: #ffedd5;
+    --color-btn-hover-border: #f1dccb;
+    --color-btn-active-bg: #ffedd5;
+    --color-btn-active-border: #f1dccb;
+    --color-btn-selected-bg: #ffedd5;
+
+    /* Fixo (não muda com o tema), igual ao botão de CTA do site (bg-brand + texto branco). */
+    --color-btn-primary-text: #ffffff;
+    --color-btn-primary-bg: #c2410c;
+    --color-btn-primary-border: #c2410c;
+    --color-btn-primary-hover-bg: #be123c;
+    --color-btn-primary-hover-border: #be123c;
+    --color-btn-primary-selected-bg: #be123c;
+}

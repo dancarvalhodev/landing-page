@@ -1,0 +1,22 @@
+{# Valores gerados em https://giscus.app, a partir do repositório dancarvalhodev/landing-page-comments.
+   data-lang usa locale.value ('pt'/'en'), não htmlLang ('pt-BR'/'en'): o Giscus não reconhece
+   "pt-BR" e falha (404 ao montar o iframe) só na versão em português.
+   data-theme começa em "preferred_color_scheme" (tema do sistema); giscus-theme.js corrige
+   pra claro/escuro assim que a página carrega, seguindo a escolha salva no site. #}
+<section class="mt-12">
+    <script src="https://giscus.app/client.js"
+        data-repo="dancarvalhodev/landing-page-comments"
+        data-repo-id="R_kgDOU6lhqw"
+        data-category="General"
+        data-category-id="DIC_kwDOU6lhq84DG-OQ"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="{{ i18n.locale.value }}"
+        crossorigin="anonymous"
+        async>
+    </script>
+</section>

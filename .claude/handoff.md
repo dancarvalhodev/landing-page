@@ -79,6 +79,10 @@ O plano tem o detalhe; aqui só o que mais pesa ao continuar.
 
 ## Pendências conhecidas
 
+- **Etapa 6f (tema do Giscus):** `www/public/assets/css/giscus-{light,dark}.css` têm as cores da
+  marca, mas o Giscus só aceita CSS de tema via `https://` — em `http://localhost`, ele ignora e
+  cai no visual padrão do GitHub. Só dá pra conferir o visual de verdade depois do deploy com
+  HTTPS (prévia ou produção, etapas 9+).
 - **Etapa 8:** reescrever as descrições profissionais. Hoje P21 e Cubo têm o mesmo texto
   provisório. (Renumerada: era a etapa 6b, virou etapa própria depois da 7, a pedido do dev.)
 - **Artigos do blog** (`ola-mundo.md`, `hello-world.md`) ainda são de exemplo; saem antes do

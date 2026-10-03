@@ -270,8 +270,8 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 6a. Blog — lista e artigo — confirmada em 2026-10-03
 - [x] 6c. Blog — tags — confirmada em 2026-10-03
 - [x] 6d. Blog — busca — confirmada em 2026-10-03
-- [ ] 6e. Blog — realce de código — entregue, aguardando conferência
-- [ ] 6f. Blog — Giscus
+- [x] 6e. Blog — realce de código — confirmada em 2026-10-03
+- [ ] 6f. Blog — Giscus — entregue, tema confirmável só após deploy com HTTPS
 - [ ] 7. SEO
 - [ ] 8. Descrições profissionais
 - [ ] 9. Imagens de produção

@@ -14,5 +14,8 @@
     {{ include('blog/_tags.html.twig', {tags: post.tags, i18n: i18n}) }}
 
     <div class="article mt-6 text-ink">{{ post.html|raw }}</div>
+
+    {{ include('blog/_giscus.html.twig', {i18n: i18n}) }}
 </main>
+<script defer src="{{ asset('js/giscus-theme.js') }}"></script>
 {% endblock %}
