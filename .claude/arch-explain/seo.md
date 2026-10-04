@@ -231,3 +231,52 @@ recalcular nada:
 - **`article:tag`** (uma etiqueta por tag do artigo) — ficou fora por ser um detalhe menor; o
   essencial (título, descrição, tipo, data) já entrega o principal benefício, que é o cartão
   aparecer bonito ao compartilhar o link.
+
+## JSON-LD `Person`: um cartão de identidade que só as máquinas leem (etapa 7d)
+
+Isso é parecido com o Open Graph (metadados que não aparecem pra quem lê a página), mas serve
+pra outra coisa: em vez de controlar como o link aparece ao ser **compartilhado**, ajuda o
+Google a entender **quem é o dono do site** como uma entidade só — "esta pessoa se chama Daniel
+Carvalho, trabalha como Software Engineer, e esses são os outros perfis dela".
+
+É um bloco `<script type="application/ld+json">`, seguindo o vocabulário público
+[schema.org](https://schema.org) (Google, Bing e outros concordaram em usar esse mesmo
+formato). É o que alimenta aquele quadro de informação que aparece do lado direito da busca
+quando você pesquisa uma pessoa ou marca conhecida — e ajuda o Google a ligar os pontos entre o
+GitHub e o LinkedIn como **a mesma pessoa**, em vez de três perfis desconectados. É a peça que
+mais ajuda diretamente o objetivo "ser encontrado pelo nome" do projeto.
+
+A chave é `sameAs`: uma lista de outros endereços que também são "essa mesma pessoa" — vem do
+`site.social` (`www/content/site.md`), já existente desde a etapa 4.
+
+### Por que montar o JSON em PHP, não em Twig
+
+```php
+// HomeController::index()
+$personJsonLd = json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'Person',
+    'name' => $site['name'],
+    'jobTitle' => $profile['role'],
+    'email' => 'mailto:' . $site['email'],
+    'url' => $this->urls->absolute($locale, '/'),
+    'sameAs' => array_column($site['social'], 'url'),
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+```
+`array_column($site['social'], 'url')` pega a lista `[{label: "GitHub", url: "..."}, {label:
+"LinkedIn", url: "..."}]` e devolve só os `url`, numa lista simples — o mesmo truque já usado
+pra `projectCategories` (etapa 5b). Montar o JSON inteiro em PHP, com `json_encode()`, evita
+qualquer manipulação de lista dentro do template: o Twig só recebe a string já pronta.
+
+```twig
+{# home/index.html.twig #}
+{% block json_ld %}
+    <script type="application/ld+json">{{ personJsonLd|raw }}</script>
+{% endblock %}
+```
+O `|raw` aqui é seguro pelo mesmo motivo do `post.html|raw` (etapa 6a): o conteúdo não vem de um
+usuário anônimo, vem do nosso próprio `json_encode()` — sem o `raw`, o Twig escaparia as aspas
+do JSON (`"` → `&quot;`), quebrando o script.
+
+`{% block json_ld %}{% endblock %}` no `base.html.twig` fica **vazio por padrão** — só a home
+sobrescreve, por isso nenhuma outra página (blog, tag, erro) ganha esse `<script>`.

@@ -283,8 +283,8 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 6. Blog (todas as subetapas) — confirmada em 2026-10-03
 - [x] 7a. SEO — metadados básicos — confirmada em 2026-10-04
 - [x] 7b. SEO — hreflang — confirmada em 2026-10-04
-- [ ] 7c. SEO — Open Graph e Twitter Card — entregue, aguardando conferência
-- [ ] 7d. SEO — JSON-LD Person
+- [x] 7c. SEO — Open Graph e Twitter Card — confirmada em 2026-10-04
+- [ ] 7d. SEO — JSON-LD Person — entregue, aguardando conferência
 - [ ] 7e. SEO — sitemap.xml e robots.txt
 - [ ] 7f. SEO — imagem de compartilhamento
 - [ ] 8. Descrições profissionais

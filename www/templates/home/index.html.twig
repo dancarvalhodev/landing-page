@@ -2,6 +2,10 @@
 
 {% block title %}{{ site.name }} — {{ profile.role }}{% endblock %}
 
+{% block json_ld %}
+    <script type="application/ld+json">{{ personJsonLd|raw }}</script>
+{% endblock %}
+
 {% block content %}
 <main>
     {{ include('home/_hero.html.twig', {profile: profile, i18n: i18n}) }}

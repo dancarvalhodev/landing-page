@@ -31,6 +31,9 @@
     <meta name="twitter:title" content="{{ block('title') }}">
     <meta name="twitter:description" content="{{ block('description') }}">
 
+    {# Dados estruturados (schema.org) pro Google entender quem é o dono do site — só na home. #}
+    {% block json_ld %}{% endblock %}
+
     <script src="{{ asset('js/theme-init.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
