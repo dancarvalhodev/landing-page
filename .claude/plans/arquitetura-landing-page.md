@@ -289,7 +289,8 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 7c. SEO — Open Graph e Twitter Card — confirmada em 2026-10-04
 - [x] 7d. SEO — JSON-LD Person — confirmada em 2026-10-04
 - [x] 7e. SEO — sitemap.xml e robots.txt — confirmada em 2026-10-04
-- [ ] 7f. SEO — imagem de compartilhamento — entregue, aguardando conferência
+- [x] 7f. SEO — imagem de compartilhamento — confirmada em 2026-10-04
+- [x] 7. SEO (todas as subetapas) — confirmada em 2026-10-04
 - [ ] 8. Descrições profissionais
 - [ ] 9. Imagens de produção
 - [ ] 10. Infra
