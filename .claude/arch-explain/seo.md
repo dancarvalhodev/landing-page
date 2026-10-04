@@ -280,3 +280,90 @@ do JSON (`"` → `&quot;`), quebrando o script.
 
 `{% block json_ld %}{% endblock %}` no `base.html.twig` fica **vazio por padrão** — só a home
 sobrescreve, por isso nenhuma outra página (blog, tag, erro) ganha esse `<script>`.
+
+## `sitemap.xml` e `robots.txt`: o mapa do site e as regras pra quem visita primeiro (etapa 7e)
+
+Dois arquivos pra **robôs de busca** (Googlebot, Bingbot), não pra pessoas.
+
+`sitemap.xml` é uma lista de todos os endereços que o site tem, pro Google conhecer de uma vez
+— em vez de só descobrir página nova seguindo links (o que funciona, mas é mais lento e pode
+deixar passar algo). Cada entrada pode ter um `<lastmod>` (quando mudou por último), o que ajuda
+o Google a priorizar revisitar o que mudou.
+
+`robots.txt` é um arquivo de texto simples, na raiz do site, que diz aos robôs "pode visitar
+isso" e, o mais importante aqui, "o mapa do site está neste endereço". É um **pedido educado**,
+não uma trava de segurança — não impede nada por si só.
+
+**Decisão tomada aqui:** não bloqueei nada no `robots.txt` (`Allow: /` pra tudo). Bloquear
+crawling de algo (ex.: páginas de tag, resultados de busca) é uma decisão mais forte e mais
+difícil de reverter do que o `canonical` (que só diz "a relevância é de outro lugar", mas ainda
+deixa o Google visitar) — fica pra você decidir depois, se quiser restringir.
+
+### O `SitemapController`, separado dos outros
+
+```php
+// www/src/Controller/SitemapController.php
+final class SitemapController
+{
+    public function __construct(
+        private readonly Twig $twig,
+        private readonly Config $config,
+        private readonly ContentRepository $content,
+        private readonly UrlGenerator $urls,
+    ) {}
+```
+Esse controller **não estende** `AbstractController` como os outros — de propósito. O
+`AbstractController::render()` injeta `site`/`profile`/`canonical` e sempre devolve
+`Content-Type: text/html`, coisas feitas pra uma **página HTML de um idioma só**. O sitemap não
+é nenhuma das duas coisas: não tem HTML, e lista os endereços dos **dois** idiomas no mesmo
+arquivo. Por isso ele monta a resposta à mão, com o `Content-Type` certo pra cada caso
+(`application/xml` pro sitemap, `text/plain` pro robots.txt).
+
+```php
+public function sitemap(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+{
+    $urls = [];
+
+    foreach (Locale::cases() as $locale) {
+        $urls[] = ['loc' => $this->urls->absolute($locale, '/'), 'lastmod' => null];
+        $urls[] = ['loc' => $this->urls->absolute($locale, '/blog'), 'lastmod' => null];
+
+        foreach ($this->content->posts($locale) as $post) {
+            $urls[] = [
+                'loc' => $this->urls->absolute($locale, '/blog/' . $post['slug']),
+                'lastmod' => date('Y-m-d', $post['date']),
+            ];
+        }
+    }
+    ...
+```
+Passa pelos dois idiomas (`Locale::cases()`), e em cada um lista a home, a lista do blog e cada
+artigo. Só os artigos ganham `lastmod` — vem do `post['date']` (aquele timestamp que vimos em
+`.claude/arch-explain/blog-content.md`). Home e lista do blog não têm uma data de "última
+alteração" confiável, então ficam sem — inventar uma data seria pior que não ter nenhuma.
+Páginas de tag e de busca **não entram** no sitemap, pelo mesmo motivo de não terem `canonical`
+próprio: não são conteúdo original, são filtros sobre o conteúdo que já está listado.
+
+```twig
+{# www/templates/sitemap.xml.twig #}
+<url>
+    <loc>{{ url.loc }}</loc>
+    {% if url.lastmod %}<lastmod>{{ url.lastmod }}</lastmod>{% endif %}
+</url>
+```
+Essa template não estende o `base.html.twig` — não é uma página HTML, é um documento XML à
+parte, autocontido.
+
+```php
+public function robots(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+{
+    $response->getBody()->write(
+        "User-agent: *\nAllow: /\n\nSitemap: {$this->config->siteUrl}/sitemap.xml\n",
+    );
+
+    return $response->withHeader('Content-Type', 'text/plain; charset=UTF-8');
+}
+```
+O `robots.txt` usa `$this->config->siteUrl` direto (não precisa do `UrlGenerator`, porque esse
+endereço não tem prefixo de idioma) — isso é o que faz o link do `Sitemap:` mudar sozinho entre
+`http://localhost:8080` (dev), a prévia e a produção, sem precisar editar nada manualmente.

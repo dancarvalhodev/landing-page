@@ -255,6 +255,9 @@ infra/
   `php -m` não lista Xdebug.
 - Lighthouse (mobile) na home e em um artigo: performance, acessibilidade e SEO ≥ 95.
 - Validar o JSON-LD `Person` no Rich Results Test e a prévia do link no LinkedIn Post Inspector.
+- Opcional: submeter `https://<domínio>/sitemap.xml` no Google Search Console, pra acelerar a
+  indexação (o Google encontra o sitemap sozinho via `robots.txt`, mas submeter manualmente não
+  tem desvantagem).
 - Abrir um PR de teste: a prévia aparece em `preview.<domínio>`, pede senha e envia `noindex`;
   após o merge, a produção atualiza e `curl -I https://<domínio>` responde 200 com HTTPS válido,
   enquanto `http://` redireciona.
@@ -284,8 +287,8 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 7a. SEO — metadados básicos — confirmada em 2026-10-04
 - [x] 7b. SEO — hreflang — confirmada em 2026-10-04
 - [x] 7c. SEO — Open Graph e Twitter Card — confirmada em 2026-10-04
-- [ ] 7d. SEO — JSON-LD Person — entregue, aguardando conferência
-- [ ] 7e. SEO — sitemap.xml e robots.txt
+- [x] 7d. SEO — JSON-LD Person — confirmada em 2026-10-04
+- [ ] 7e. SEO — sitemap.xml e robots.txt — entregue, aguardando conferência
 - [ ] 7f. SEO — imagem de compartilhamento
 - [ ] 8. Descrições profissionais
 - [ ] 9. Imagens de produção
