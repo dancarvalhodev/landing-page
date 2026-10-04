@@ -17,6 +17,8 @@ final class HomeController extends AbstractController
         return $this->render($request, $response, 'home/index.html.twig', [
             'projects' => $projects,
             'projectCategories' => array_values(array_unique(array_column($projects, 'category'))),
+            // A home existe sempre nos dois idiomas, então sempre tem par de hreflang.
+            'altUrl' => $this->urls->absolute($locale->other(), '/'),
         ]);
     }
 }

@@ -8,6 +8,7 @@ use App\Config;
 use App\Content\ContentRepository;
 use App\I18n\Locale;
 use App\I18n\LocalizerFactory;
+use App\I18n\UrlGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
@@ -19,6 +20,7 @@ abstract class AbstractController
         private readonly LocalizerFactory $localizerFactory,
         private readonly Config $config,
         protected readonly ContentRepository $content,
+        protected readonly UrlGenerator $urls,
     ) {}
 
     protected function locale(ServerRequestInterface $request): Locale
@@ -39,6 +41,8 @@ abstract class AbstractController
         $data['site'] = $this->content->site();
         $data['profile'] = $this->content->profile($this->locale($request));
         $data['canonical'] = $this->config->siteUrl . $request->getUri()->getPath();
+        // hreflang só existe quando a página define um equivalente real no outro idioma.
+        $data['altUrl'] ??= null;
 
         $response = $this->twig->render($response, $template, $data);
 

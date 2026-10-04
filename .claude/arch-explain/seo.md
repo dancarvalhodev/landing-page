@@ -89,3 +89,77 @@ $data['canonical'] = $this->config->siteUrl . $request->getUri()->getPath();
 As páginas de erro (404/500) não passam por `AbstractController` (são tratadas pelo
 `HttpErrorHandler`), por isso ele repete essa mesma injeção separadamente, no seu próprio
 `errorPage()`.
+
+## hreflang: "esta página tem uma versão equivalente em outro idioma, aqui" (etapa 7b)
+
+O `canonical` resolve "qual é o endereço oficial desta página". O `hreflang` resolve um problema
+parecido, mas **entre idiomas**: o site tem o mesmo artigo em português e em inglês — como o
+Google sabe que são a mesma coisa, só traduzida, e não dois conteúdos concorrendo entre si? E
+mais importante: como ele sabe **qual mostrar** pra cada pessoa (alguém buscando em inglês deve
+cair na versão em inglês, não na em português)?
+
+A tag `<link rel="alternate" hreflang="...">` responde isso: "esta página tem uma versão
+equivalente, nesse idioma, neste endereço". O Google usa isso pra não tratar PT e EN como
+conteúdo duplicado, e pra mostrar automaticamente a versão certa pra quem busca em cada idioma.
+
+**Regra importante, já prevista no plano de arquitetura:** só emitir o par quando a tradução
+existe de verdade. Um artigo sem tradução não pode "fingir" ter uma versão em inglês — isso
+enganaria o Google. Por isso:
+
+| Página | Tem par de hreflang? |
+|---|---|
+| Home | Sempre (existe nos dois idiomas) |
+| Lista do blog (`/blog`) | Sempre |
+| Artigo, com tradução (`translation_key` igual nos dois arquivos) | Sim, apontando pro slug traduzido |
+| Artigo, sem tradução | Não |
+| Página de tag | Não (tags não têm conceito de tradução, ver `.claude/arch-explain/blog-content.md`) |
+| Páginas de erro (404/500) | Não |
+
+### O código
+
+Cada controller decide se existe um equivalente e, se sim, passa `altUrl` (a URL **absoluta** —
+o Google exige endereço completo aqui, igual o `canonical`, relativo é ignorado):
+
+```php
+// HomeController::index() — a home sempre tem par
+'altUrl' => $this->urls->absolute($locale->other(), '/'),
+```
+```php
+// BlogController::show() — só quando a tradução existe de verdade
+$translatedSlug = $this->translatedSlugFor($other, $post);
+
+'altUrl' => $translatedSlug !== null
+    ? $this->urls->absolute($other, '/blog/' . $translatedSlug)
+    : null,
+```
+
+Quando `altUrl` não é passado (tag, 404, 500), o `AbstractController::render()` garante que ele
+exista mesmo assim, só que como `null` — isso evita que o Twig quebre tentando ler uma variável
+que ninguém passou:
+
+```php
+// AbstractController::render()
+$data['altUrl'] ??= null;
+```
+
+E o template só desenha as tags quando existe um valor de verdade — e, quando existe, desenha
+**duas**: uma apontando pra própria página (auto-referência, recomendação do Google) e outra
+pro equivalente:
+
+```twig
+{# base.html.twig #}
+{% if altUrl is defined and altUrl %}
+    <link rel="alternate" hreflang="{{ i18n.htmlLang }}" href="{{ canonical }}">
+    <link rel="alternate" hreflang="{{ i18n.switchHtmlLang }}" href="{{ altUrl }}">
+{% endif %}
+```
+
+### Por que não reaproveitar o `switchUrl` do cabeçalho
+
+O site já tinha um `switchUrl` (o link "English"/"Português" no topo da página), que também
+decide pra onde ir no outro idioma — mas ele **sempre** aponta pra algum lugar, mesmo sem
+tradução (cai no índice do blog, pra não deixar a pessoa sem opção). Isso é correto pra um
+humano clicando num botão, mas seria uma mentira pro Google: diria que existe uma tradução onde
+não existe. Por isso o `BlogController::show()` calcula o slug traduzido **uma vez**
+(`translatedSlugFor()`) e usa esse resultado dos dois jeitos — com fallback pro `switchUrl`,
+sem fallback pro `altUrl`.

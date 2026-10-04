@@ -281,8 +281,8 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 6e. Blog — realce de código — confirmada em 2026-10-03
 - [x] 6f. Blog — Giscus — confirmada em 2026-10-03 (visual do tema pendente de deploy com HTTPS)
 - [x] 6. Blog (todas as subetapas) — confirmada em 2026-10-03
-- [ ] 7a. SEO — metadados básicos — entregue, aguardando conferência
-- [ ] 7b. SEO — hreflang
+- [x] 7a. SEO — metadados básicos — confirmada em 2026-10-04
+- [ ] 7b. SEO — hreflang — entregue, aguardando conferência
 - [ ] 7c. SEO — Open Graph e Twitter Card
 - [ ] 7d. SEO — JSON-LD Person
 - [ ] 7e. SEO — sitemap.xml e robots.txt

@@ -4,28 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Config;
-use App\Content\ContentRepository;
 use App\I18n\Locale;
-use App\I18n\LocalizerFactory;
-use App\I18n\UrlGenerator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
-use Slim\Views\Twig;
 
 final class BlogController extends AbstractController
 {
-    public function __construct(
-        Twig $twig,
-        LocalizerFactory $localizerFactory,
-        Config $config,
-        ContentRepository $content,
-        private readonly UrlGenerator $urls,
-    ) {
-        parent::__construct($twig, $localizerFactory, $config, $content);
-    }
-
     public function index(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $locale = $this->locale($request);
@@ -35,6 +20,8 @@ final class BlogController extends AbstractController
             'posts' => $this->search($this->content->posts($locale), $query),
             'q' => $query,
             'switchUrl' => $this->urls->path($locale->other(), '/blog'),
+            // A lista existe sempre nos dois idiomas, então sempre tem par de hreflang.
+            'altUrl' => $this->urls->absolute($locale->other(), '/blog'),
         ]);
     }
 
@@ -63,9 +50,19 @@ final class BlogController extends AbstractController
             throw new HttpNotFoundException($request);
         }
 
+        $other = $locale->other();
+        $translatedSlug = $this->translatedSlugFor($other, $post);
+
         return $this->render($request, $response, 'blog/show.html.twig', [
             'post' => $post,
-            'switchUrl' => $this->switchUrlFor($locale, $post),
+            // Sem tradução, o link de idioma cai no índice do blog do outro idioma.
+            'switchUrl' => $translatedSlug !== null
+                ? $this->urls->path($other, '/blog/' . $translatedSlug)
+                : $this->urls->path($other, '/blog'),
+            // hreflang não aceita esse mesmo fallback: sem tradução de verdade, não existe par.
+            'altUrl' => $translatedSlug !== null
+                ? $this->urls->absolute($other, '/blog/' . $translatedSlug)
+                : null,
         ]);
     }
 
@@ -103,16 +100,14 @@ final class BlogController extends AbstractController
     /**
      * @param array<mixed> $post
      */
-    private function switchUrlFor(Locale $locale, array $post): string
+    private function translatedSlugFor(Locale $otherLocale, array $post): ?string
     {
-        $other = $locale->other();
-
-        foreach ($this->content->posts($other) as $candidate) {
+        foreach ($this->content->posts($otherLocale) as $candidate) {
             if (($candidate['translation_key'] ?? null) === ($post['translation_key'] ?? null)) {
-                return $this->urls->path($other, '/blog/' . $candidate['slug']);
+                return $candidate['slug'];
             }
         }
 
-        return $this->urls->path($other, '/blog');
+        return null;
     }
 }
