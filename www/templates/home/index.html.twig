@@ -1,5 +1,7 @@
 {% extends 'layout/base.html.twig' %}
 
+{% block title %}{{ site.name }} — {{ profile.role }}{% endblock %}
+
 {% block content %}
 <main>
     {{ include('home/_hero.html.twig', {profile: profile, i18n: i18n}) }}

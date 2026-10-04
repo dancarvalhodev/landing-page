@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Config;
 use App\Content\ContentRepository;
 use App\I18n\Locale;
 use App\I18n\LocalizerFactory;
@@ -18,10 +19,11 @@ final class BlogController extends AbstractController
     public function __construct(
         Twig $twig,
         LocalizerFactory $localizerFactory,
-        private readonly ContentRepository $content,
+        Config $config,
+        ContentRepository $content,
         private readonly UrlGenerator $urls,
     ) {
-        parent::__construct($twig, $localizerFactory);
+        parent::__construct($twig, $localizerFactory, $config, $content);
     }
 
     public function index(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface

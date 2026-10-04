@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Handler;
 
 use App\Config;
+use App\Content\ContentRepository;
 use App\Handler\HttpErrorHandler;
 use App\I18n\InterfaceTexts;
 use App\I18n\LocalizerFactory;
@@ -56,7 +57,14 @@ final class HttpErrorHandlerTest extends TestCase
 
         $localizerFactory = new LocalizerFactory(new InterfaceTexts($rootDir . '/lang'), new UrlGenerator($config));
 
-        $handler = new HttpErrorHandler(new CallableResolver(), new ResponseFactory(), $twig, $localizerFactory);
+        $handler = new HttpErrorHandler(
+            new CallableResolver(),
+            new ResponseFactory(),
+            $twig,
+            $localizerFactory,
+            $config,
+            new ContentRepository($config),
+        );
 
         $requestFactory = new ServerRequestFactory();
         $request = $requestFactory->createServerRequest('GET', $path);

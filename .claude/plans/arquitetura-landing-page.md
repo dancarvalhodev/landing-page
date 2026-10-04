@@ -212,7 +212,15 @@ infra/
    - **6d. Busca:** parâmetro `q` na listagem (`/blog?q=`), no servidor.
    - **6e. Realce de código:** `tempest/highlight` integrado ao CommonMark.
    - **6f. Giscus:** comentários via GitHub Discussions, tema acompanhando o claro/escuro do site.
-7. **SEO:** metadados, JSON-LD, sitemap, `robots.txt`, imagem de compartilhamento.
+7. **SEO**, dividida em seis a pedido do dev:
+   - **7a. Metadados básicos:** `<title>`/descrição por página e `canonical`.
+   - **7b. hreflang:** entre PT/EN (home, lista do blog, artigos — reaproveitando a tradução por
+     `translation_key` da etapa 6a).
+   - **7c. Open Graph e Twitter Card:** usando `UrlGenerator::absolute()`, já existente.
+   - **7d. JSON-LD `Person`:** na home, com `sameAs` apontando para as redes sociais.
+   - **7e. `sitemap.xml` e `robots.txt`.**
+   - **7f. Imagem de compartilhamento:** o dev gera a arte (1200×630px) a partir de um prompt que
+     descreve a identidade "Pôr do sol", preparado nesta etapa.
 8. **Descrições profissionais:** com a home e o blog já mostrando o conteúdo, revisar com o dev e
    reescrever todos os textos profissionais em `content/`, nos dois idiomas: a descrição de cada
    experiência (hoje P21 e Cubo têm o mesmo texto provisório), a chamada, a apresentação, o "sobre"
@@ -271,8 +279,14 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 6c. Blog — tags — confirmada em 2026-10-03
 - [x] 6d. Blog — busca — confirmada em 2026-10-03
 - [x] 6e. Blog — realce de código — confirmada em 2026-10-03
-- [ ] 6f. Blog — Giscus — entregue, tema confirmável só após deploy com HTTPS
-- [ ] 7. SEO
+- [x] 6f. Blog — Giscus — confirmada em 2026-10-03 (visual do tema pendente de deploy com HTTPS)
+- [x] 6. Blog (todas as subetapas) — confirmada em 2026-10-03
+- [ ] 7a. SEO — metadados básicos — entregue, aguardando conferência
+- [ ] 7b. SEO — hreflang
+- [ ] 7c. SEO — Open Graph e Twitter Card
+- [ ] 7d. SEO — JSON-LD Person
+- [ ] 7e. SEO — sitemap.xml e robots.txt
+- [ ] 7f. SEO — imagem de compartilhamento
 - [ ] 8. Descrições profissionais
 - [ ] 9. Imagens de produção
 - [ ] 10. Infra

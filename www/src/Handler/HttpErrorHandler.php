@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use App\Config;
+use App\Content\ContentRepository;
 use App\I18n\LocalizerFactory;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -20,6 +22,8 @@ final class HttpErrorHandler extends ErrorHandler
         ResponseFactoryInterface $responseFactory,
         private readonly Twig $twig,
         private readonly LocalizerFactory $localizerFactory,
+        private readonly Config $config,
+        private readonly ContentRepository $content,
     ) {
         parent::__construct($callableResolver, $responseFactory);
     }
@@ -53,7 +57,14 @@ final class HttpErrorHandler extends ErrorHandler
 
     private function errorPage(int $status, string $template): ResponseInterface
     {
-        $data = ['i18n' => $this->localizerFactory->fromRequest($this->request)];
+        $i18n = $this->localizerFactory->fromRequest($this->request);
+
+        $data = [
+            'i18n' => $i18n,
+            'site' => $this->content->site(),
+            'profile' => $this->content->profile($i18n->locale),
+            'canonical' => $this->config->siteUrl . $this->request->getUri()->getPath(),
+        ];
 
         $response = $this->responseFactory->createResponse($status);
         $response = $this->twig->render($response, $template, $data);

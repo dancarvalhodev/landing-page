@@ -1,6 +1,7 @@
 {% extends 'layout/base.html.twig' %}
 
-{% block title %}{{ post.title }}{% endblock %}
+{% block title %}{{ post.title }} · {{ site.name }}{% endblock %}
+{% block description %}{{ post.description }}{% endblock %}
 
 {% block content %}
 <main class="mx-auto max-w-2xl px-6 py-16 text-ink">
