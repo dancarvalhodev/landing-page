@@ -367,3 +367,35 @@ public function robots(ServerRequestInterface $request, ResponseInterface $respo
 O `robots.txt` usa `$this->config->siteUrl` direto (não precisa do `UrlGenerator`, porque esse
 endereço não tem prefixo de idioma) — isso é o que faz o link do `Sitemap:` mudar sozinho entre
 `http://localhost:8080` (dev), a prévia e a produção, sem precisar editar nada manualmente.
+
+## `og:image`: a imagem do cartão de prévia (etapa 7f)
+
+De todas as etiquetas do Open Graph (etapa 7c), a imagem é a que mais pesa visualmente — ocupa a
+maior parte do espaço quando o link é colado no WhatsApp ou LinkedIn. A arte (1200×630px, nas
+cores da identidade "Pôr do sol") foi gerada pelo dev a partir de um prompt descrevendo a
+paleta, a tipografia e o conteúdo do site, e salva em `www/public/assets/img/og-image.png`.
+
+### De volta ao `asset_absolute()`
+
+Essa função (uma URL completa, com domínio, em vez de só `/assets/...`) já tinha aparecido na
+etapa 6f (Giscus) e foi removida por ficar sem nenhum uso real na época. Agora ela tem um uso de
+verdade de novo: `og:image` é lido por um servidor de fora (o do WhatsApp, do LinkedIn...), que
+não tem como completar um endereço relativo sozinho — ele não sabe "relativo a qual página".
+
+```twig
+{# base.html.twig #}
+<meta property="og:image" content="{{ asset_absolute('img/og-image.png') }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+...
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{{ asset_absolute('img/og-image.png') }}">
+```
+`og:image:width`/`og:image:height` são opcionais, mas ajudam o WhatsApp/Facebook a montar o
+cartão sem precisar baixar a imagem primeiro só pra descobrir o tamanho. `twitter:card` trocou
+de `"summary"` (sem imagem) pra `"summary_large_image"` (cartão grande, com a imagem em
+destaque) — só faz sentido depois que a imagem existe.
+
+Como a imagem é a **mesma em toda página** (não muda por artigo), ela é referenciada direto no
+`base.html.twig`, sem precisar passar por nenhum controller — diferente do `canonical`/`altUrl`,
+que mudam página a página.

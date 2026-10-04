@@ -25,11 +25,14 @@
     {% if block('og_type') == 'article' %}
         <meta property="article:published_time" content="{% block article_published_time %}{% endblock %}">
     {% endif %}
+    <meta property="og:image" content="{{ asset_absolute('img/og-image.png') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
 
-    {# "summary" por enquanto (sem imagem); a etapa 7f troca pra "summary_large_image". #}
-    <meta name="twitter:card" content="summary">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ block('title') }}">
     <meta name="twitter:description" content="{{ block('description') }}">
+    <meta name="twitter:image" content="{{ asset_absolute('img/og-image.png') }}">
 
     {# Dados estruturados (schema.org) pro Google entender quem é o dono do site — só na home. #}
     {% block json_ld %}{% endblock %}

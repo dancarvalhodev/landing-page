@@ -16,6 +16,7 @@ final class AssetExtension extends AbstractExtension
     {
         return [
             new TwigFunction('asset', $this->assetUrl(...)),
+            new TwigFunction('asset_absolute', $this->absoluteAssetUrl(...)),
         ];
     }
 
@@ -32,5 +33,14 @@ final class AssetExtension extends AbstractExtension
         }
 
         return $url . '?v=' . filemtime($file);
+    }
+
+    /**
+     * Com domínio e esquema: para quando quem lê o endereço não está numa página nossa
+     * (og:image, por exemplo — lido por um servidor de fora, sem "relativo a quê?").
+     */
+    public function absoluteAssetUrl(string $path): string
+    {
+        return $this->config->siteUrl . $this->assetUrl($path);
     }
 }

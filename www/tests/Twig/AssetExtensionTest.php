@@ -31,4 +31,14 @@ final class AssetExtensionTest extends TestCase
     {
         self::assertSame('/assets/nao-existe.css', $this->extension->assetUrl('/nao-existe.css'));
     }
+
+    public function testAbsoluteUrlAddsTheSiteUrlInFront(): void
+    {
+        $file = dirname(__DIR__, 2) . '/public/assets/fonts/LICENSES.md';
+
+        self::assertSame(
+            'http://localhost:8080/assets/fonts/LICENSES.md?v=' . filemtime($file),
+            $this->extension->absoluteAssetUrl('fonts/LICENSES.md'),
+        );
+    }
 }
