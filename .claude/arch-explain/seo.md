@@ -163,3 +163,71 @@ humano clicando num botão, mas seria uma mentira pro Google: diria que existe u
 não existe. Por isso o `BlogController::show()` calcula o slug traduzido **uma vez**
 (`translatedSlugFor()`) e usa esse resultado dos dois jeitos — com fallback pro `switchUrl`,
 sem fallback pro `altUrl`.
+
+## Open Graph e Twitter Card: o cartão de prévia ao colar o link (etapa 7c)
+
+`<title>` e `<meta description>` controlam como a página aparece **na busca do Google**. Open
+Graph controla como ela aparece em outro lugar bem diferente: quando alguém **cola o link** no
+WhatsApp, LinkedIn, Slack ou Facebook. Sem essas etiquetas, cada rede tenta adivinhar sozinha —
+às vezes pega um pedaço de texto aleatório da página, ou nenhuma imagem, e o link aparece feio.
+
+As etiquetas `og:*` (Open Graph, um padrão aberto que a maioria das redes lê) e `twitter:*`
+(formato próprio do X/Twitter) dizem exatamente: "aqui está o título, a descrição e o tipo de
+conteúdo que você deve mostrar no cartão".
+
+### Reaproveitar, não duplicar
+
+O título e a descrição do cartão social são **os mesmos** que já aparecem na busca — não faz
+sentido ter um texto pro Google e outro pro WhatsApp. Em vez de escrever o texto de novo, uso a
+função `block()` do Twig, que lê o conteúdo já resolvido dos blocos `title`/`description`
+(da etapa 7a), de dentro do próprio `base.html.twig`:
+
+```twig
+{# base.html.twig #}
+<meta property="og:title" content="{{ block('title') }}">
+<meta property="og:description" content="{{ block('description') }}">
+...
+<meta name="twitter:title" content="{{ block('title') }}">
+<meta name="twitter:description" content="{{ block('description') }}">
+```
+`block('title')` funciona mesmo chamado do template-pai: o Twig sempre devolve o conteúdo **já
+resolvido** daquele bloco — o da página filha, se ela sobrescreveu, ou o padrão, se não.
+
+### `og:type` — "isto é uma página qualquer, ou um artigo?"
+
+Um artigo de blog é um tipo de conteúdo diferente de uma página comum (tem autor, data de
+publicação, etc.), e o Open Graph tem uma etiqueta pra marcar isso. O padrão é `"website"`
+(qualquer página); o artigo sobrescreve pra `"article"` e ganha uma etiqueta extra, a data de
+publicação:
+
+```twig
+{# blog/show.html.twig #}
+{% block og_type %}article{% endblock %}
+{% block article_published_time %}{{ post.date|date('c') }}{% endblock %}
+```
+`date('c')` é o formato ISO 8601 (`2026-10-02T00:00:00+00:00`) — o formato que o Open Graph (e
+quase todo padrão de data na web) espera, diferente do `d/m/Y` que usamos pra mostrar a data pra
+humanos lerem.
+
+### `og:locale` e `og:locale:alternate` — reaproveitando o `altUrl` da 7b
+
+`og:locale` diz em qual idioma está o conteúdo (`pt_BR`, `en_US` — note o underscore, diferente
+do `pt-BR` do `hreflang`, por isso o `Locale::ogLocale()` é um método separado do `htmlLang()`).
+`og:locale:alternate` diz "esse mesmo conteúdo também existe em outro idioma" — e só aparece
+quando existe, reaproveitando **exatamente** a mesma condição do `hreflang` (`altUrl`), sem
+recalcular nada:
+
+```twig
+{% if altUrl is defined and altUrl %}
+    <meta property="og:locale:alternate" content="{{ i18n.locale.other.ogLocale }}">
+{% endif %}
+```
+
+### O que ficou de fora, de propósito
+
+- **`og:image`** — depende da imagem de compartilhamento, que é a etapa 7f (ainda não existe).
+  Por enquanto `twitter:card` fica como `"summary"` (cartão simples, sem imagem grande); quando a
+  imagem existir, troca pra `"summary_large_image"`.
+- **`article:tag`** (uma etiqueta por tag do artigo) — ficou fora por ser um detalhe menor; o
+  essencial (título, descrição, tipo, data) já entrega o principal benefício, que é o cartão
+  aparecer bonito ao compartilhar o link.

@@ -50,6 +50,17 @@ enum Locale: string
         };
     }
 
+    /**
+     * O Open Graph usa "pt_BR"/"en_US" (com underscore), diferente do htmlLang() ("pt-BR"/"en").
+     */
+    public function ogLocale(): string
+    {
+        return match ($this) {
+            self::Pt => 'pt_BR',
+            self::En => 'en_US',
+        };
+    }
+
     public function other(): self
     {
         return match ($this) {
