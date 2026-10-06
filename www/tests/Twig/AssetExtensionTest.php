@@ -32,6 +32,16 @@ final class AssetExtensionTest extends TestCase
         self::assertSame('/assets/nao-existe.css', $this->extension->assetUrl('/nao-existe.css'));
     }
 
+    public function testBuildVersionReplacesTheModificationTimeEvenForMissingFiles(): void
+    {
+        $extension = new AssetExtension(
+            new Config(dirname(__DIR__, 2), 'production', 'https://meusite.com', 'abc123'),
+        );
+
+        self::assertSame('/assets/fonts/LICENSES.md?v=abc123', $extension->assetUrl('fonts/LICENSES.md'));
+        self::assertSame('/assets/nao-existe.css?v=abc123', $extension->assetUrl('nao-existe.css'));
+    }
+
     public function testAbsoluteUrlAddsTheSiteUrlInFront(): void
     {
         $file = dirname(__DIR__, 2) . '/public/assets/fonts/LICENSES.md';

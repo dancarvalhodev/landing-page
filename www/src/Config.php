@@ -17,6 +17,7 @@ final readonly class Config
         public string $rootDir,
         public string $env,
         string $siteUrl,
+        public ?string $assetVersion = null,
     ) {
         if (!in_array($env, self::ENVIRONMENTS, true)) {
             $accepted = implode(', ', self::ENVIRONMENTS);
@@ -39,6 +40,7 @@ final readonly class Config
             $rootDir,
             self::requiredEnv('APP_ENV'),
             self::requiredEnv('SITE_URL'),
+            self::optionalEnv('ASSET_VERSION'),
         );
     }
 
@@ -53,6 +55,17 @@ final readonly class Config
 
         if ($value === false) {
             throw new RuntimeException("A variável de ambiente {$name} é obrigatória.");
+        }
+
+        return $value;
+    }
+
+    private static function optionalEnv(string $name): ?string
+    {
+        $value = getenv($name);
+
+        if ($value === false || $value === '') {
+            return null;
         }
 
         return $value;

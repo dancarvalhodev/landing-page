@@ -1,7 +1,8 @@
 # Imagens de produção — o que muda em relação ao desenvolvimento
 
 Arquivos explicados: `bin/php/Dockerfile`, `bin/caddy/Dockerfile`, `config/php/php.prod.ini`,
-`.dockerignore` e os serviços `php` e `caddy` do `docker-compose.yml`. Este documento cresce a cada
+`.dockerignore`, os serviços `php` e `caddy` do `docker-compose.yml` e, na parte da versão dos
+arquivos estáticos, `www/src/Config.php` e `www/src/Twig/AssetExtension.php`. Este documento cresce a cada
 subetapa da etapa 9.
 
 ## A ideia geral
@@ -110,11 +111,12 @@ Com a raiz como contexto, o Docker enviaria tudo para o build, inclusive `.git`,
 ### Como conferir
 
 ```
-docker build -f bin/php/Dockerfile --target prod -t landing-page-php:prod-test .
+docker build --build-arg ASSET_VERSION=teste -f bin/php/Dockerfile --target prod -t landing-page-php:prod-test .
 docker run --rm landing-page-php:prod-test php -m
 ```
 
-A lista de módulos não pode ter `xdebug`.
+A lista de módulos não pode ter `xdebug`. O `--build-arg ASSET_VERSION` é exigido desde a subetapa
+9c.
 
 ## 9b — Imagem Caddy
 
@@ -212,3 +214,76 @@ docker run --rm landing-page-caddy:prod-test ls -la /app/public/assets/css
 ```
 
 A lista precisa ter o `app.css`, mesmo ele não existindo no git.
+
+## 9c — Versão do CSS em produção
+
+Arquivos: `www/src/Config.php`, `www/src/Twig/AssetExtension.php` e o estágio `prod` de
+`bin/php/Dockerfile`.
+
+### Para que serve o `?v=`
+
+O Caddy manda o navegador guardar tudo de `/assets` por um ano, para o site abrir rápido. O
+problema é quando o arquivo muda: o navegador continuaria usando a cópia guardada.
+
+Pense na **data de validade de um produto**. O navegador guarda o pote na despensa e não volta ao
+mercado enquanto o rótulo for o mesmo. O `?v=` é o rótulo: `app.css?v=1` e `app.css?v=2` são, para
+o navegador, dois produtos diferentes, e ele busca o novo.
+
+### O que quebrava em produção
+
+No desenvolvimento, a função `asset()` usa como rótulo a data de modificação do arquivo
+(`filemtime`). Quem monta o HTML é o PHP, então é o PHP que precisa enxergar o arquivo.
+
+Em produção, o `app.css` só existe na imagem do Caddy (subetapa 9b). O PHP não o encontra, e a
+função devolvia o endereço sem rótulo: `/assets/css/app.css`. O visitante que já tivesse o CSS
+guardado ficaria com o visual antigo por até um ano depois de um deploy.
+
+### A solução: um rótulo por build
+
+Em vez de olhar arquivo por arquivo, a produção usa um rótulo único para o build inteiro, a
+variável `ASSET_VERSION`. O caminho dela:
+
+1. Quem constrói a imagem informa o valor: `docker build --build-arg ASSET_VERSION=<valor>`. No
+   deploy (etapa 11), o valor será o identificador do commit.
+2. O estágio `prod` do Dockerfile grava o valor dentro da imagem (`ENV ASSET_VERSION`).
+3. `Config::fromEnv()` lê a variável e guarda em `assetVersion`.
+4. `AssetExtension::assetUrl()` usa esse valor no `?v=` de todos os arquivos, sem conferir se o
+   arquivo existe.
+
+| Ambiente | `ASSET_VERSION` | Resultado |
+|---|---|---|
+| Desenvolvimento | Não definida | `app.css?v=<data de modificação>`, como sempre foi |
+| Produção | Identificador do build | `app.css?v=<identificador>`, igual para todos os arquivos |
+
+### Por que o valor fica dentro da imagem
+
+O rótulo e os arquivos precisam andar juntos. Como o valor é gravado na imagem, voltar para uma
+imagem antiga (rollback) traz de volta o rótulo antigo junto com o CSS antigo. Se ele fosse uma
+variável do servidor, daria para trocar a imagem e esquecer o rótulo.
+
+### Por que o build falha sem a versão
+
+A linha `RUN test -n "$ASSET_VERSION"` interrompe o build se o valor não for informado. Sem ela,
+um build feito por engano sem o `--build-arg` geraria uma imagem que funciona, mas com o CSS sem
+rótulo, e o defeito só apareceria semanas depois, no navegador de quem já visitou o site. Melhor
+um erro na hora.
+
+### O custo dessa escolha
+
+Todo deploy troca o rótulo de todos os arquivos, mesmo os que não mudaram. Quem volta ao site
+depois de um deploy baixa de novo o CSS e o JS. São arquivos pequenos e os deploys são poucos por
+mês, então o custo é baixo. As fontes não entram nisso: são chamadas de dentro do CSS, sem `?v=`.
+
+A alternativa seria gerar o CSS também na imagem do PHP, para o `filemtime` continuar funcionando.
+Isso duplicaria o estágio do Tailwind nos dois Dockerfiles e ainda dependeria de datas de arquivo,
+que mudam a cada build de qualquer forma.
+
+### Como conferir
+
+Construa com um valor qualquer e veja o HTML:
+
+```
+docker build --build-arg ASSET_VERSION=teste -f bin/php/Dockerfile --target prod -t landing-page-php:prod-test .
+```
+
+Sem o `--build-arg`, o build precisa falhar na linha `RUN test -n "$ASSET_VERSION"`.

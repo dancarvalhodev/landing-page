@@ -32,3 +32,8 @@ RUN composer install --no-dev --classmap-authoritative --no-interaction
 
 # O PHP-FPM atende como www-data e precisa gravar o cache do Twig.
 RUN mkdir -p var/cache/twig && chown -R www-data:www-data var
+
+# Sem a versão, o navegador guardaria o CSS antigo por um ano; por isso o build falha sem ela.
+ARG ASSET_VERSION
+RUN test -n "$ASSET_VERSION"
+ENV ASSET_VERSION=$ASSET_VERSION
