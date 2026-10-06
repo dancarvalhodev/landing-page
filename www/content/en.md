@@ -8,11 +8,23 @@ jobs:
   - role: Systems Analyst
     company: P21 Sistemas
     period: Apr 2022 — present
-    description: Systems Analyst Backend with PHP as main language
+    description: >-
+      Full stack developer at a company that builds software for protest notary offices in
+      Brazil, responsible for an architecture built on PHP, MySQL and Redis, with caching and persistence layers tuned
+      for performance and scalability. Fully containerised infrastructure designed for high
+      availability, with working knowledge of Kubernetes orchestration. Delivery quality backed
+      by a comprehensive automated test suite and by continuous improvement through agile
+      practices such as Scrum and Kanban. Automation of the whole development cycle (backup,
+      planning, development, code review, staging and deployment), using Artificial Intelligence
+      (Claude Code) to speed up delivery, support code reviews and raise the quality of the work.
   - role: Software Developer
     company: Cubo Comunicação e Marketing
     period: Dec 2020 — Apr 2022
-    description: Systems Analyst Backend with PHP as main language
+    description: >-
+      Worked as a full stack developer at a job board platform company, focused on building and
+      maintaining features in PHP and MySQL. During that period, implemented new features, fixed
+      bugs and optimised database queries, which contributed to the stability and evolution of
+      the platform.
   - role: Technical Support
     company: PROBO Informática
     period: Oct 2018 — Nov 2020

@@ -8,11 +8,25 @@ jobs:
   - role: Analista de sistemas Pleno
     company: P21 Sistemas
     period: abr. 2022 — atual
-    description: Analista de sistemas Backend com PHP como linguagem principal
+    description: >-
+      Desenvolvedor full stack em empresa que desenvolve sistemas para cartórios de protesto,
+      responsável por uma arquitetura baseada em PHP, MySQL e Redis, com camadas de cache e
+      persistência otimizadas para desempenho e escalabilidade. Infraestrutura totalmente containerizada e projetada para
+      alta disponibilidade, com conhecimentos em orquestração via Kubernetes. Qualidade das
+      entregas assegurada por uma suíte abrangente de testes automatizados e pela melhoria
+      contínua com práticas ágeis como Scrum e Kanban. Automação de todo o ciclo de
+      desenvolvimento (backup, planejamento, desenvolvimento, code review, homologação e deploy),
+      com uso de Inteligência Artificial (Claude Code) para acelerar a produtividade, apoiar
+      revisões de código e elevar a qualidade das entregas.
   - role: Desenvolvedor de software
     company: Cubo Comunicação e Marketing
     period: dez. 2020 — abr. 2022
-    description: Analista de sistemas Backend com PHP como linguagem principal
+    description: >-
+      Atuação como desenvolvedor full stack em empresa de plataforma de vagas de emprego, com foco
+      no desenvolvimento e na manutenção de funcionalidades em PHP e MySQL. Durante o período, a
+      responsabilidade foi a implementação de novas funcionalidades, a correção de bugs e a
+      otimização de consultas ao banco de dados, o que contribuiu para a estabilidade e a evolução
+      da plataforma.
   - role: Suporte técnico
     company: PROBO Informática
     period: out. 2018 — nov. 2020
