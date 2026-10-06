@@ -292,8 +292,8 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 7f. SEO — imagem de compartilhamento — confirmada em 2026-10-04
 - [x] 7. SEO (todas as subetapas) — confirmada em 2026-10-04
 - [ ] 8a. Descrições profissionais — experiências — confirmada em 2026-10-05
-- [ ] 8b. Descrições profissionais — chamada, apresentação, "sobre" e habilidades — entregue, aguardando conferência
-- [ ] 8c. Descrições profissionais — projetos
+- [ ] 8b. Descrições profissionais — chamada, apresentação, "sobre" e habilidades — confirmada em 2026-10-05
+- [ ] 8c. Descrições profissionais — projetos — entregue, aguardando conferência
 - [ ] 8. Descrições profissionais (todas as subetapas)
 - [ ] 9. Imagens de produção
 - [ ] 10. Infra

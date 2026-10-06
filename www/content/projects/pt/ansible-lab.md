@@ -1,7 +1,7 @@
 ---
 title: Ansible Lab
 summary: Automação com Ansible que configura do zero meu servidor pessoal em Debian 13.
-category: Infraestrutura
+category: DevOps
 technologies: [Ansible, Debian, Nginx, AWS S3]
 repository: https://github.com/dancarvalhodev/ansible-lab
 order: 3

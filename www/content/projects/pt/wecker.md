@@ -2,7 +2,7 @@
 title: Wecker
 summary: Interface web inspirada no Portainer para controlar contêineres Docker de forma visual.
 category: Web
-technologies: [PHP, Slim, Twig, PHP-DI, PostgreSQL, Redis, Docker]
+technologies: [PHP, Slim, Twig, PHP-DI, Doctrine DBAL, PostgreSQL, Redis, Nginx, Docker]
 repository: https://github.com/dancarvalhodev/wecker
 order: 1
 translation_key: wecker

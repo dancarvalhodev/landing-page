@@ -1,7 +1,7 @@
 ---
 title: Templates Docker para PHP
 summary: Imagens PHP prontas para desenvolvimento e um ambiente completo com Nginx, PHP, MySQL e Redis.
-category: Infraestrutura
+category: DevOps
 technologies: [Docker, Docker Compose, PHP, Nginx, MySQL, Redis]
 repository: https://github.com/dancarvalhodev/dockerfile-php-alpine
 order: 2
