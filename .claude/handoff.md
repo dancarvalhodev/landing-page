@@ -3,19 +3,19 @@
 Resumo para continuar o desenvolvimento em outro computador (ou voltar a este). Quem terminar uma
 sessão atualiza este arquivo antes do último commit; quem começar lê este arquivo primeiro.
 
-Última atualização: 2026-10-04.
+Última atualização: 2026-10-06.
 
 ## Onde paramos
 
 - **Branch:** `feat/site-foundation`, já enviada ao GitHub (`origin`). Um commit por etapa.
 - **Plano:** `.claude/plans/arquitetura-landing-page.md`. A seção "Progresso", no fim do arquivo,
   marca o que está confirmado.
-- **Confirmadas:** etapas 1, 2, 3, 4 (4a-4c), 5 (5a-5d, Home) e 6 (6a-6f, Blog) inteiras, e agora
-  **7 (7a-7f, SEO) inteira também** — título/descrição/canonical, hreflang PT/EN, Open Graph e
-  Twitter Card, JSON-LD `Person`, `sitemap.xml`/`robots.txt` e a imagem de compartilhamento.
-  Conceito e código de cada parte estão documentados em `.claude/arch-explain/seo.md`.
-- **Próxima:** etapa 8 — descrições profissionais (reescrever os textos profissionais em
-  `content/`, nos dois idiomas, com informações dadas pelo dev; ver "Pendências conhecidas").
+- **Confirmadas:** etapas 1 a 8 inteiras (a 8, descrições profissionais, em 8a-8c) e, da etapa 9
+  (imagens de produção), as subetapas 9a (imagem PHP), 9b (imagem Caddy) e 9c (versão do CSS em
+  produção). Conceito e código da etapa 9 estão em `.claude/arch-explain/producao.md`.
+- **Entregue, aguardando conferência:** 9d (`docker-compose.prod.yml`). Com ela confirmada, a
+  etapa 9 fecha.
+- **Próxima:** etapa 10 — infra (`infra/cloud-init.yaml`, `infra/edge/`, `infra/README.md`).
 
 ## Como retomar em um computador novo
 
@@ -23,7 +23,7 @@ sessão atualiza este arquivo antes do último commit; quem começar lê este ar
 2. `cp env-example .env` e ajustar `HOST_UID` e `HOST_GID` para a saída de `id -u` e `id -g`.
 3. `docker compose up -d --build`.
 4. `docker compose exec php composer install` (a pasta `vendor/` não vai para o git).
-5. Conferir: `docker compose exec php composer test` (39 testes passando) e
+5. Conferir: `docker compose exec php composer test` (40 testes passando) e
    `http://localhost:8080`.
 6. O índice do CodeGraph (`.codegraph/`) não vai inteiro para o git; se quiser usá-lo, rode
    `codegraph init` no projeto.
@@ -40,9 +40,12 @@ projeto.
 - **Uma etapa por vez, com a skill `modo-codando`** (`.claude/skills/modo-codando/SKILL.md`):
   entregar, dizer como conferir, perguntar "está tudo correto?" e só seguir depois de um sim claro.
   Um comentário ou um "commitei" não é aprovação.
+- **Ao fim de cada subetapa, um resumo explicando as alterações e a documentação** em
+  `.claude/arch-explain/` (pedido do dev na etapa 9). As dúvidas que ele faz durante a conferência
+  também entram no documento, quando ele concorda.
 - **Etapas grandes demais para revisar de uma vez, dividir em subetapas** (a, b, c...) antes de
   começar, perguntando ao dev como prefere dividir. Foi feito com a etapa 5 (Home → 5a-5d), a 6
-  (Blog → 6a-6f) e a 7 (SEO → 7a-7f). Cuidado ao reaproveitar uma letra já usada em outro lugar do
+  (Blog → 6a-6f), a 7 (SEO → 7a-7f), a 8 (8a-8c) e a 9 (9a-9d). Cuidado ao reaproveitar uma letra já usada em outro lugar do
   plano (ex.: a 6b já existia reservada quando a 7 foi dividida).
 - **MVP sempre.** O mínimo de arquivos e classes que resolve a etapa de hoje; nada antecipado
   (cache, validadores, camadas "para o futuro"). A etapa 4b foi refeita porque a primeira versão
@@ -103,8 +106,16 @@ O plano tem o detalhe; aqui só o que mais pesa ao continuar.
 
 ## Pendências conhecidas
 
-- **Etapa 8:** reescrever as descrições profissionais. Hoje P21 e Cubo têm o mesmo texto
-  provisório. É a próxima etapa.
+- **Texto do projeto "Landing Page"** (`content/projects/{pt,en}/landing-page.md`): já afirma a
+  hospedagem na Oracle Cloud, a publicação pelo GitHub Actions e a prévia por alteração, que
+  dependem das etapas 10 e 11. Rever antes do deploy se algo mudar. O repositório também precisa
+  estar público quando o site for ao ar, senão o link do cartão dá 404.
+- **Etapa 10:** o `docker-compose.prod.yml` publica o Caddy do app com `ports`, o que serve para
+  testar localmente. No servidor, trocar por uma rede compartilhada com o Caddy de borda.
+- **Etapa 11:** o build de produção exige `IMAGE_TAG` (que também vira o `ASSET_VERSION`); o
+  workflow deve passar o identificador do commit.
+- **Versão do Tailwind em dois lugares:** `bin/tailwind/Dockerfile` e `bin/caddy/Dockerfile`.
+  Atualizar os dois juntos.
 - **Artigos do blog** (`ola-mundo.md`, `hello-world.md`) ainda são de exemplo; saem antes do
   deploy se não houver artigo real.
 - **Tema do Giscus (etapa 6f):** só confirmável visualmente depois do deploy com HTTPS (etapas
@@ -112,8 +123,6 @@ O plano tem o detalhe; aqui só o que mais pesa ao continuar.
 - **`robots.txt` (etapa 7e):** libera tudo (`Allow: /`), sem bloquear páginas de tag nem de busca.
   Foi uma decisão consciente, não uma pendência técnica — fica pra o dev revisitar se quiser
   restringir depois.
-- **Etapa 9:** a função `asset()` do Twig não vai achar o CSS na imagem de produção (ele fica só na
-  imagem do Caddy); precisará de outra fonte para o `?v=`.
 - **Etapa 12:** reescrever o `CLAUDE.md` com comandos e arquitetura completos.
 - **Etapa 13:** depois da 12, revisar a documentação escrita (e os `.claude/arch-explain/`) antes
   da etapa de spec, a pedido do dev.

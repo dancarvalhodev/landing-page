@@ -1,9 +1,9 @@
 # Imagens de produção — o que muda em relação ao desenvolvimento
 
 Arquivos explicados: `bin/php/Dockerfile`, `bin/caddy/Dockerfile`, `config/php/php.prod.ini`,
-`.dockerignore`, os serviços `php` e `caddy` do `docker-compose.yml` e, na parte da versão dos
-arquivos estáticos, `www/src/Config.php` e `www/src/Twig/AssetExtension.php`. Este documento cresce a cada
-subetapa da etapa 9.
+`.dockerignore`, `docker-compose.prod.yml`, os serviços `php` e `caddy` do `docker-compose.yml` e,
+na parte da versão dos arquivos estáticos, `www/src/Config.php` e
+`www/src/Twig/AssetExtension.php`. Uma seção por subetapa da etapa 9.
 
 ## A ideia geral
 
@@ -287,3 +287,108 @@ docker build --build-arg ASSET_VERSION=teste -f bin/php/Dockerfile --target prod
 ```
 
 Sem o `--build-arg`, o build precisa falhar na linha `RUN test -n "$ASSET_VERSION"`.
+
+## 9d — `docker-compose.prod.yml`
+
+Arquivo: `docker-compose.prod.yml`.
+
+### O que ele é
+
+O `docker-compose.yml` é a planta da cozinha; o `docker-compose.prod.yml` é o pedido de entrega
+das marmitas. Ele diz quais imagens subir e com quais variáveis, e mais nada: não há pasta
+compartilhada nem contêiner do Tailwind.
+
+| | `docker-compose.yml` (desenvolvimento) | `docker-compose.prod.yml` |
+|---|---|---|
+| Estágio das imagens | `dev` | `prod` |
+| Código | Pasta `./www` compartilhada | Dentro da imagem |
+| CSS | Contêiner `tailwind` em modo watch | Gerado no build, dentro da imagem do Caddy |
+| Caddyfile e `php.ini` | Montados do computador | Dentro das imagens |
+| Nome das imagens | Automático | `ghcr.io/dancarvalhodev/landing-page-{php,caddy}:<IMAGE_TAG>` |
+| Limite de log | Não | 3 arquivos de 10 MB por contêiner |
+
+### As variáveis
+
+| Variável | Para quê | Exemplo |
+|---|---|---|
+| `IMAGE_TAG` | A etiqueta das duas imagens e também o `ASSET_VERSION` do build | o identificador do commit |
+| `APP_ENV` | `preview` ou `production` | `production` |
+| `SITE_URL` | O endereço oficial daquele ambiente | `https://meusite.com` |
+| `PORT_CADDY` | A porta publicada no computador | `8081` |
+
+O `IMAGE_TAG` é obrigatório: sem ele, o Compose se recusa a rodar e mostra "informe IMAGE_TAG".
+Isso vale para qualquer comando com este arquivo, inclusive `down` e `logs`.
+
+Uma variável só faz dois papéis de propósito. O `IMAGE_TAG` vira a etiqueta da imagem e é
+repassado ao build como `ASSET_VERSION` (subetapa 9c). Assim é impossível ter uma imagem com
+etiqueta de um commit e `?v=` de outro.
+
+### `image` e `build` juntos
+
+Cada serviço tem as duas chaves, e cada uma serve a um momento:
+
+- `build`: como construir a imagem. É usado no seu computador e, na etapa 11, pelo GitHub Actions.
+- `image`: o nome que a imagem recebe ao ser construída e de onde ela é baixada. No servidor só
+  esta chave importa: a imagem já vem pronta do GHCR e nada é construído lá.
+
+### Por que `ghcr.io` se o site roda na Oracle
+
+São duas coisas diferentes: o GHCR (GitHub Container Registry) é onde as imagens ficam guardadas,
+e a VM da Oracle é onde elas rodam.
+
+Pense em uma transportadora. A fábrica (GitHub Actions) monta as marmitas, mas a cozinha do
+restaurante (a VM) fica em outro lugar. No meio precisa existir um depósito onde a fábrica deixa a
+carga e o restaurante retira. Esse depósito é o registro de imagens. O nome
+`ghcr.io/dancarvalhodev/...` é só o endereço do depósito; não diz onde a imagem vai rodar.
+
+O caminho previsto para a etapa 11:
+
+1. Merge na `master`.
+2. O GitHub Actions constrói as duas imagens e envia ao GHCR, com o identificador do commit como
+   etiqueta.
+3. O workflow entra na VM por SSH e roda `docker compose up`.
+4. A VM lê o `image:` deste arquivo, baixa as imagens do GHCR e sobe os contêineres.
+
+Daria para clonar o repositório na VM e construir lá, sem registro. O plano evitou isso porque:
+
+- a VM gratuita é pequena, e compilar extensões do PHP nela é lento e disputa memória com o site
+  no ar;
+- com as imagens antigas guardadas, o rollback é subir a etiqueta anterior, em segundos;
+- prévia e produção usam a mesma imagem já construída, em vez de dois builds que podem sair
+  diferentes.
+
+O GHCR foi escolhido, e não o registro da Oracle ou o Docker Hub, porque o repositório já está no
+GitHub: o Actions envia para lá sem cadastrar credencial, e ele é gratuito para imagens públicas.
+Se as imagens forem privadas, a VM precisa de um token de leitura do GHCR.
+
+### O limite de log
+
+O Docker guarda tudo o que os contêineres escrevem na saída (inclusive os erros do PHP, ver "Por
+que o log de erros não vai para um arquivo"). Sem limite, esse arquivo cresce até encher o disco.
+Com `max-size: 10m` e `max-file: "3"`, cada contêiner guarda no máximo 30 MB e descarta o mais
+antigo.
+
+### Rodar a produção no seu computador
+
+Com `-p landing-prod`, a pilha sobe em um projeto separado e não mexe nos contêineres de
+desenvolvimento. Use uma porta diferente da 8080:
+
+```
+IMAGE_TAG=teste APP_ENV=production SITE_URL=http://localhost:8081 PORT_CADDY=8081 docker compose -p landing-prod -f docker-compose.prod.yml up -d --build
+```
+
+Abra `http://localhost:8081`. Para ver os erros do PHP e para derrubar:
+
+```
+docker logs landing-prod-php-1
+IMAGE_TAG=teste docker compose -p landing-prod -f docker-compose.prod.yml down
+```
+
+As variáveis vão na frente do comando porque o `.env` do projeto tem os valores de
+desenvolvimento; o que é passado na linha de comando tem prioridade sobre o `.env`.
+
+### O que ainda vai mudar
+
+A linha `ports` publica o Caddy do app direto no computador, o que serve para testar. No servidor,
+quem recebe as visitas é o Caddy de borda, com HTTPS; a etapa 10 troca essa porta publicada por
+uma rede compartilhada com ele.
