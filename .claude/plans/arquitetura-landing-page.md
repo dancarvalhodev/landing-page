@@ -225,7 +225,16 @@ infra/
    reescrever todos os textos profissionais em `content/`, nos dois idiomas: a descrição de cada
    experiência (hoje P21 e Cubo têm o mesmo texto provisório), a chamada, a apresentação, o "sobre"
    e a descrição de cada projeto. Só com informações dadas pelo dev; nada inventado.
-9. **Imagens de produção:** estágios `prod`, `docker-compose.prod.yml`, `php.prod.ini`.
+9. **Imagens de produção**, dividida em quatro a pedido do dev. Cada subetapa termina com um resumo
+   das alterações e com a documentação em `.claude/arch-explain/producao.md`:
+   - **9a. Imagem PHP:** estágios `base`, `dev` e `prod` em `bin/php/Dockerfile`, `php.prod.ini` e
+     `.dockerignore`.
+   - **9b. Imagem Caddy:** estágio que gera o CSS minificado com o Tailwind e estágio final com
+     `public/` embutido.
+   - **9c. Versão do CSS em produção:** outra fonte para o `?v=` da função `asset()`, já que o CSS
+     só existe na imagem do Caddy.
+   - **9d. `docker-compose.prod.yml` e conferência:** subir as duas imagens sem bind mounts e
+     testar localmente.
 10. **Infra:** `infra/cloud-init.yaml`, `infra/edge/`, `infra/README.md`. A criação da conta/VM na
     OCI, a regra na Security List e os registros DNS (`@`, `www`, `preview`) são feitos pelo
     usuário seguindo o passo a passo.
@@ -291,11 +300,15 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 7e. SEO — sitemap.xml e robots.txt — confirmada em 2026-10-04
 - [x] 7f. SEO — imagem de compartilhamento — confirmada em 2026-10-04
 - [x] 7. SEO (todas as subetapas) — confirmada em 2026-10-04
-- [ ] 8a. Descrições profissionais — experiências — confirmada em 2026-10-05
-- [ ] 8b. Descrições profissionais — chamada, apresentação, "sobre" e habilidades — confirmada em 2026-10-05
-- [ ] 8c. Descrições profissionais — projetos — entregue, aguardando conferência
-- [ ] 8. Descrições profissionais (todas as subetapas)
-- [ ] 9. Imagens de produção
+- [x] 8a. Descrições profissionais — experiências — confirmada em 2026-10-05
+- [x] 8b. Descrições profissionais — chamada, apresentação, "sobre" e habilidades — confirmada em 2026-10-05
+- [x] 8c. Descrições profissionais — projetos — confirmada em 2026-10-05
+- [x] 8. Descrições profissionais (todas as subetapas) — confirmada em 2026-10-05
+- [ ] 9a. Imagens de produção — imagem PHP — entregue, aguardando conferência
+- [ ] 9b. Imagens de produção — imagem Caddy
+- [ ] 9c. Imagens de produção — versão do CSS em produção
+- [ ] 9d. Imagens de produção — docker-compose.prod.yml e conferência
+- [ ] 9. Imagens de produção (todas as subetapas)
 - [ ] 10. Infra
 - [ ] 11. CI/CD
 - [ ] 12. Documentação

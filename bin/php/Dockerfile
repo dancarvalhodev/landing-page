@@ -1,5 +1,5 @@
-# Cópia de dancarvalhodev/dockerfile-php-alpine (8.5/Dockerfile); só o WORKDIR muda.
-FROM php:8.5-fpm-alpine
+# O estágio base é cópia de dancarvalhodev/dockerfile-php-alpine (8.5/Dockerfile); só o WORKDIR muda.
+FROM php:8.5-fpm-alpine AS base
 
 WORKDIR /app
 
@@ -17,3 +17,18 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN apk cache clean
 
 CMD ["php-fpm"]
+
+FROM base AS dev
+
+FROM base AS prod
+
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+RUN rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+COPY config/php/php.prod.ini /usr/local/etc/php/php.ini
+
+COPY www/ ./
+RUN composer install --no-dev --classmap-authoritative --no-interaction
+
+# O PHP-FPM atende como www-data e precisa gravar o cache do Twig.
+RUN mkdir -p var/cache/twig && chown -R www-data:www-data var

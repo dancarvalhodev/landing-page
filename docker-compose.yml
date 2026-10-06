@@ -13,7 +13,9 @@ services:
         restart: unless-stopped
     php:
         build:
-            context: bin/php
+            context: .
+            dockerfile: bin/php/Dockerfile
+            target: dev
         container_name: ${CONTAINER_NAME}php
         user: ${HOST_UID}:${HOST_GID}
         environment:
