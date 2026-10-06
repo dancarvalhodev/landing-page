@@ -1,7 +1,7 @@
 ---
 role: Software Engineer · Full Stack
 headline: I turn ideas into solutions.
-intro: Full stack developer based in Itaúna, Brazil, working with PHP, JavaScript, Docker, Linux and API integrations.
+intro: Full stack developer based in Itaúna, Brazil, working with HTML, CSS, JavaScript, PHP, MySQL, Docker and Linux, as well as frameworks such as Laminas and Zend Framework 2.
 location: Itaúna, Minas Gerais, Brazil
 
 jobs:
@@ -32,13 +32,15 @@ jobs:
 
 skills:
   - group: Back end
-    items: [PHP, Laminas, Zend Framework 2, MySQL, API integration]
+    items: [PHP, Laminas, Zend Framework 2, Slim, PHP-DI, Twig, Doctrine DBAL, MySQL, PostgreSQL, Redis, API integration]
   - group: Front end
-    items: [HTML, CSS, JavaScript (ES6+)]
-  - group: Infrastructure
-    items: [Docker, Docker Compose, Linux]
+    items: [HTML, CSS, JavaScript (ES6+), jQuery, Bootstrap]
+  - group: DevOps
+    items: [Docker, Docker Compose, Linux, Kubernetes, Nginx, Shell Script]
   - group: Practices
-    items: [Refactoring]
+    items: [Refactoring, Automated testing, PHPUnit, Scrum, Kanban, OKR, NCTs]
+  - group: Soft skills
+    items: [Communication, Teamwork, Strategy]
 
 education:
   - course: Associate degree in Systems Analysis and Development
@@ -62,8 +64,6 @@ testimonials: []
 ---
 
 I am a web developer passionate about technology and about turning ideas into real solutions.
-I work with HTML, CSS, JavaScript, PHP, MySQL, Docker and Linux, as well as frameworks such as
-Laminas and Zend Framework 2.
-
 I believe continuous learning and constant improvement are an essential part of professional
-growth. Every new project is a chance to evolve, as a person and as a developer.
+growth. Every new project is a chance to evolve — as a person (listening to the people who use
+the system) and as a developer (sharpening my tech skills).

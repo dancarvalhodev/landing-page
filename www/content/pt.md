@@ -1,7 +1,7 @@
 ---
 role: Software Engineer · Full Stack
 headline: Transformo ideias em soluções.
-intro: Desenvolvedor full stack em Itaúna (MG), trabalhando com PHP, JavaScript, Docker e Linux, além de integrações de API.
+intro: Desenvolvedor full stack em Itaúna (MG), trabalhando com HTML, CSS, JavaScript, PHP, MySQL, Docker e Linux, além de frameworks como Laminas e Zend Framework 2.
 location: Itaúna, Minas Gerais
 
 jobs:
@@ -34,13 +34,15 @@ jobs:
 
 skills:
   - group: Back-end
-    items: [PHP, Laminas, Zend Framework 2, MySQL, Integração de APIs]
+    items: [PHP, Laminas, Zend Framework 2, Slim, PHP-DI, Twig, Doctrine DBAL, MySQL, PostgreSQL, Redis, Integração de APIs]
   - group: Front-end
-    items: [HTML, CSS, JavaScript (ES6+)]
-  - group: Infraestrutura
-    items: [Docker, Docker Compose, Linux]
+    items: [HTML, CSS, JavaScript (ES6+), jQuery, Bootstrap]
+  - group: DevOps
+    items: [Docker, Docker Compose, Linux, Kubernetes, Nginx, Shell Script]
   - group: Práticas
-    items: [Refatoração]
+    items: [Refatoração, Testes automatizados, PHPUnit, Scrum, Kanban, OKR, NCTs]
+  - group: Soft skills
+    items: [Comunicação, Trabalho em equipe, Estratégia]
 
 education:
   - course: Tecnólogo em Análise e Desenvolvimento de Sistemas
@@ -64,8 +66,6 @@ testimonials: []
 ---
 
 Sou um desenvolvedor web apaixonado por tecnologia e por transformar ideias em soluções reais.
-Trabalho com HTML, CSS, JavaScript, PHP, MySQL, Docker e Linux, além de frameworks como Laminas e
-Zend Framework 2.
-
 Acredito no aprendizado contínuo e na melhoria constante como parte essencial do crescimento
-profissional. Cada novo projeto é uma oportunidade de evoluir, como pessoa e como desenvolvedor.
+profissional. Cada novo projeto é uma oportunidade de evoluir — como pessoa (ouvindo quem usa o
+sistema) e como desenvolvedor (aprimorando tech skills).
