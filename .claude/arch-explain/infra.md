@@ -18,6 +18,10 @@ O segurança faz duas coisas que o porteiro interno não faz:
 2. **Olha o nome no envelope.** `meusite.com` vai para a loja; `www.meusite.com` é corrigido para
    `meusite.com`.
 
+O nome técnico do segurança é **proxy reverso**: um servidor que recebe a requisição no lugar de
+outro e a repassa. "Caddy de borda" é só o apelido deste projeto para o proxy reverso que fica na
+entrada da máquina e também termina o HTTPS (o cadeado é aberto nele; dali para dentro é HTTP).
+
 ### Por que dois Caddy, e não um só
 
 Daria para o Caddy do app cuidar do HTTPS e dispensar a borda. A separação foi mantida porque:
