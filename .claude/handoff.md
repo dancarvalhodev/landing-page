@@ -10,11 +10,10 @@ sessão atualiza este arquivo antes do último commit; quem começar lê este ar
 - **Branch:** `feat/site-foundation`, já enviada ao GitHub (`origin`). Um commit por etapa.
 - **Plano:** `.claude/plans/arquitetura-landing-page.md`. A seção "Progresso", no fim do arquivo,
   marca o que está confirmado.
-- **Confirmadas:** etapas 1 a 8 inteiras (a 8, descrições profissionais, em 8a-8c) e, da etapa 9
-  (imagens de produção), as subetapas 9a (imagem PHP), 9b (imagem Caddy) e 9c (versão do CSS em
-  produção). Conceito e código da etapa 9 estão em `.claude/arch-explain/producao.md`.
-- **Entregue, aguardando conferência:** 9d (`docker-compose.prod.yml`). Com ela confirmada, a
-  etapa 9 fecha.
+- **Confirmadas:** etapas 1 a 9 inteiras. A 8 (descrições profissionais) foi feita em 8a-8c e a 9
+  (imagens de produção) em 9a-9d: imagem PHP, imagem Caddy, versão do CSS em produção e
+  `docker-compose.prod.yml`. Conceito e código da etapa 9 estão em
+  `.claude/arch-explain/producao.md`.
 - **Próxima:** etapa 10 — infra (`infra/cloud-init.yaml`, `infra/edge/`, `infra/README.md`).
 
 ## Como retomar em um computador novo
