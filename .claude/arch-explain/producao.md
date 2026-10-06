@@ -176,6 +176,17 @@ Na prática, quando chega `/blog`, o `php_fastcgi` procura, na pasta do próprio
 O terceiro existe, então ele repassa a requisição ao PHP dizendo "abra `/app/public/index.php`". O
 PHP abre a cópia dele, que é a que roda.
 
+A rota não se perde nessa troca. O recado do Caddy para o PHP leva duas informações separadas:
+
+| Campo | Valor para `/blog/meu-artigo?q=php` | Quem usa |
+|---|---|---|
+| `SCRIPT_FILENAME` | `/app/public/index.php` | O PHP-FPM, para saber qual arquivo executar |
+| `REQUEST_URI` | `/blog/meu-artigo?q=php` | O Slim, para escolher a rota em `routes/web.php` |
+
+É o porteiro dizendo no interfone: "apartamento `index.php`, a visita quer falar sobre
+`/blog/meu-artigo`". O arquivo é sempre o mesmo; o assunto muda a cada requisição. Isso vale igual
+no desenvolvimento e em produção.
+
 No desenvolvimento isso passa despercebido, porque os dois contêineres enxergam a mesma pasta
 `./www`. Em produção cada imagem tem os seus arquivos, então o `index.php` precisa estar nas duas:
 
