@@ -1,7 +1,9 @@
 services:
     caddy:
         build:
-            context: bin/caddy
+            context: .
+            dockerfile: bin/caddy/Dockerfile
+            target: dev
         container_name: ${CONTAINER_NAME}caddy
         ports:
             - ${PORT_CADDY}:80

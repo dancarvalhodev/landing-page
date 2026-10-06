@@ -304,8 +304,8 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 8b. Descrições profissionais — chamada, apresentação, "sobre" e habilidades — confirmada em 2026-10-05
 - [x] 8c. Descrições profissionais — projetos — confirmada em 2026-10-05
 - [x] 8. Descrições profissionais (todas as subetapas) — confirmada em 2026-10-05
-- [ ] 9a. Imagens de produção — imagem PHP — entregue, aguardando conferência
-- [ ] 9b. Imagens de produção — imagem Caddy
+- [x] 9a. Imagens de produção — imagem PHP — confirmada em 2026-10-06
+- [ ] 9b. Imagens de produção — imagem Caddy — entregue, aguardando conferência
 - [ ] 9c. Imagens de produção — versão do CSS em produção
 - [ ] 9d. Imagens de produção — docker-compose.prod.yml e conferência
 - [ ] 9. Imagens de produção (todas as subetapas)

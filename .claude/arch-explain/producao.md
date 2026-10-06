@@ -1,7 +1,8 @@
 # Imagens de produção — o que muda em relação ao desenvolvimento
 
-Arquivos explicados: `bin/php/Dockerfile`, `config/php/php.prod.ini`, `.dockerignore` e o serviço
-`php` do `docker-compose.yml`. Este documento cresce a cada subetapa da etapa 9.
+Arquivos explicados: `bin/php/Dockerfile`, `bin/caddy/Dockerfile`, `config/php/php.prod.ini`,
+`.dockerignore` e os serviços `php` e `caddy` do `docker-compose.yml`. Este documento cresce a cada
+subetapa da etapa 9.
 
 ## A ideia geral
 
@@ -114,3 +115,89 @@ docker run --rm landing-page-php:prod-test php -m
 ```
 
 A lista de módulos não pode ter `xdebug`.
+
+## 9b — Imagem Caddy
+
+Arquivos: `bin/caddy/Dockerfile` e o serviço `caddy` do `docker-compose.yml`.
+
+### O problema
+
+No desenvolvimento, o CSS é gerado por um terceiro contêiner, o `tailwind`, que fica vigiando os
+templates e reescreve `public/assets/css/app.css` a cada mudança. Em produção esse contêiner não
+existe, e o `app.css` nem vai para o git. O CSS precisa nascer durante o build e já sair dentro da
+imagem do Caddy, que é quem entrega os arquivos estáticos.
+
+### Um estágio que só serve de oficina
+
+Voltando à marmita: para cozinhar você usa panela e fogão, mas só a comida vai na embalagem. O
+estágio `assets` é a panela: ele instala o Tailwind, gera o CSS e é descartado. A imagem final
+leva só o arquivo pronto.
+
+| Estágio | Parte de | O que faz |
+|---|---|---|
+| `dev` | `caddy:2-alpine` | O Caddy puro; os arquivos entram pela pasta compartilhada |
+| `assets` | `alpine:3` | Instala o Tailwind, copia `www/` e gera o `app.css` minificado |
+| `prod` | `dev` | Recebe o Caddyfile, a pasta `public/` e o CSS vindo do `assets` |
+
+A linha que faz a ponte é `COPY --from=assets ...`: ela copia um arquivo de outro estágio, em vez
+de copiar do computador. É por causa dela que o Docker constrói o `assets` quando o alvo é o
+`prod`, mesmo o `prod` não partindo dele no `FROM`. Na árvore da subetapa 9a, `--from` conta como
+dependência, igual ao `FROM`.
+
+### Por que o Tailwind precisa de `www/` inteiro
+
+O Tailwind só gera as classes que encontra em uso. Ele procura nas pastas listadas em
+`www/resources/css/app.css` (`templates`, `src`, `content` e `public/assets/js`), então o estágio
+`assets` copia `www/` inteiro. Nada disso vai para a imagem final: só o `app.css`.
+
+O `--minify` tira espaços e quebras de linha do CSS. O arquivo de produção fica com cerca de 18 KB.
+
+### O que a imagem `prod` carrega
+
+- `/etc/caddy/Caddyfile`: o mesmo do desenvolvimento, agora embutido.
+- `/app/public/`: fontes, imagens, JS, os CSS do Giscus, o `index.php` e o `app.css` gerado.
+
+### Por que o `index.php` aparece nas duas imagens
+
+`www/public/index.php` é a porta de entrada do site: um arquivo de poucas linhas que liga o app.
+Toda página (`/`, `/blog`, `/en`) passa por ele. Quem o executa é sempre o PHP; o Caddy nunca roda
+PHP.
+
+Mesmo assim, o Caddy precisa ter uma cópia dele. Lembre do porteiro do `caddy.md`: antes de
+interfonar para o apartamento do PHP, ele olha a lista de moradores na portaria. Se `index.php`
+não estiver na lista, ele responde "não existe" (404) sem nem interfonar.
+
+Na prática, quando chega `/blog`, o `php_fastcgi` procura, na pasta do próprio Caddy:
+
+1. um arquivo chamado `/blog`;
+2. um `/blog/index.php`;
+3. o `/index.php`.
+
+O terceiro existe, então ele repassa a requisição ao PHP dizendo "abra `/app/public/index.php`". O
+PHP abre a cópia dele, que é a que roda.
+
+No desenvolvimento isso passa despercebido, porque os dois contêineres enxergam a mesma pasta
+`./www`. Em produção cada imagem tem os seus arquivos, então o `index.php` precisa estar nas duas:
+
+| Imagem | Tem o `index.php`? | Para quê |
+|---|---|---|
+| Caddy | Sim, dentro de `public/` | Só para constar na "lista de moradores" |
+| PHP | Sim, com todo o resto de `www/` | É o que de fato executa |
+
+O restante do código (`src/`, `templates/`, `content/`, `vendor/`) fica só na imagem do PHP.
+
+### Um cuidado: a versão do Tailwind está em dois lugares
+
+`bin/tailwind/Dockerfile` (desenvolvimento) e `bin/caddy/Dockerfile` (produção) declaram cada um o
+seu `TAILWIND_VERSION`. Ao atualizar um, atualize o outro, senão o CSS de produção sai diferente
+do que você viu no desenvolvimento. O script de instalação (`bin/tailwind/install.sh`) é um só,
+usado pelos dois.
+
+### Como conferir
+
+```
+docker build -f bin/caddy/Dockerfile --target prod -t landing-page-caddy:prod-test .
+docker run --rm landing-page-caddy:prod-test ls -la /app/public/assets/css
+```
+
+A lista precisa ter o `app.css`, mesmo ele não existindo no git.
