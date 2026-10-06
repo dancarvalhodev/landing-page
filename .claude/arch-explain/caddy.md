@@ -8,7 +8,7 @@ Caddyfile é a folha de instruções que ele segue.
 ## As instruções, em ordem
 
 1. **"Fique na portaria da porta 80 e atenda qualquer um"** (`:80`). Ele não cuida do cadeado
-   (HTTPS); isso será trabalho de outro porteiro, na entrada da rua: o Caddy de borda da etapa 9.
+   (HTTPS); isso será trabalho de outro porteiro, na entrada da rua: o Caddy de borda da etapa 10 (ver `infra.md`).
 
 2. **"O prédio é a pasta `/app/public`"** (`root`). Só o que está lá dentro pode ser entregue a
    visitantes.

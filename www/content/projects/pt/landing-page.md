@@ -14,5 +14,4 @@ planejado desde o início, com hreflang, Open Graph, JSON-LD e sitemap. O back-e
 Slim 4, PHP-DI e Twig, com Tailwind CSS no estilo, e todo o ambiente sobe com Caddy e Docker
 Compose.
 
-O site está hospedado na Oracle Cloud, com publicação automática pelo GitHub Actions e uma prévia
-de cada alteração antes de ir ao ar.
+O site está hospedado na Oracle Cloud, com publicação automática pelo GitHub Actions.

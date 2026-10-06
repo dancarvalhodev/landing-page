@@ -29,13 +29,15 @@ do usuário:
 - **SEO:** ser encontrado pelo nome. Sem analytics.
 - **Hospedagem:** instância Oracle Cloud Free Tier (ainda não criada); domínio já registrado.
 - **Atualização:** Markdown no repositório, algumas vezes por mês; publicação automática com
-  prévia e aprovação antes de ir ao ar.
+  prévia e aprovação antes de ir ao ar. **A prévia foi retirada em 2026-10-06, por decisão do
+  dev** (etapa 10a): a conferência antes de publicar é feita no ambiente local. O motivo e o
+  caminho para recolocá-la estão em `.claude/arch-explain/infra.md`.
 
 ## Abordagem recomendada
 
 Aplicação **PHP com Slim 4**, sem banco de dados: todo o conteúdo são arquivos Markdown (etiqueta em YAML no topo, texto embaixo),
 lidos direto do disco a cada requisição (MVP: sem cache até haver necessidade medida). Dois contêineres por ambiente —
-`caddy` (arquivos estáticos + FastCGI) e `php` (PHP-FPM) — iguais em desenvolvimento, prévia e
+`caddy` (arquivos estáticos + FastCGI) e `php` (PHP-FPM) — iguais em desenvolvimento e
 produção. MySQL e Redis do template ficam de fora: não há dados nem sessões.
 
 | Camada | Escolha | Por quê |
@@ -64,7 +66,7 @@ repositório.
 
 ```
 docker-compose.yml          # desenvolvimento: caddy, php, tailwind (watch)
-docker-compose.prod.yml     # prévia e produção: imagens do GHCR, sem bind mounts
+docker-compose.prod.yml     # produção: imagens do GHCR, sem bind mounts
 env-example                 # CONTAINER_NAME, PORT_CADDY, APP_ENV, SITE_URL
 bin/
   php/Dockerfile            # estágios base (Dockerfile 8.5 do usuário) → dev → prod
@@ -103,12 +105,11 @@ www/                        # a aplicação
   composer.json
 infra/
   cloud-init.yaml           # instala Docker Engine + plugin compose, usuário de deploy, firewall
-  edge/docker-compose.yml   # Caddy de borda: TLS e proxy para produção e prévia
+  edge/docker-compose.yml   # Caddy de borda: TLS e proxy para a produção
   edge/Caddyfile
   README.md                 # passo a passo OCI + DNS
 .github/workflows/
   ci.yml                    # CS, PHPStan, PHPUnit (os testes também leem o conteúdo real)
-  preview.yml               # PR → imagens :pr-<n> → sobe a pilha de prévia
   deploy.yml                # merge na master → imagens :<sha> → sobe a produção
 ```
 
@@ -127,10 +128,9 @@ infra/
   bloqueio de dotfiles. Escuta só em `:80` — o TLS fica na borda.
 - **Desenvolvimento** (`docker-compose.yml`): `caddy` publica `${PORT_CADDY}`, `php` no alvo `dev`,
   `tailwind` em `--watch`; bind mounts de `./www` nos três.
-- **Servidor**: três projetos compose na mesma rede externa `edge`:
-  `site-prod` e `site-preview` (ambos `docker-compose.prod.yml`, com `IMAGE_TAG` diferente) e
-  `edge` (único a publicar 80/443). O Caddy de borda emite os certificados e faz proxy de
-  `<domínio>` → produção e `preview.<domínio>` → prévia, esta com senha e `X-Robots-Tag: noindex`.
+- **Servidor**: dois projetos compose na mesma rede externa `edge`: `site-prod`
+  (`docker-compose.prod.yml`) e `edge` (único a publicar 80/443). O Caddy de borda emite os
+  certificados, faz proxy de `<domínio>` → produção e redireciona `www.<domínio>` para o domínio.
 - **Arquitetura das imagens:** `linux/arm64`, construídas no CI em runner ARM nativo
   (`ubuntu-24.04-arm`) com cache do buildx; o mesmo Dockerfile constrói em amd64 na máquina local.
 
@@ -160,9 +160,8 @@ infra/
 - **Filtro de projetos:** cartões renderizados com `data-*`; o script só oculta/mostra.
 - **SEO (nome):** `<title>` e `h1` com o nome, JSON-LD `Person` com `sameAs`, canonical, sitemap
   gerado do índice, `robots.txt`, Open Graph básico com imagem estática.
-- **Publicação com revisão:** branch → Pull Request → `ci.yml` valida, `preview.yml` publica em
-  `preview.<domínio>` → revisão → merge na `master` → `deploy.yml` publica em produção.
-  Aprovar = fazer o merge. Um único slot de prévia.
+- **Publicação com revisão:** conferência no ambiente local → branch → Pull Request → `ci.yml`
+  valida → merge na `master` → `deploy.yml` publica em produção. Aprovar = fazer o merge.
 - **Deploy:** o workflow envia as imagens ao GHCR e, por SSH, roda
   `IMAGE_TAG=<sha> docker compose -p site-prod -f docker-compose.prod.yml up -d --wait`.
   Rollback = subir de novo com a tag anterior.
@@ -235,11 +234,17 @@ infra/
      só existe na imagem do Caddy.
    - **9d. `docker-compose.prod.yml` e conferência:** subir as duas imagens sem bind mounts e
      testar localmente.
-10. **Infra:** `infra/cloud-init.yaml`, `infra/edge/`, `infra/README.md`. A criação da conta/VM na
-    OCI, a regra na Security List e os registros DNS (`@`, `www`, `preview`) são feitos pelo
-    usuário seguindo o passo a passo.
-11. **CI/CD:** `ci.yml`, `preview.yml`, `deploy.yml`; secrets (`SSH_KEY`, `SSH_HOST`, senha da
-    prévia); proteção da `master` exigindo PR e CI verde.
+10. **Infra**, dividida em três a pedido do dev. Por ser um processo importante e complexo, cada
+    subetapa explica e documenta tudo em `.claude/arch-explain/infra.md`. A criação da conta/VM na
+    OCI, a regra na Security List e os registros DNS (`@` e `www`) são feitos pelo usuário seguindo
+    o passo a passo.
+    - **10a. Caddy de borda e rede compartilhada:** `infra/edge/docker-compose.yml`,
+      `infra/edge/Caddyfile` e a rede `edge` no `docker-compose.prod.yml`, no lugar da porta
+      publicada. A prévia foi retirada nesta subetapa.
+    - **10b. `infra/cloud-init.yaml`:** Docker, usuário de deploy e firewall.
+    - **10c. `infra/README.md`:** passo a passo OCI + DNS.
+11. **CI/CD:** `ci.yml` e `deploy.yml`; secrets (`SSH_KEY`, `SSH_HOST`); proteção da `master`
+    exigindo PR e CI verde.
 12. **Documentação:** atualizar `CLAUDE.md` e `README.md` com comandos, arquitetura e como
     publicar um artigo.
 13. **Revisão da documentação:** reler o que foi escrito na etapa 12 (e os demais documentos do
@@ -267,7 +272,7 @@ infra/
 - Opcional: submeter `https://<domínio>/sitemap.xml` no Google Search Console, pra acelerar a
   indexação (o Google encontra o sitemap sozinho via `robots.txt`, mas submeter manualmente não
   tem desvantagem).
-- Abrir um PR de teste: a prévia aparece em `preview.<domínio>`, pede senha e envia `noindex`;
+- Abrir um PR de teste: o CI roda;
   após o merge, a produção atualiza e `curl -I https://<domínio>` responde 200 com HTTPS válido,
   enquanto `http://` redireciona.
 - Rollback: subir a produção com a tag anterior e confirmar que o site volta.
@@ -309,7 +314,10 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 9c. Imagens de produção — versão do CSS em produção — confirmada em 2026-10-06
 - [x] 9d. Imagens de produção — docker-compose.prod.yml e conferência — confirmada em 2026-10-06
 - [x] 9. Imagens de produção (todas as subetapas) — confirmada em 2026-10-06
-- [ ] 10. Infra
+- [ ] 10a. Infra — Caddy de borda e rede compartilhada — entregue, aguardando conferência
+- [ ] 10b. Infra — cloud-init.yaml
+- [ ] 10c. Infra — README com o passo a passo OCI + DNS
+- [ ] 10. Infra (todas as subetapas)
 - [ ] 11. CI/CD
 - [ ] 12. Documentação
 - [ ] 13. Revisão da documentação

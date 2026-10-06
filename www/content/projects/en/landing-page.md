@@ -14,5 +14,4 @@ Giscus, and SEO was planned from the start, with hreflang, Open Graph, JSON-LD a
 back end is PHP 8.5 with Slim 4, PHP-DI and Twig, with Tailwind CSS for styling, and the whole
 environment runs on Caddy and Docker Compose.
 
-The site is hosted on Oracle Cloud, with automatic publishing through GitHub Actions and a
-preview of each change before it goes live.
+The site is hosted on Oracle Cloud, with automatic publishing through GitHub Actions.

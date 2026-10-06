@@ -366,7 +366,7 @@ public function robots(ServerRequestInterface $request, ResponseInterface $respo
 ```
 O `robots.txt` usa `$this->config->siteUrl` direto (não precisa do `UrlGenerator`, porque esse
 endereço não tem prefixo de idioma) — isso é o que faz o link do `Sitemap:` mudar sozinho entre
-`http://localhost:8080` (dev), a prévia e a produção, sem precisar editar nada manualmente.
+`http://localhost:8080` (dev) e a produção, sem precisar editar nada manualmente.
 
 ## `og:image`: a imagem do cartão de prévia (etapa 7f)
 

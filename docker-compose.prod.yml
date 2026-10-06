@@ -5,8 +5,11 @@ services:
             context: .
             dockerfile: bin/caddy/Dockerfile
             target: prod
-        ports:
-            - ${PORT_CADDY}:80
+        networks:
+            default:
+            edge:
+                aliases:
+                    - ${COMPOSE_PROJECT_NAME}
         depends_on:
             - php
         restart: unless-stopped
@@ -32,3 +35,7 @@ services:
             options:
                 max-size: 10m
                 max-file: "3"
+
+networks:
+    edge:
+        external: true

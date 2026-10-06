@@ -106,13 +106,17 @@ O plano tem o detalhe; aqui só o que mais pesa ao continuar.
 ## Pendências conhecidas
 
 - **Texto do projeto "Landing Page"** (`content/projects/{pt,en}/landing-page.md`): já afirma a
-  hospedagem na Oracle Cloud, a publicação pelo GitHub Actions e a prévia por alteração, que
-  dependem das etapas 10 e 11. Rever antes do deploy se algo mudar. O repositório também precisa
+  hospedagem na Oracle Cloud e a publicação pelo GitHub Actions, que dependem das etapas 10 e 11. Rever antes do deploy se algo mudar. O repositório também precisa
   estar público quando o site for ao ar, senão o link do cartão dá 404.
-- **Etapa 10:** o `docker-compose.prod.yml` publica o Caddy do app com `ports`, o que serve para
-  testar localmente. No servidor, trocar por uma rede compartilhada com o Caddy de borda.
+- **Etapa 10 em andamento:** dividida em 10a (Caddy de borda e rede `edge`), 10b (`cloud-init`) e
+  10c (README com o passo a passo). Ver o "Progresso" do plano e `.claude/arch-explain/infra.md`.
 - **Etapa 11:** o build de produção exige `IMAGE_TAG` (que também vira o `ASSET_VERSION`); o
-  workflow deve passar o identificador do commit.
+  workflow deve passar o identificador do commit. O projeto do Compose precisa se chamar
+  `site-prod` (`-p`), porque o Caddyfile de borda usa esse nome.
+- **A prévia (`preview.<domínio>`) foi retirada em 2026-10-06, por decisão do dev:** o projeto é
+  simples e a conferência é feita no ambiente local. Não existe `preview.yml` na etapa 11. O
+  valor `preview` continua aceito em `APP_ENV` (`Config` e testes), sem uso. Como recolocar:
+  `.claude/arch-explain/infra.md`.
 - **Versão do Tailwind em dois lugares:** `bin/tailwind/Dockerfile` e `bin/caddy/Dockerfile`.
   Atualizar os dois juntos.
 - **Artigos do blog** (`ola-mundo.md`, `hello-world.md`) ainda são de exemplo; saem antes do

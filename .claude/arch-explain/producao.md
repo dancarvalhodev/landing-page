@@ -312,9 +312,8 @@ compartilhada nem contêiner do Tailwind.
 | Variável | Para quê | Exemplo |
 |---|---|---|
 | `IMAGE_TAG` | A etiqueta das duas imagens e também o `ASSET_VERSION` do build | o identificador do commit |
-| `APP_ENV` | `preview` ou `production` | `production` |
+| `APP_ENV` | O ambiente; no servidor, sempre `production` | `production` |
 | `SITE_URL` | O endereço oficial daquele ambiente | `https://meusite.com` |
-| `PORT_CADDY` | A porta publicada no computador | `8081` |
 
 O `IMAGE_TAG` é obrigatório: sem ele, o Compose se recusa a rodar e mostra "informe IMAGE_TAG".
 Isso vale para qualquer comando com este arquivo, inclusive `down` e `logs`.
@@ -353,9 +352,7 @@ Daria para clonar o repositório na VM e construir lá, sem registro. O plano ev
 
 - a VM gratuita é pequena, e compilar extensões do PHP nela é lento e disputa memória com o site
   no ar;
-- com as imagens antigas guardadas, o rollback é subir a etiqueta anterior, em segundos;
-- prévia e produção usam a mesma imagem já construída, em vez de dois builds que podem sair
-  diferentes.
+- com as imagens antigas guardadas, o rollback é subir a etiqueta anterior, em segundos.
 
 O GHCR foi escolhido, e não o registro da Oracle ou o Docker Hub, porque o repositório já está no
 GitHub: o Actions envia para lá sem cadastrar credencial, e ele é gratuito para imagens públicas.
@@ -370,25 +367,13 @@ antigo.
 
 ### Rodar a produção no seu computador
 
-Com `-p landing-prod`, a pilha sobe em um projeto separado e não mexe nos contêineres de
-desenvolvimento. Use uma porta diferente da 8080:
+Desde a subetapa 10a, o Caddy do app não publica porta: ele só é alcançado pelo Caddy de borda.
+O passo a passo para subir a produção e a borda no computador está em `infra.md`, na seção
+"Testar tudo no computador".
 
-```
-IMAGE_TAG=teste APP_ENV=production SITE_URL=http://localhost:8081 PORT_CADDY=8081 docker compose -p landing-prod -f docker-compose.prod.yml up -d --build
-```
+Dois detalhes que valem para qualquer comando com este arquivo:
 
-Abra `http://localhost:8081`. Para ver os erros do PHP e para derrubar:
-
-```
-docker logs landing-prod-php-1
-IMAGE_TAG=teste docker compose -p landing-prod -f docker-compose.prod.yml down
-```
-
-As variáveis vão na frente do comando porque o `.env` do projeto tem os valores de
-desenvolvimento; o que é passado na linha de comando tem prioridade sobre o `.env`.
-
-### O que ainda vai mudar
-
-A linha `ports` publica o Caddy do app direto no computador, o que serve para testar. No servidor,
-quem recebe as visitas é o Caddy de borda, com HTTPS; a etapa 10 troca essa porta publicada por
-uma rede compartilhada com ele.
+- As variáveis vão na frente do comando (`IMAGE_TAG=teste APP_ENV=production ... docker compose`)
+  porque o `.env` do projeto tem os valores de desenvolvimento; o que é passado na linha de
+  comando tem prioridade sobre o `.env`.
+- Os erros do PHP se leem com `docker logs site-prod-php-1`.

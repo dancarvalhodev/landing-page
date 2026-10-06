@@ -8,7 +8,6 @@ O `SITE_URL` é o endereço oficial do site, escrito uma vez por ambiente:
 | Ambiente | Valor |
 |---|---|
 | Desenvolvimento | `http://localhost:8080` |
-| Prévia | `https://preview.<domínio>` |
 | Produção | `https://<domínio>` |
 
 Ele é obrigatório e validado, como o `APP_ENV`: sem a variável, o app não sobe.
@@ -81,6 +80,5 @@ vez de deixar cada visitante adivinhar.
 
 ## O cuidado que ele pede
 
-Se o `SITE_URL` estiver errado (por exemplo `http://` em vez de `https://`, ou o domínio da prévia
-em produção), o site passa a dizer ao Google que o endereço oficial é outro, e o Google obedece.
+Se o `SITE_URL` estiver errado (por exemplo `http://` em vez de `https://`, ou outro domínio), o site passa a dizer ao Google que o endereço oficial é outro, e o Google obedece.
 Vale conferir o valor em cada ambiente ao configurar o deploy.
