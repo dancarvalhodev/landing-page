@@ -1,0 +1,27 @@
+#cloud-config
+# Somente ASCII, sem acentos: o painel da Oracle corrompe outros caracteres ao colar.
+
+package_update: true
+package_upgrade: true
+
+groups:
+  - docker
+
+users:
+  - default
+  - name: deploy
+    groups: [docker]
+    shell: /bin/bash
+    lock_passwd: true
+    ssh_authorized_keys:
+      - TROQUE_PELA_CHAVE_PUBLICA_DE_DEPLOY
+
+runcmd:
+  # Salvar as regras antes de instalar o Docker: assim as regras dele ficam fora do arquivo salvo.
+  - iptables -I INPUT -p tcp -m multiport --dports 80,443 -j ACCEPT
+  - iptables -I INPUT -p udp --dport 443 -j ACCEPT
+  - netfilter-persistent save
+  - curl -fsSL https://get.docker.com | sh
+  - docker network create edge
+  - mkdir -p /srv/landing-page
+  - chown deploy:deploy /srv/landing-page

@@ -10,11 +10,11 @@ sessão atualiza este arquivo antes do último commit; quem começar lê este ar
 - **Branch:** `feat/site-foundation`, já enviada ao GitHub (`origin`). Um commit por etapa.
 - **Plano:** `.claude/plans/arquitetura-landing-page.md`. A seção "Progresso", no fim do arquivo,
   marca o que está confirmado.
-- **Confirmadas:** etapas 1 a 9 inteiras. A 8 (descrições profissionais) foi feita em 8a-8c e a 9
-  (imagens de produção) em 9a-9d: imagem PHP, imagem Caddy, versão do CSS em produção e
-  `docker-compose.prod.yml`. Conceito e código da etapa 9 estão em
-  `.claude/arch-explain/producao.md`.
-- **Próxima:** etapa 10 — infra (`infra/cloud-init.yaml`, `infra/edge/`, `infra/README.md`).
+- **Confirmadas:** etapas 1 a 10 inteiras. A 8 (descrições profissionais) foi feita em 8a-8c; a 9
+  (imagens de produção) em 9a-9d; a 10 (infra) em 10a (Caddy de borda e rede `edge`) e 10b
+  (`cloud-init.yaml` e `infra/README.md`). Conceito e código estão em
+  `.claude/arch-explain/producao.md` e `.claude/arch-explain/infra.md`.
+- **Próxima:** etapa 11 — CI/CD (`ci.yml` e `deploy.yml`, secrets e proteção da `master`).
 
 ## Como retomar em um computador novo
 
@@ -108,8 +108,11 @@ O plano tem o detalhe; aqui só o que mais pesa ao continuar.
 - **Texto do projeto "Landing Page"** (`content/projects/{pt,en}/landing-page.md`): já afirma a
   hospedagem na Oracle Cloud e a publicação pelo GitHub Actions, que dependem das etapas 10 e 11. Rever antes do deploy se algo mudar. O repositório também precisa
   estar público quando o site for ao ar, senão o link do cartão dá 404.
-- **Etapa 10 em andamento:** dividida em 10a (Caddy de borda e rede `edge`), 10b (`cloud-init`) e
-  10c (README com o passo a passo). Ver o "Progresso" do plano e `.claude/arch-explain/infra.md`.
+- **A VM já existe na Oracle** (criada pelo dev em 2026-10-09), com Docker, usuário `deploy`,
+  rede `edge`, portas abertas, DNS no Squarespace e o Caddy de borda no ar. O cloud-init não foi
+  aplicado nessa VM: um acento no arquivo foi corrompido ao colar no painel, e os passos foram
+  feitos à mão por SSH. O `infra/cloud-init.yaml` corrigido (só ASCII) ainda não rodou em uma VM
+  de verdade. Ver `.claude/arch-explain/infra.md`.
 - **Etapa 11:** o build de produção exige `IMAGE_TAG` (que também vira o `ASSET_VERSION`); o
   workflow deve passar o identificador do commit. O projeto do Compose precisa se chamar
   `site-prod` (`-p`), porque o Caddyfile de borda usa esse nome.

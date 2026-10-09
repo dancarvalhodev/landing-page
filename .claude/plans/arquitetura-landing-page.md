@@ -234,15 +234,16 @@ infra/
      só existe na imagem do Caddy.
    - **9d. `docker-compose.prod.yml` e conferência:** subir as duas imagens sem bind mounts e
      testar localmente.
-10. **Infra**, dividida em três a pedido do dev. Por ser um processo importante e complexo, cada
+10. **Infra**, dividida em duas a pedido do dev. Por ser um processo importante e complexo, cada
     subetapa explica e documenta tudo em `.claude/arch-explain/infra.md`. A criação da conta/VM na
     OCI, a regra na Security List e os registros DNS (`@` e `www`) são feitos pelo usuário seguindo
     o passo a passo.
     - **10a. Caddy de borda e rede compartilhada:** `infra/edge/docker-compose.yml`,
       `infra/edge/Caddyfile` e a rede `edge` no `docker-compose.prod.yml`, no lugar da porta
       publicada. A prévia foi retirada nesta subetapa.
-    - **10b. `infra/cloud-init.yaml`:** Docker, usuário de deploy e firewall.
-    - **10c. `infra/README.md`:** passo a passo OCI + DNS.
+    - **10b. Preparar a VM:** `infra/cloud-init.yaml` (Docker, usuário de deploy e firewall) e
+      `infra/README.md` (passo a passo OCI + DNS). Eram 10b e 10c; foram juntadas a pedido do dev,
+      por serem dependentes: o roteiro é o que executa o `cloud-init`.
 11. **CI/CD:** `ci.yml` e `deploy.yml`; secrets (`SSH_KEY`, `SSH_HOST`); proteção da `master`
     exigindo PR e CI verde.
 12. **Documentação:** atualizar `CLAUDE.md` e `README.md` com comandos, arquitetura e como
@@ -314,10 +315,9 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 9c. Imagens de produção — versão do CSS em produção — confirmada em 2026-10-06
 - [x] 9d. Imagens de produção — docker-compose.prod.yml e conferência — confirmada em 2026-10-06
 - [x] 9. Imagens de produção (todas as subetapas) — confirmada em 2026-10-06
-- [ ] 10a. Infra — Caddy de borda e rede compartilhada — entregue, aguardando conferência
-- [ ] 10b. Infra — cloud-init.yaml
-- [ ] 10c. Infra — README com o passo a passo OCI + DNS
-- [ ] 10. Infra (todas as subetapas)
+- [x] 10a. Infra — Caddy de borda e rede compartilhada (prévia retirada) — confirmada em 2026-10-07
+- [x] 10b. Infra — preparar a VM: cloud-init.yaml e README com o passo a passo OCI + DNS (antigas 10b e 10c, juntadas) — confirmada em 2026-10-09, com a VM criada e o roteiro executado pelo dev. O cloud-init não foi aplicado na primeira VM (um acento no arquivo foi corrompido ao colar); os passos foram feitos à mão e o arquivo corrigido para só ASCII
+- [x] 10. Infra (todas as subetapas) — confirmada em 2026-10-09
 - [ ] 11. CI/CD
 - [ ] 12. Documentação
 - [ ] 13. Revisão da documentação
