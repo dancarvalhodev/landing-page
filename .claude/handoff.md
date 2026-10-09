@@ -14,7 +14,11 @@ sessão atualiza este arquivo antes do último commit; quem começar lê este ar
   (imagens de produção) em 9a-9d; a 10 (infra) em 10a (Caddy de borda e rede `edge`) e 10b
   (`cloud-init.yaml` e `infra/README.md`). Conceito e código estão em
   `.claude/arch-explain/producao.md` e `.claude/arch-explain/infra.md`.
-- **Próxima:** etapa 11 — CI/CD (`ci.yml` e `deploy.yml`, secrets e proteção da `master`).
+- **Próxima:** etapa 11 — CI/CD, dividida em 11a (`ci.yml`), 11b (`deploy.yml`, secrets, Pull
+  Request para a `master` e primeiro deploy) e 11c (proteção da `master` e rollback). A 11a está
+  entregue, aguardando conferência; ver `.claude/arch-explain/ci-cd.md`. Decisões já tomadas pelo dev: a VM é ARM, o repositório e as imagens no GHCR serão
+  públicos (a VM baixa sem token) e a `feat/site-foundation` vai para a `master` por Pull
+  Request, com passo a passo escrito para ele.
 
 ## Como retomar em um computador novo
 
@@ -44,7 +48,9 @@ projeto.
   também entram no documento, quando ele concorda.
 - **Etapas grandes demais para revisar de uma vez, dividir em subetapas** (a, b, c...) antes de
   começar, perguntando ao dev como prefere dividir. Foi feito com a etapa 5 (Home → 5a-5d), a 6
-  (Blog → 6a-6f), a 7 (SEO → 7a-7f), a 8 (8a-8c) e a 9 (9a-9d). Cuidado ao reaproveitar uma letra já usada em outro lugar do
+  (Blog → 6a-6f), a 7 (SEO → 7a-7f), a 8 (8a-8c), a 9 (9a-9d), a 10 (10a-10b) e a 11 (11a-11c).
+  **Registrar a divisão no plano e neste arquivo antes de escrever qualquer arquivo da etapa**: o
+  dev interrompeu a 11a porque a divisão ainda não estava registrada. Cuidado ao reaproveitar uma letra já usada em outro lugar do
   plano (ex.: a 6b já existia reservada quando a 7 foi dividida).
 - **MVP sempre.** O mínimo de arquivos e classes que resolve a etapa de hoje; nada antecipado
   (cache, validadores, camadas "para o futuro"). A etapa 4b foi refeita porque a primeira versão

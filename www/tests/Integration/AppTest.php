@@ -16,7 +16,7 @@ final class AppTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->main = new Main(new Config(dirname(__DIR__, 2), 'production', 'https://meusite.com'));
+        $this->main = new Main(new Config(dirname(__DIR__, 2), 'production', 'https://meusite.com', 'abc123'));
     }
 
     public function testHomeRespondsInPortuguese(): void
@@ -44,8 +44,9 @@ final class AppTest extends TestCase
     {
         $response = $this->request('GET', '/');
 
-        self::assertMatchesRegularExpression(
-            '#<link rel="stylesheet" href="/assets/css/app\.css\?v=\d+">#',
+        // Com a versão do build, o teste não depende do app.css, que é gerado e não vai para o git.
+        self::assertStringContainsString(
+            '<link rel="stylesheet" href="/assets/css/app.css?v=abc123">',
             (string) $response->getBody(),
         );
     }
