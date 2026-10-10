@@ -133,6 +133,9 @@ Etiqueta YAML no topo e Markdown embaixo. `site.md`; `pt.md` e `en.md` (perfil; 
   `master`. Renomear trava todo Pull Request até a regra ser atualizada no GitHub.
 - **Mudou o Caddyfile? Reinicie o Caddy.** A API de administração está desligada, então
   `caddy reload` não funciona.
+- **Tema do Giscus:** os `giscus-{light,dark}.css` não declaram `color-scheme` (gera uma caixa
+  opaca atrás dos comentários) e dependem do cabeçalho de CORS do Caddyfile. Só dá para conferir
+  em produção. Ver `.claude/arch-explain/giscus.md`.
 - **Nunca `down --volumes` na borda, no servidor:** o volume guarda os certificados.
 - **A `master` é protegida e publica.** Toda alteração vai por branch nova e Pull Request; o merge
   dispara o deploy.
@@ -152,6 +155,6 @@ Etiqueta YAML no topo e Markdown embaixo. `site.md`; `pt.md` e `en.md` (perfil; 
 ## Documentação
 
 `.claude/arch-explain/` tem um documento por assunto, com o porquê das decisões: `caddy.md`,
-`tailwind.md`, `i18n.md`, `blog-content.md`, `seo.md`, `site-url.md`, `scroll-reveal.md`,
+`tailwind.md`, `i18n.md`, `blog-content.md`, `giscus.md`, `seo.md`, `site-url.md`, `scroll-reveal.md`,
 `producao.md`, `infra.md` e `ci-cd.md`. Ao mudar o comportamento de uma dessas áreas, atualize o
 documento correspondente na mesma alteração.
