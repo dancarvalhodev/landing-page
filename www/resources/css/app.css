@@ -202,10 +202,3 @@
         @apply border border-line px-3 py-2 text-left;
     }
 }
-
-/* O Giscus põe "color-scheme: light dark" no iframe; se o sistema for escuro e o site claro (ou
-   o contrário), o navegador pinta um fundo opaco atrás dos comentários. Fora de @layer de
-   propósito: dentro de uma camada, a regra perderia para o CSS do Giscus. */
-.giscus-frame {
-    color-scheme: normal;
-}
