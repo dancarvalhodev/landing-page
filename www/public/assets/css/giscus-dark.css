@@ -1,7 +1,9 @@
 /* Tema do Giscus (comentários) nos tons da identidade "Pôr do sol" — escuro.
    Valores duplicados de www/resources/css/app.css (.dark); atualizar os dois juntos se a
    paleta mudar. O Giscus roda num documento à parte (iframe), por isso não dá pra usar
-   var(--dark-page) etc. direto — essas variáveis não existem nesse documento. */
+   var(--dark-page) etc. direto — essas variáveis não existem nesse documento.
+   Não declarar color-scheme aqui: o iframe e o documento do Giscus já usam "light dark"; se um
+   lado divergir do outro, o navegador pinta um fundo opaco atrás dos comentários. */
 :root {
     --color-canvas-default: #1a0d0a;
     --color-canvas-overlay: #2a1612;

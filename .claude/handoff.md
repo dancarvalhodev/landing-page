@@ -130,7 +130,9 @@ O que não funciona como esperado ou é provisório:
   com `data-emit-metadata="1"`; agora ele reage a qualquer mensagem do Giscus. Uma terceira,
   também por conferir: uma caixa branca atrás dos comentários no tema claro com o sistema em modo
   escuro, porque o iframe (`color-scheme: light dark`) e o CSS do tema (`color-scheme: light`)
-  discordavam; o `color-scheme` saiu dos dois CSS e o `app.css` põe `normal` no iframe. Em
+  discordavam; o `color-scheme` saiu dos dois CSS. Não sobrescrever o `color-scheme` do iframe
+  no `app.css`: o documento do Giscus também usa `light dark`, e a tentativa com `normal` gerou
+  uma caixa escura. Em
   `http://localhost` o Giscus ignora o CSS customizado, então o visual só dá para conferir depois
   do deploy. Os dois
   CSS definem só parte das variáveis `--color-*` do Giscus; se sobrar algum elemento sem cor,
