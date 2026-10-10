@@ -162,6 +162,7 @@ por analogias:
 | `tailwind.md` | O Tailwind sem Node e as cores da identidade |
 | `i18n.md` | Os dois idiomas e as rotas |
 | `blog-content.md` | Do arquivo Markdown ao artigo na tela |
+| `giscus.md` | Os comentários com as cores do site |
 | `seo.md` | Metadados, `hreflang`, Open Graph, JSON-LD e sitemap |
 | `site-url.md` | Para que serve o `SITE_URL` |
 | `scroll-reveal.md` | As animações ao rolar a página |

@@ -112,8 +112,10 @@ O plano tem o detalhe; aqui só o que mais pesa ao continuar.
   `hl-*` em `app.css`) nas cores da identidade, não um dos temas prontos do pacote.
 - **Giscus** (etapa 6f) está configurado com o repositório real
   `dancarvalhodev/landing-page-comments`. O tema customizado
-  (`www/public/assets/css/giscus-{light,dark}.css`) depende de um cabeçalho de CORS no Caddy —
-  ver "Pendências".
+  (`www/public/assets/css/giscus-{light,dark}.css`) funciona em produção desde 2026-10-10, depois
+  de quatro correções. O `giscus-theme.js` carrega o `client.js` já com o tema certo, o Caddy
+  manda um cabeçalho de CORS nesses dois CSS e eles não declaram `color-scheme`. O porquê de cada
+  peça está em `.claude/arch-explain/giscus.md`; ler antes de mexer.
 - **`SITE_URL` e `APP_ENV` são obrigatórios** no `.env`; o app não sobe sem eles. Ver
   `.claude/arch-explain/site-url.md`.
 - **`CanonicalPathMiddleware`** (barra final e barras duplicadas) foi mantido de propósito em vez
@@ -123,23 +125,10 @@ O plano tem o detalhe; aqui só o que mais pesa ao continuar.
 
 O que não funciona como esperado ou é provisório:
 
-- **Tema do Giscus (etapa 6f): funcionando em produção desde 2026-10-10; falta conferir a
-  última correção (troca de idioma).** O que foi preciso, em ordem:
-  - o Caddy entregava `giscus-{light,dark}.css` sem `Access-Control-Allow-Origin` (ver
-    `.claude/arch-explain/caddy.md`);
-  - o `giscus-theme.js` esperava a mensagem `discussion`, que o Giscus só envia com
-    `data-emit-metadata="1"`; passou a reagir a qualquer mensagem do Giscus;
-  - os dois CSS declaravam `color-scheme`, o que gerava uma caixa opaca atrás dos comentários.
-    O iframe e o documento do Giscus usam `light dark`; não declarar `color-scheme` nos CSS do
-    tema nem sobrescrever o do iframe no `app.css`;
-  - ao trocar de idioma, os comentários ficavam com as cores padrão até recarregar. A causa exata
-    não foi isolada (dependia do tempo de chegada das mensagens). Agora o `giscus-theme.js`
-    carrega o `client.js` já com `data-theme` certo, e o `_giscus.html.twig` guarda só as
-    configurações, em uma `<div class="giscus">`.
-  - Em `http://localhost` o Giscus não consegue baixar o nosso CSS, então o script usa os temas
-    prontos `light` e `dark`; o visual da marca só dá para conferir em produção.
-  - Os dois CSS definem só parte das variáveis `--color-*` do Giscus; se sobrar algum elemento
-    sem cor, comparar com o `custom_example.css` oficial.
+- **O tema do Giscus só dá para conferir em produção.** Em `http://localhost` o iframe não
+  consegue baixar o nosso CSS, então o script usa os temas prontos `light` e `dark`. Os dois CSS
+  também definem só parte das variáveis `--color-*` do Giscus; se algum elemento aparecer sem
+  cor, comparar com o `custom_example.css` oficial. Ver `.claude/arch-explain/giscus.md`.
 - **Os artigos do blog no ar são de exemplo** (`ola-mundo.md` e `hello-world.md`). Foram
   publicados no primeiro deploy e devem dar lugar a artigos reais.
 - **O `infra/cloud-init.yaml` corrigido nunca rodou em uma VM.** Na VM atual ele não foi aplicado

@@ -312,7 +312,7 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 6c. Blog — tags — confirmada em 2026-10-03
 - [x] 6d. Blog — busca — confirmada em 2026-10-03
 - [x] 6e. Blog — realce de código — confirmada em 2026-10-03
-- [x] 6f. Blog — Giscus — confirmada em 2026-10-03 (visual do tema pendente de deploy com HTTPS)
+- [x] 6f. Blog — Giscus — confirmada em 2026-10-03 (visual do tema pendente de deploy com HTTPS; corrigido e conferido em produção em 2026-10-10, ver `.claude/arch-explain/giscus.md`)
 - [x] 6. Blog (todas as subetapas) — confirmada em 2026-10-03
 - [x] 7a. SEO — metadados básicos — confirmada em 2026-10-04
 - [x] 7b. SEO — hreflang — confirmada em 2026-10-04
@@ -334,7 +334,7 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 10b. Infra — preparar a VM: cloud-init.yaml e README com o passo a passo OCI + DNS (antigas 10b e 10c, juntadas) — confirmada em 2026-10-09, com a VM criada e o roteiro executado pelo dev. O cloud-init não foi aplicado na primeira VM (um acento no arquivo foi corrompido ao colar); os passos foram feitos à mão e o arquivo corrigido para só ASCII
 - [x] 10. Infra (todas as subetapas) — confirmada em 2026-10-09
 - [x] 11a. CI/CD — ci.yml (estilo, análise e testes) — confirmada em 2026-10-09
-- [x] 11b. CI/CD — deploy.yml, secrets, Pull Request para a master e primeiro deploy — confirmada em 2026-10-09, com o site no ar. O tema customizado do Giscus não funcionou em produção; o dev abriu uma issue no GitHub e corrige depois
+- [x] 11b. CI/CD — deploy.yml, secrets, Pull Request para a master e primeiro deploy — confirmada em 2026-10-09, com o site no ar. O tema customizado do Giscus não funcionou em produção; o dev abriu uma issue no GitHub e corrigiu em 2026-10-10
 - [x] 11c. CI/CD — proteção da master e rollback — confirmada em 2026-10-09
 - [x] 11. CI/CD (todas as subetapas) — confirmada em 2026-10-09
 - [x] 12. Documentação — confirmada em 2026-10-09 (feita de uma vez, sem subetapas: são dois arquivos, README.md e CLAUDE.md)

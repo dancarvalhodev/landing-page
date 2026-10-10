@@ -34,6 +34,7 @@ Caddyfile é a folha de instruções que ele segue.
   Giscus, que busca o CSS do tema na nossa portaria com `crossorigin="anonymous"`; sem o bilhete,
   o navegador baixa o arquivo e joga fora, e os comentários ficam sem as cores do site. Foi o que
   aconteceu no primeiro deploy. A autorização vale só para o Giscus e só para esses dois arquivos.
+  O caminho completo do tema está em `giscus.md`.
 
 ## Em uma frase
 
@@ -64,9 +65,9 @@ repassa ao PHP.
   servidor por um deploy.
 - **O bloqueio de ocultos também pega `/.well-known/`.** Hoje nada usa esse caminho.
 - **Cache de um ano pede endereço com versão.** Tudo em `/assets` sai como `immutable`, então um
-  arquivo só é buscado de novo se o endereço mudar. Nos templates isso é o `?v=` do `asset()`. O
-  `giscus-theme.js` montava o endereço do tema sozinho, sem `?v=`; agora recebe os endereços
-  prontos do template (`data-light` e `data-dark`, via `asset_absolute()`).
+  arquivo só é buscado de novo se o endereço mudar. Nos templates isso é o `?v=` do `asset()`.
+  Um script que precise do endereço de um arquivo deve recebê-lo pronto do template, como o
+  `giscus-theme.js` (`data-light` e `data-dark`, via `asset_absolute()`), e não montá-lo sozinho.
 
 ## Comandos úteis
 
