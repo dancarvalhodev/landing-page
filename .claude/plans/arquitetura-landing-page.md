@@ -246,11 +246,11 @@ infra/
       por serem dependentes: o roteiro é o que executa o `cloud-init`.
 11. **CI/CD**, dividida em três a pedido do dev. Cada subetapa explica e documenta tudo em
     `.claude/arch-explain/`, com o passo a passo do que o dev faz no GitHub:
-    - **11a. `ci.yml`:** a cada push na `master` e a cada Pull Request, roda PHP-CS-Fixer, PHPStan
-      e PHPUnit.
-    - **11b. `deploy.yml`:** no merge na `master`, constrói as duas imagens para ARM64, envia ao
-      GHCR e, por SSH, sobe o projeto `site-prod` na VM. Inclui os secrets (`SSH_KEY`,
-      `SSH_HOST`), o passo a passo do Pull Request da `feat/site-foundation` para a `master` e o
+    - **11a. `ci.yml`:** a cada Pull Request, roda PHP-CS-Fixer, PHPStan e PHPUnit. Na `master`,
+      quem o chama é o `deploy.yml`.
+    - **11b. `deploy.yml`:** no merge na `master`, roda o `ci.yml`, constrói as duas imagens para
+      ARM64, envia ao GHCR e, por SSH, sobe o projeto `site-prod` na VM. Inclui os secrets
+      (`SSH_KEY`, `SSH_HOST`, `SSH_KNOWN_HOSTS`), o `.env` do site na VM, o passo a passo do Pull Request da `feat/site-foundation` para a `master` e o
       primeiro deploy.
     - **11c. Proteção da `master` e rollback:** exigir Pull Request e CI verde para o merge
       (configurado pelo dev no painel do GitHub, seguindo o passo a passo) e documentar como
@@ -331,8 +331,8 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 10a. Infra — Caddy de borda e rede compartilhada (prévia retirada) — confirmada em 2026-10-07
 - [x] 10b. Infra — preparar a VM: cloud-init.yaml e README com o passo a passo OCI + DNS (antigas 10b e 10c, juntadas) — confirmada em 2026-10-09, com a VM criada e o roteiro executado pelo dev. O cloud-init não foi aplicado na primeira VM (um acento no arquivo foi corrompido ao colar); os passos foram feitos à mão e o arquivo corrigido para só ASCII
 - [x] 10. Infra (todas as subetapas) — confirmada em 2026-10-09
-- [ ] 11a. CI/CD — ci.yml (estilo, análise e testes) — entregue, aguardando conferência (simulado em um clone limpo; a execução no GitHub só acontece com o Pull Request aberto)
-- [ ] 11b. CI/CD — deploy.yml, secrets, Pull Request para a master e primeiro deploy
+- [x] 11a. CI/CD — ci.yml (estilo, análise e testes) — confirmada em 2026-10-09
+- [ ] 11b. CI/CD — deploy.yml, secrets, Pull Request para a master e primeiro deploy — entregue, aguardando conferência (simulado no computador; o envio ao GHCR e o SSH só se confirmam no primeiro merge, seguindo os passos 9 a 15 do infra/README.md)
 - [ ] 11c. CI/CD — proteção da master e rollback
 - [ ] 11. CI/CD (todas as subetapas)
 - [ ] 12. Documentação

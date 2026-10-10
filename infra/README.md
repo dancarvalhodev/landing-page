@@ -1,16 +1,18 @@
 # Infra — passo a passo para colocar o servidor no ar
 
-Este roteiro cria a máquina na Oracle Cloud, aponta o domínio para ela e sobe o Caddy de borda. Ao
-final, `https://<domínio>` responde com um certificado válido. O site em si entra depois, pelo
-deploy automático.
+Este roteiro tem duas partes. A primeira (passos 1 a 8) cria a máquina na Oracle Cloud, aponta o
+domínio para ela e sobe o Caddy de borda; ao final, `https://<domínio>` responde com um
+certificado válido. A segunda (passos 9 a 15) prepara o GitHub e faz o primeiro deploy, que
+coloca o site no ar.
 
-O porquê de cada peça está em `.claude/arch-explain/infra.md`. Aqui fica só o que fazer, na ordem.
+O porquê de cada peça está em `.claude/arch-explain/infra.md` e `.claude/arch-explain/ci-cd.md`.
+Aqui fica só o que fazer, na ordem.
 
 > Os nomes de menus e botões são os do painel da Oracle em inglês e podem mudar com o tempo. Se
 > algum não bater, procure pelo conceito (por exemplo, "regra de entrada" em vez de "Ingress
 > Rule").
 
-## Visão geral
+## Parte 1 — O servidor
 
 | # | Passo | Onde | Tempo |
 |---|---|---|---|
@@ -365,6 +367,142 @@ Do seu computador:
 válido, e que ainda não existe um site atrás dela. O site sobe com o primeiro deploy. Se o `curl`
 reclamar do certificado, ou não conectar, algo nos passos anteriores falhou.
 
+## Parte 2 — O primeiro deploy
+
+Com a borda respondendo 502, falta colocar o site atrás dela. Quem faz isso é o GitHub Actions,
+no merge na `master`. Esta parte prepara o que ele precisa e faz o primeiro merge. O porquê de
+cada peça está em `.claude/arch-explain/ci-cd.md`.
+
+| # | Passo | Onde |
+|---|---|---|
+| 9 | Criar o `.env` do site | VM, por SSH |
+| 10 | Copiar a identidade da VM | Seu computador |
+| 11 | Cadastrar os três secrets | GitHub |
+| 12 | Tornar o repositório público | GitHub |
+| 13 | Abrir o Pull Request e fazer o merge | GitHub |
+| 14 | Acompanhar o deploy e tornar as imagens públicas | GitHub |
+| 15 | Conferir o site no ar | Seu computador |
+
+### 9. Criar o `.env` do site na VM
+
+O domínio e o ambiente do site ficam em um arquivo na VM, fora do repositório. Entre como
+`deploy`:
+
+```
+ssh -i ~/.ssh/landing-deploy deploy@<IP>
+nano /srv/landing-page/.env
+```
+
+Conteúdo, com o seu domínio (com `https://`, sem `www` e sem barra no fim):
+
+```
+APP_ENV=production
+SITE_URL=https://meusite.com
+```
+
+Confira o `SITE_URL` com cuidado: é ele que o site usa para dizer ao Google qual é o endereço
+oficial.
+
+### 10. Copiar a identidade da VM
+
+O GitHub precisa ter certeza de que está falando com a sua VM, e não com alguém se passando por
+ela. Para isso ele guarda a "impressão digital" da máquina. No seu computador:
+
+```
+ssh-keyscan -t ed25519 <IP>
+```
+
+A saída tem uma linha que começa com o IP, seguida de `ssh-ed25519 AAAA...`. Copie essa linha
+inteira (a que começa com `#` é só um comentário e não entra).
+
+### 11. Cadastrar os três secrets no GitHub
+
+No repositório: **Settings → Secrets and variables → Actions → New repository secret**. Crie
+três, com estes nomes exatos:
+
+| Nome | Valor | De onde vem |
+|---|---|---|
+| `SSH_HOST` | O IP público da VM | Página da instância na Oracle |
+| `SSH_KEY` | O conteúdo inteiro da chave **privada** de deploy | `cat ~/.ssh/landing-deploy` |
+| `SSH_KNOWN_HOSTS` | A linha copiada no passo 10 | `ssh-keyscan` |
+
+Cuidados com o `SSH_KEY`:
+
+- É o arquivo **sem** `.pub`.
+- Copie tudo, da linha `-----BEGIN OPENSSH PRIVATE KEY-----` até
+  `-----END OPENSSH PRIVATE KEY-----`, inclusive.
+- Depois de salvo, o GitHub não mostra mais o valor. Para trocar, é preciso cadastrar de novo.
+
+### 12. Tornar o repositório público
+
+**Settings → General**, no fim da página, em **Danger Zone → Change repository visibility →
+Change to public**.
+
+Faça isso antes do merge, por dois motivos: o runner ARM usado para construir as imagens é
+gratuito em repositórios públicos, e o cartão do projeto "Landing Page" no site aponta para o
+repositório.
+
+### 13. Abrir o Pull Request e fazer o merge
+
+1. No seu computador, faça o commit e o `git push` da branch `feat/site-foundation`.
+2. No GitHub, abra o Pull Request para a `master`, se ainda não estiver aberto: **Pull requests →
+   New pull request**, com `base: master` e `compare: feat/site-foundation`, e **Create pull
+   request**.
+3. Espere a verificação "CI / Estilo, análise e testes" ficar verde.
+4. Clique em **Merge pull request** e depois em **Confirm merge**.
+
+O merge é o gatilho: a partir dele, o GitHub publica sozinho.
+
+### 14. Acompanhar o deploy
+
+Na aba **Actions**, abra a execução do workflow **Deploy**. Ela tem três partes, em sequência:
+
+| Job | O que faz | Tempo aproximado |
+|---|---|---|
+| Estilo, análise e testes | As mesmas conferências do CI, agora na `master` | 1 min |
+| Construir e enviar as imagens | Constrói as duas imagens e envia ao GHCR | 5 a 10 min |
+| Publicar na VM | Manda a VM baixar as imagens e subir o site | 1 min |
+
+**No primeiro deploy, o terceiro job pode falhar**, com uma mensagem como `denied`,
+`unauthorized` ou `pull access denied`. Não é um erro seu: no GHCR, toda imagem nasce privada,
+mesmo em repositório público, e a VM não tem senha para baixar imagem privada. As imagens já
+foram enviadas; falta só abri-las:
+
+1. No GitHub, clique na sua foto → **Your profile** → aba **Packages**.
+2. Abra `landing-page-php` → **Package settings** → no fim da página, **Change visibility →
+   Public**.
+3. Repita para `landing-page-caddy`.
+4. Volte à execução que falhou, em **Actions**, e clique em **Re-run failed jobs**. Só o terceiro
+   job roda de novo.
+
+Isso é feito uma vez só. As próximas versões das mesmas imagens já nascem públicas.
+
+### 15. Conferir o site no ar
+
+Do seu computador:
+
+| Comando | Resultado esperado |
+|---|---|
+| `curl -I https://meusite.com` | `HTTP/2 200` |
+| `curl -I https://meusite.com/en` | `HTTP/2 200` |
+| `curl -I https://meusite.com/sitemap.xml` | `HTTP/2 200` |
+
+Abra o site no navegador e veja o código-fonte da página: o `app.css` deve aparecer com `?v=`
+seguido de uma sequência longa de letras e números. É o identificador do commit publicado, o
+mesmo que aparece na execução do Deploy.
+
+Vale conferir também o que só dá para ver com o site no ar:
+
+- o tema dos comentários (Giscus) em um artigo do blog, no claro e no escuro;
+- a prévia do link no LinkedIn Post Inspector;
+- o JSON-LD `Person` no Rich Results Test, do Google.
+
+### Daqui em diante
+
+Publicar passa a ser: criar uma branch, alterar, conferir em `localhost:8080`, abrir o Pull
+Request, esperar o CI ficar verde e fazer o merge. O deploy acontece sozinho, alguns minutos
+depois.
+
 ## Se algo não funcionar
 
 | Sintoma | Causa provável | Onde olhar |
@@ -379,6 +517,12 @@ reclamar do certificado, ou não conectar, algo nos passos anteriores falhou.
 | `network edge not found` ao subir a borda | O cloud-init não chegou ao fim | `docker network create edge` e rever o log do cloud-init |
 | O log do Caddy mostra falha ao obter o certificado | O domínio ainda não aponta para a VM, ou a porta 80 está fechada | `dig +short meusite.com` e o passo 4 |
 | `curl` reclama de certificado inválido | O certificado ainda não foi emitido | `docker logs edge-caddy-1` |
+| O job "Construir e enviar as imagens" fica parado em "Queued" | O repositório ainda é privado e o runner ARM não está disponível para ele | Passo 12 |
+| O job "Publicar na VM" falha com `denied` ou `unauthorized` | As imagens no GHCR ainda são privadas | Passo 14 |
+| O job "Publicar na VM" falha com `Permission denied (publickey)` | O secret `SSH_KEY` está incompleto, ou é a chave pública | Passo 11 |
+| O job "Publicar na VM" falha com `Host key verification failed` | O secret `SSH_KNOWN_HOSTS` não bate com a VM (IP trocado ou VM recriada) | Refazer os passos 10 e 11 |
+| O deploy ficou verde, mas o site responde 502 | O projeto subiu com outro nome, ou os contêineres caíram | `docker ps` e `docker logs site-prod-php-1`, na VM |
+| O site abre, mas os links canônicos apontam para o endereço errado | `SITE_URL` errado no `.env` da VM | Passo 9, e publicar de novo |
 
 ## Cuidados no dia a dia
 

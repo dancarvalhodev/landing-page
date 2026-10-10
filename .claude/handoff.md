@@ -16,7 +16,11 @@ sessão atualiza este arquivo antes do último commit; quem começar lê este ar
   `.claude/arch-explain/producao.md` e `.claude/arch-explain/infra.md`.
 - **Próxima:** etapa 11 — CI/CD, dividida em 11a (`ci.yml`), 11b (`deploy.yml`, secrets, Pull
   Request para a `master` e primeiro deploy) e 11c (proteção da `master` e rollback). A 11a está
-  entregue, aguardando conferência; ver `.claude/arch-explain/ci-cd.md`. Decisões já tomadas pelo dev: a VM é ARM, o repositório e as imagens no GHCR serão
+  confirmada. A 11b está entregue, aguardando conferência: os workflows foram escritos e
+  simulados no computador, mas o primeiro deploy ainda não aconteceu. Ele depende de o dev
+  seguir os passos 9 a 15 do `infra/README.md` (`.env` na VM, três secrets, repositório público,
+  merge do Pull Request e tornar as imagens públicas no GHCR). Ver
+  `.claude/arch-explain/ci-cd.md`. Decisões já tomadas pelo dev: a VM é ARM, o repositório e as imagens no GHCR serão
   públicos (a VM baixa sem token) e a `feat/site-foundation` vai para a `master` por Pull
   Request, com passo a passo escrito para ele.
 
