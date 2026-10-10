@@ -1,7 +1,7 @@
 # SEO — conceito e código de cada peça (etapa 7)
 
-Este arquivo cresce a cada subetapa da etapa 7 (ver `.claude/plans/arquitetura-landing-page.md`).
-Cada seção explica **o que o conceito resolve** antes de mostrar o código — o dev não tem
+Uma seção por subetapa da etapa 7 (ver `.claude/plans/arquitetura-landing-page.md`), todas
+concluídas. Cada seção explica **o que o conceito resolve** antes de mostrar o código — o dev não tem
 bagagem em SEO, então aqui a ordem é sempre conceito primeiro.
 
 ## Metadados básicos: título, descrição e canonical (etapa 7a)
@@ -223,11 +223,11 @@ recalcular nada:
 {% endif %}
 ```
 
-### O que ficou de fora, de propósito
+### O que ficou de fora desta subetapa
 
-- **`og:image`** — depende da imagem de compartilhamento, que é a etapa 7f (ainda não existe).
-  Por enquanto `twitter:card` fica como `"summary"` (cartão simples, sem imagem grande); quando a
-  imagem existir, troca pra `"summary_large_image"`.
+- **`og:image`** — dependia da imagem de compartilhamento e entrou na etapa 7f (ver a última
+  seção deste arquivo). Foi lá que o `twitter:card` passou de `"summary"` (cartão simples) para
+  `"summary_large_image"`.
 - **`article:tag`** (uma etiqueta por tag do artigo) — ficou fora por ser um detalhe menor; o
   essencial (título, descrição, tipo, data) já entrega o principal benefício, que é o cartão
   aparecer bonito ao compartilhar o link.
@@ -341,8 +341,10 @@ Passa pelos dois idiomas (`Locale::cases()`), e em cada um lista a home, a lista
 artigo. Só os artigos ganham `lastmod` — vem do `post['date']` (aquele timestamp que vimos em
 `.claude/arch-explain/blog-content.md`). Home e lista do blog não têm uma data de "última
 alteração" confiável, então ficam sem — inventar uma data seria pior que não ter nenhuma.
-Páginas de tag e de busca **não entram** no sitemap, pelo mesmo motivo de não terem `canonical`
-próprio: não são conteúdo original, são filtros sobre o conteúdo que já está listado.
+Páginas de tag e de busca **não entram** no sitemap: não são conteúdo original, são filtros
+sobre o conteúdo que já está listado. As duas se comportam de forma diferente no `canonical`: a
+busca (`/blog?q=php`) aponta para `/blog`, porque o canonical ignora os parâmetros; a página de
+tag (`/blog/tag/php`) aponta para si mesma, porque a tag faz parte do caminho.
 
 ```twig
 {# www/templates/sitemap.xml.twig #}

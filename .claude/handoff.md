@@ -16,9 +16,10 @@ sessão atualiza este arquivo antes do último commit; quem começar lê este ar
   em 9a-9d; a 10 (infra) em 10a-10b; a 11 (CI/CD) em 11a (`ci.yml`), 11b (`deploy.yml` e primeiro
   deploy) e 11c (proteção da `master` e rollback). Conceito e código estão em
   `.claude/arch-explain/producao.md`, `infra.md` e `ci-cd.md`.
-- **Entregue, aguardando conferência:** etapa 12 — documentação (`README.md` e `CLAUDE.md`
-  reescritos).
-- **Próximas:** etapa 13 (revisão da documentação) e etapa 14 (spec do projeto).
+- **Confirmada também a etapa 12** (documentação: `README.md` e `CLAUDE.md` reescritos).
+- **Entregue, aguardando conferência:** etapa 13 — revisão da documentação. Doze correções em
+  oito documentos, conferidas contra o código.
+- **Próxima:** etapa 14 (spec do projeto, em `.claude/specs/`).
 - **Decisões de infraestrutura:** a VM é ARM (`VM.Standard.A1.Flex`); o repositório e as imagens
   no GHCR são públicos, então a VM baixa as imagens sem token.
 - **Atenção ao git:** a `master` publica e deve estar protegida. Toda alteração nova começa de uma
@@ -141,5 +142,6 @@ O plano tem o detalhe; aqui só o que mais pesa ao continuar.
 - **`robots.txt` (etapa 7e):** libera tudo (`Allow: /`), sem bloquear páginas de tag nem de busca.
   Foi uma decisão consciente, não uma pendência técnica — fica pra o dev revisitar se quiser
   restringir depois.
-- **Etapa 13:** depois da 12, revisar a documentação escrita (e os `.claude/arch-explain/`) antes
-  da etapa de spec, a pedido do dev.
+- **Etapa 14:** escrever a spec a partir do que foi construído, não do plano. O plano difere do
+  código em vários pontos (prévia retirada, registro `SSH_KNOWN_HOSTS`, `.env` na VM) e não foi
+  reescrito de propósito.

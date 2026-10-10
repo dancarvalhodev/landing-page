@@ -42,6 +42,17 @@ O serviço roda em modo `--watch`: fica olhando as pastas da lista. Você salva 
 uma classe nova, ele percebe e reimprime o CSS em milissegundos. Você recarrega a página e a
 mudança está lá.
 
+## Em produção
+
+No servidor não existe funcionário de plantão: o contêiner `tailwind` é só do desenvolvimento. O
+CSS é impresso uma vez, durante o build da imagem do Caddy, por um estágio chamado `assets`, com
+`--minify` para sair menor, e já vai embutido na imagem (ver `producao.md`, "9b — Imagem Caddy").
+
+Por causa disso a versão do Tailwind está escrita em dois lugares: `bin/tailwind/Dockerfile`
+(desenvolvimento) e `bin/caddy/Dockerfile` (produção). Ao atualizar um, atualize o outro, senão o
+CSS publicado sai diferente do que você viu no computador. O script de instalação
+(`bin/tailwind/install.sh`) é um só, usado pelos dois.
+
 ## Regras práticas
 
 - **Edite só o arquivo de `resources/`.** O de `public/assets/css/` é sobrescrito a cada

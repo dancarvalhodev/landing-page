@@ -30,7 +30,7 @@ outro. É como uma receita com uma massa básica e duas coberturas:
 | `prod` | `base` | Sem Xdebug, com `php.prod.ini`, o código copiado e as dependências instaladas |
 
 Quem escolhe o estágio é o `target`. O `docker-compose.yml` de desenvolvimento pede `target: dev`;
-o de produção (subetapa 9d) pedirá `prod`.
+o de produção (`docker-compose.prod.yml`, subetapa 9d) pede `prod`.
 
 ### Como o Docker sabe o que não precisa rodar
 
@@ -244,7 +244,7 @@ Em vez de olhar arquivo por arquivo, a produção usa um rótulo único para o b
 variável `ASSET_VERSION`. O caminho dela:
 
 1. Quem constrói a imagem informa o valor: `docker build --build-arg ASSET_VERSION=<valor>`. No
-   deploy (etapa 11), o valor será o identificador do commit.
+   deploy, o valor é o identificador do commit (ver `ci-cd.md`).
 2. O estágio `prod` do Dockerfile grava o valor dentro da imagem (`ENV ASSET_VERSION`).
 3. `Config::fromEnv()` lê a variável e guarda em `assetVersion`.
 4. `AssetExtension::assetUrl()` usa esse valor no `?v=` de todos os arquivos, sem conferir se o
@@ -326,7 +326,7 @@ etiqueta de um commit e `?v=` de outro.
 
 Cada serviço tem as duas chaves, e cada uma serve a um momento:
 
-- `build`: como construir a imagem. É usado no seu computador e, na etapa 11, pelo GitHub Actions.
+- `build`: como construir a imagem. É usado no seu computador e pelo GitHub Actions, no `deploy.yml`.
 - `image`: o nome que a imagem recebe ao ser construída e de onde ela é baixada. No servidor só
   esta chave importa: a imagem já vem pronta do GHCR e nada é construído lá.
 
@@ -340,7 +340,7 @@ restaurante (a VM) fica em outro lugar. No meio precisa existir um depósito ond
 carga e o restaurante retira. Esse depósito é o registro de imagens. O nome
 `ghcr.io/dancarvalhodev/...` é só o endereço do depósito; não diz onde a imagem vai rodar.
 
-O caminho previsto para a etapa 11:
+O caminho, implementado no `deploy.yml` (ver `ci-cd.md`):
 
 1. Merge na `master`.
 2. O GitHub Actions constrói as duas imagens e envia ao GHCR, com o identificador do commit como

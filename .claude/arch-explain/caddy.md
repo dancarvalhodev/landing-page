@@ -49,10 +49,14 @@ repassa ao PHP.
   (`root` → `header` → `encode` → `respond` → `php_fastcgi` → `file_server`). Por isso
   `file_server` aparece por último no texto e a lógica acima funciona do mesmo jeito.
 - **O caminho precisa ser igual nos dois contêineres.** O Caddy só diz ao PHP qual arquivo
-  abrir (`/app/public/index.php`); quem abre é o PHP. Por isso `./www` é montado em `/app` tanto
-  no `caddy` quanto no `php`.
+  abrir (`/app/public/index.php`); quem abre é o PHP. No desenvolvimento, `./www` é montado em
+  `/app` tanto no `caddy` quanto no `php`. Em produção não há pasta montada: os arquivos são
+  copiados para dentro das duas imagens, no mesmo caminho (ver `producao.md`, "Por que o
+  `index.php` aparece nas duas imagens").
 - **Mudou o Caddyfile? Reinicie.** A API de administração está desligada (`admin off`), então
-  `caddy reload` não funciona: use `docker compose restart caddy`.
+  `caddy reload` não funciona: use `docker compose restart caddy`. Isso vale para o
+  desenvolvimento. Em produção o Caddyfile vai embutido na imagem, e uma mudança nele só chega ao
+  servidor por um deploy.
 - **O bloqueio de ocultos também pega `/.well-known/`.** Hoje nada usa esse caminho.
 
 ## Comandos úteis

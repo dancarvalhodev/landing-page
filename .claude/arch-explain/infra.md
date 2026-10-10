@@ -127,7 +127,7 @@ uma segunda vez com outro `-p` sem os dois responderem pelo mesmo nome.
 
 **O cuidado:** o nome do projeto deixou de ser livre. Se a produção subir com outro `-p`, o Caddy
 de borda não a encontra e responde 502. O nome `site-prod` está escrito no Caddyfile de borda e
-precisa bater com o `-p` usado no deploy (etapa 11).
+precisa bater com o `-p` usado no `deploy.yml`.
 
 ### O Caddyfile de borda, bloco a bloco
 
@@ -401,7 +401,7 @@ o Docker recria. Salvando antes, o arquivo guarda só as duas regras nossas.
 ### O que não está no arquivo, de propósito
 
 - **O domínio e os arquivos de compose.** São copiados para a VM depois (passo 7 do `infra/README.md`).
-- **Subir o site.** A primeira subida é feita pelo deploy (etapa 11).
+- **Subir o site.** Quem sobe o site é o deploy, a cada merge na `master` (ver `ci-cd.md`).
 - **Endurecimento do SSH.** A imagem da Oracle já vem sem login por senha.
 
 ### Como saber se deu certo
@@ -458,14 +458,23 @@ A validação com `cloud-init schema` não pegou o problema, porque o arquivo no
 válido; o estrago acontece no caminho, ao colar. Para quem cair nisso, o roteiro tem a seção "Se o
 cloud-init não foi aplicado", com os mesmos passos feitos à mão por SSH, sem recriar a máquina.
 
-### O que só dá para confirmar na VM de verdade
+### O que foi confirmado na VM de verdade, e o que não foi
 
-A validação acima não executa os comandos. Ficam por confirmar, na criação da VM:
+A validação acima não executa os comandos. Na VM criada em 2026-10-09 (Ubuntu, ARM), o dev rodou
+os mesmos comandos à mão, por SSH, e todos funcionaram:
 
-- se as regras de `iptables` têm o efeito esperado na imagem atual da Oracle;
-- se o `netfilter-persistent` existe nessa imagem (existia nas versões anteriores do Ubuntu da
-  Oracle);
-- se o instalador do Docker roda sem erro em ARM64.
+- o `netfilter-persistent` existe na imagem da Oracle e gravou as regras;
+- o instalador do Docker rodou sem erro em ARM64;
+- o usuário `deploy`, a rede `edge` e a pasta `/srv/landing-page` foram criados como esperado.
+
+O que continua sem confirmação:
+
+- **O arquivo em si nunca rodou.** A versão corrigida, só em ASCII, ainda não foi colada em uma
+  VM nova. Os comandos são os mesmos que funcionaram à mão, mas o caminho "colar no painel e a
+  máquina se configurar sozinha" só será provado na próxima VM.
+- **Se as regras de `iptables` são mesmo necessárias.** O Docker cria regras próprias para as
+  portas que publica, e é possível que elas bastem. As nossas foram mantidas porque são
+  inofensivas se sobrarem.
 
 Se a imagem escolhida não for Ubuntu, este arquivo não serve como está: os comandos de firewall e
 o usuário padrão mudam.
@@ -494,8 +503,8 @@ Daqui em diante, esta seção explica os conceitos que aparecem nele.
 ### Por que ARM importa
 
 A máquina gratuita usa processador ARM (`aarch64`), e o seu computador provavelmente usa x86
-(`amd64`). Uma imagem Docker construída para um não roda no outro. Por isso o plano prevê
-construir as imagens do site em um runner ARM do GitHub Actions (etapa 11). A imagem do Caddy de
+(`amd64`). Uma imagem Docker construída para um não roda no outro. Por isso o `deploy.yml`
+constrói as imagens do site em um runner ARM do GitHub Actions. A imagem do Caddy de
 borda (`caddy:2-alpine`) é publicada para as duas arquiteturas, e o Docker baixa a certa sozinho.
 
 ### DNS em uma frase
@@ -530,14 +539,18 @@ primeiro deploy coloca.
 
 ```
 /srv/landing-page/
+├── docker-compose.prod.yml   # copiado pelo deploy.yml a cada publicação
+├── .env                      # só existe no servidor: APP_ENV e SITE_URL do site
 └── edge/
     ├── docker-compose.yml
     ├── Caddyfile
     ├── env-example
-    └── .env            # só existe no servidor, com o DOMAIN
+    └── .env                  # só existe no servidor, com o DOMAIN
 ```
 
-A pasta é do usuário `deploy`. O `docker-compose.prod.yml` do site chega pelo deploy, na etapa 11.
+A pasta é do usuário `deploy`. São dois arquivos `.env`, um para cada projeto do Compose: o da
+raiz é lido pelo `site-prod`, e o de `edge/`, pela borda. Nenhum dos dois vai para o git; os dois
+foram criados à mão, uma vez (passos 7 e 9 do `infra/README.md`).
 
 ### As duas chaves SSH
 
@@ -556,6 +569,8 @@ No computador, simulei os passos 7 e 8: copiei `infra/edge` para outra pasta, cr
 `DOMAIN=localhost` e subi a borda sem site atrás. As três respostas da conferência final bateram
 (502, 308 e 301).
 
-Os passos 1 a 6 não puderam ser testados: dependem da conta, do painel e do domínio. O roteiro foi
-escrito a partir do funcionamento conhecido do painel da Oracle, e os nomes de menus podem ter
-mudado. Cada passo termina com uma conferência justamente para o erro aparecer cedo.
+Os passos 1 a 6 dependem da conta, do painel e do domínio, e foram executados pelo dev em
+2026-10-09. O roteiro foi corrigido com o que apareceu no caminho: a sub-rede pública criada pelo
+assistente de VCN, a falta de capacidade de máquinas ARM e o cloud-init descartado por causa de um
+acento. Os nomes de menus do painel da Oracle podem mudar com o tempo; cada passo termina com uma
+conferência justamente para o erro aparecer cedo.

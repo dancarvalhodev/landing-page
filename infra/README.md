@@ -445,9 +445,9 @@ repositório.
 
 ### 13. Abrir o Pull Request e fazer o merge
 
-1. No seu computador, faça o commit e o `git push` da branch `feat/site-foundation`.
+1. No seu computador, faça o commit e o `git push` da branch de trabalho.
 2. No GitHub, abra o Pull Request para a `master`, se ainda não estiver aberto: **Pull requests →
-   New pull request**, com `base: master` e `compare: feat/site-foundation`, e **Create pull
+   New pull request**, com `base: master` e `compare:` a sua branch, e **Create pull
    request**.
 3. Espere a verificação "CI / Estilo, análise e testes" ficar verde.
 4. Clique em **Merge pull request** e depois em **Confirm merge**.
@@ -513,7 +513,7 @@ Request, esperar o CI ficar verde e fazer o merge. O deploy acontece sozinho, al
 depois.
 
 Cada alteração começa de uma branch nova, criada a partir da `master` atualizada. Uma branch já
-mesclada (como a `feat/site-foundation`) não deve ser reaproveitada.
+mesclada não deve ser reaproveitada.
 
 ## Parte 3 — Proteger a `master` e voltar atrás
 

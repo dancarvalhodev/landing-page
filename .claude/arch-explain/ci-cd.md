@@ -183,9 +183,9 @@ O CI só roda no GitHub, e só quando há um Pull Request (ou, pelo `deploy.yml`
 `master`).
 
 1. Faça o commit do `ci.yml` e envie a branch: `git push`.
-2. No GitHub, abra o repositório. Aparece uma faixa amarela, "feat/site-foundation had recent
+2. No GitHub, abra o repositório. Aparece uma faixa amarela, "<nome-da-branch> had recent
    pushes"; clique em **Compare & pull request**. Se a faixa não aparecer: aba **Pull requests →
-   New pull request**, com `base: master` e `compare: feat/site-foundation`.
+   New pull request**, com `base: master` e `compare:` a sua branch.
 3. Dê um título e clique em **Create pull request**. **Não clique em "Merge".** Abrir o Pull
    Request não publica nada; ele só propõe a mudança.
 4. Na página do Pull Request, perto do fim, aparece a seção de verificações com "CI / Estilo,

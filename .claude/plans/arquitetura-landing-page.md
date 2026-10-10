@@ -335,6 +335,6 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 11b. CI/CD — deploy.yml, secrets, Pull Request para a master e primeiro deploy — confirmada em 2026-10-09, com o site no ar. O tema customizado do Giscus não funcionou em produção; o dev abriu uma issue no GitHub e corrige depois
 - [x] 11c. CI/CD — proteção da master e rollback — confirmada em 2026-10-09
 - [x] 11. CI/CD (todas as subetapas) — confirmada em 2026-10-09
-- [ ] 12. Documentação — entregue, aguardando conferência (feita de uma vez, sem subetapas: são dois arquivos, README.md e CLAUDE.md)
-- [ ] 13. Revisão da documentação
+- [x] 12. Documentação — confirmada em 2026-10-09 (feita de uma vez, sem subetapas: são dois arquivos, README.md e CLAUDE.md)
+- [ ] 13. Revisão da documentação — entregue, aguardando conferência. Levantamento feito em 2026-10-09 (leitura de todos os documentos contra o código); o dev decidiu aplicar as doze correções de uma vez, sem subetapas. O plano não foi revisado: registrar o que foi construído de verdade é a etapa 14
 - [ ] 14. Spec do projeto
