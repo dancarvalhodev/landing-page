@@ -94,26 +94,39 @@ translation_key: ola-mundo
 
 Quando alguém troca de idioma dentro de um artigo, o `BlogController` não troca o endereço na marra
 (trocar `/blog/ola-mundo` por `/en/blog/ola-mundo` quebraria, porque esse arquivo não existe em
-inglês). Em vez disso, ele procura, entre os posts do outro idioma, um com a mesma `translation_key`:
+inglês). Em vez disso, ele procura, entre os posts do outro idioma, um com a mesma `translation_key`
+e devolve o slug dele, ou `null` se não houver tradução:
 
 ```php
-private function switchUrlFor(Locale $locale, array $post): string
+private function translatedSlugFor(Locale $otherLocale, array $post): ?string
 {
-    $other = $locale->other();
-
-    foreach ($this->content->posts($other) as $candidate) {
+    foreach ($this->content->posts($otherLocale) as $candidate) {
         if (($candidate['translation_key'] ?? null) === ($post['translation_key'] ?? null)) {
-            return $this->urls->path($other, '/blog/' . $candidate['slug']);
+            return $candidate['slug'];
         }
     }
 
-    return $this->urls->path($other, '/blog'); // sem tradução: cai no índice do outro idioma
+    return null;
 }
+```
+
+O `show()` chama esse método uma vez e usa o resultado em dois lugares, com regras diferentes:
+
+```php
+$translatedSlug = $this->translatedSlugFor($other, $post);
+
+'switchUrl' => $translatedSlug !== null
+    ? $this->urls->path($other, '/blog/' . $translatedSlug)
+    : $this->urls->path($other, '/blog'),   // sem tradução: cai no índice do outro idioma
+'altUrl' => $translatedSlug !== null
+    ? $this->urls->absolute($other, '/blog/' . $translatedSlug)
+    : null,                                 // sem tradução: não existe par de hreflang
 ```
 
 Achou um post com a mesma etiqueta: monta a URL com o **slug daquele outro arquivo** (não do atual).
 Não achou (o artigo ainda não foi traduzido): o link de idioma leva para o índice do blog no outro
-idioma, em vez de dar 404 ou linkar para algo que não existe.
+idioma, em vez de dar 404 ou linkar para algo que não existe. Já o `altUrl`, que vira a etiqueta
+`hreflang`, fica vazio: para o Google não se pode fingir uma tradução (ver `seo.md`).
 
 Essa é a mesma ideia do `translationKey` descrita no plano de arquitetura, lá na seção "i18n":
 "leva à tradução se existir, senão ao índice do blog do outro idioma".

@@ -4,7 +4,7 @@
 
 O repositório `/home/dan/dev/landing-page` (remoto `git@github.com:dancarvalhodev/landing-page.git`)
 contém apenas `README.md` e `CLAUDE.md`. O objetivo é um site de portfólio pessoal que leve
-recrutadores e clientes a entrar em contato. A arquitetura deriva da entrevista e das decisões
+todos a entrar em contato. A arquitetura deriva da entrevista e das decisões
 do usuário:
 
 - **PHP 8.5** (linguagem de domínio do usuário) com o microframework **Slim 4** para roteamento
@@ -264,11 +264,13 @@ infra/
 13. **Revisão da documentação:** reler o que foi escrito na etapa 12 (e os demais documentos do
     projeto, como os de `.claude/arch-explain/`) e corrigir o que estiver desatualizado, incompleto
     ou confuso, com o código já pronto como referência.
-14. **Spec do projeto:** com o código já pronto, escrever a especificação completa a partir do que
-    foi de fato construído (e não do que este plano previa): requisitos, arquitetura, rotas,
-    modelo de conteúdo e front matter, i18n, front-end, ambiente Docker, infraestrutura, fluxo de
-    publicação e convenções de código. Os arquivos ficam em `.claude/specs/`, em Markdown, com texto
-    em português claro e completo, sem jargão desnecessário nem escrita excessivamente formal.
+14. **Spec do projeto — retirada em 2026-10-09, por decisão do dev.** A ideia era escrever a
+    especificação completa a partir do que foi de fato construído, em `.claude/specs/`. Ela seria
+    redundante: o `README.md`, o `CLAUDE.md`, os documentos de `.claude/arch-explain/` e o
+    `infra/README.md` já cobrem requisitos, arquitetura, rotas, conteúdo, i18n, front-end, Docker,
+    infraestrutura, publicação e convenções, e foram revisados contra o código na etapa 13. Uma
+    spec seria um terceiro conjunto de documentos para manter em dia. Vale reconsiderar se o
+    projeto for passado a outra pessoa ou reescrito em outra tecnologia.
 
 ## Verificação
 
@@ -332,9 +334,23 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 10b. Infra — preparar a VM: cloud-init.yaml e README com o passo a passo OCI + DNS (antigas 10b e 10c, juntadas) — confirmada em 2026-10-09, com a VM criada e o roteiro executado pelo dev. O cloud-init não foi aplicado na primeira VM (um acento no arquivo foi corrompido ao colar); os passos foram feitos à mão e o arquivo corrigido para só ASCII
 - [x] 10. Infra (todas as subetapas) — confirmada em 2026-10-09
 - [x] 11a. CI/CD — ci.yml (estilo, análise e testes) — confirmada em 2026-10-09
-- [ ] 11b. CI/CD — deploy.yml, secrets, Pull Request para a master e primeiro deploy — entregue, aguardando conferência (simulado no computador; o envio ao GHCR e o SSH só se confirmam no primeiro merge, seguindo os passos 9 a 15 do infra/README.md)
-- [ ] 11c. CI/CD — proteção da master e rollback
-- [ ] 11. CI/CD (todas as subetapas)
-- [ ] 12. Documentação
-- [ ] 13. Revisão da documentação
-- [ ] 14. Spec do projeto
+- [x] 11b. CI/CD — deploy.yml, secrets, Pull Request para a master e primeiro deploy — confirmada em 2026-10-09, com o site no ar. O tema customizado do Giscus não funcionou em produção; o dev abriu uma issue no GitHub e corrige depois
+- [x] 11c. CI/CD — proteção da master e rollback — confirmada em 2026-10-09
+- [x] 11. CI/CD (todas as subetapas) — confirmada em 2026-10-09
+- [x] 12. Documentação — confirmada em 2026-10-09 (feita de uma vez, sem subetapas: são dois arquivos, README.md e CLAUDE.md)
+- [x] 13. Revisão da documentação — confirmada em 2026-10-09. Levantamento feito em 2026-10-09 (leitura de todos os documentos contra o código); o dev decidiu aplicar as doze correções de uma vez, sem subetapas. O plano não foi revisado
+- [x] 14. Spec do projeto — retirada em 2026-10-09, por decisão do dev: seria redundante com a documentação existente
+
+**Plano concluído em 2026-10-09.** As etapas 1 a 13 estão confirmadas e a 14 foi retirada. O site
+está no ar. Este arquivo fica como registro do que foi planejado e de como o plano mudou no
+caminho; ele não foi reescrito para refletir o resultado final. Para o estado real do projeto, ver
+o `README.md`, o `CLAUDE.md` e `.claude/arch-explain/`. Onde o plano e o código diferem:
+
+- a prévia (`preview.<domínio>`) foi retirada na etapa 10a;
+- o deploy usa um terceiro secret, `SSH_KNOWN_HOSTS`, e o `APP_ENV` e o `SITE_URL` ficam em um
+  `.env` na VM (etapa 11b);
+- o `?v=` dos arquivos estáticos em produção é a versão do build, não a data do arquivo (9c);
+- não há cache de build no deploy nem a pasta `public/media/blog/` prevista para imagens de
+  artigos.
+
+O que ficou pendente está em `.claude/handoff.md`, seção "Pendências conhecidas".

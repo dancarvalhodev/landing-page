@@ -15,8 +15,9 @@ Ele é obrigatório e validado, como o `APP_ENV`: sem a variável, o app não so
 ## Quando ele é usado
 
 Quase todos os links do site são relativos (`/blog`, `/en`), e para esses o domínio não importa.
-O `SITE_URL` só entra onde o endereço completo é exigido, o que acontece nas etiquetas de SEO da
-etapa 7. Até lá, nenhum template chama `UrlGenerator::absolute()`.
+O `SITE_URL` só entra onde o endereço completo é exigido: nas etiquetas de SEO (`canonical`,
+`hreflang`, Open Graph, JSON-LD), no `sitemap.xml` e no `robots.txt`. Quem monta esses endereços é
+`UrlGenerator::absolute()` e, para a imagem de compartilhamento, a função `asset_absolute()`.
 
 ## Por que o SEO precisa do endereço completo
 

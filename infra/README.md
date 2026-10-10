@@ -1,9 +1,10 @@
 # Infra — passo a passo para colocar o servidor no ar
 
-Este roteiro tem duas partes. A primeira (passos 1 a 8) cria a máquina na Oracle Cloud, aponta o
+Este roteiro tem três partes. A primeira (passos 1 a 8) cria a máquina na Oracle Cloud, aponta o
 domínio para ela e sobe o Caddy de borda; ao final, `https://<domínio>` responde com um
 certificado válido. A segunda (passos 9 a 15) prepara o GitHub e faz o primeiro deploy, que
-coloca o site no ar.
+coloca o site no ar. A terceira (passos 16 e 17) protege a `master` e ensina a voltar para uma
+versão anterior.
 
 O porquê de cada peça está em `.claude/arch-explain/infra.md` e `.claude/arch-explain/ci-cd.md`.
 Aqui fica só o que fazer, na ordem.
@@ -444,9 +445,9 @@ repositório.
 
 ### 13. Abrir o Pull Request e fazer o merge
 
-1. No seu computador, faça o commit e o `git push` da branch `feat/site-foundation`.
+1. No seu computador, faça o commit e o `git push` da branch de trabalho.
 2. No GitHub, abra o Pull Request para a `master`, se ainda não estiver aberto: **Pull requests →
-   New pull request**, com `base: master` e `compare: feat/site-foundation`, e **Create pull
+   New pull request**, com `base: master` e `compare:` a sua branch, e **Create pull
    request**.
 3. Espere a verificação "CI / Estilo, análise e testes" ficar verde.
 4. Clique em **Merge pull request** e depois em **Confirm merge**.
@@ -499,9 +500,98 @@ Vale conferir também o que só dá para ver com o site no ar:
 
 ### Daqui em diante
 
-Publicar passa a ser: criar uma branch, alterar, conferir em `localhost:8080`, abrir o Pull
+Publicar passa a ser:
+
+```
+git switch master
+git pull
+git switch -c <nome-da-branch>
+```
+
+Depois: alterar, conferir em `localhost:8080`, fazer o commit e o `git push`, abrir o Pull
 Request, esperar o CI ficar verde e fazer o merge. O deploy acontece sozinho, alguns minutos
 depois.
+
+Cada alteração começa de uma branch nova, criada a partir da `master` atualizada. Uma branch já
+mesclada não deve ser reaproveitada.
+
+## Parte 3 — Proteger a `master` e voltar atrás
+
+### 16. Proteger a `master`
+
+Desde o primeiro deploy, tudo o que chega à `master` vai para o ar. A proteção faz o GitHub
+recusar qualquer alteração na `master` que não venha por um Pull Request com o CI verde, mesmo
+que seja você, por engano, com um `git push` direto.
+
+No repositório: **Settings → Branches → Add classic branch protection rule** (em algumas contas o
+botão é **Add branch ruleset**; as opções têm os mesmos nomes).
+
+| Opção | Valor | Para quê |
+|---|---|---|
+| **Branch name pattern** | `master` | A branch protegida |
+| **Require a pull request before merging** | Marcada | Ninguém envia direto para a `master` |
+| ↳ **Required approvals** | `0` | Você trabalha sozinho, e o GitHub não deixa aprovar o próprio Pull Request. Com 1, nenhum merge seria possível |
+| **Require status checks to pass before merging** | Marcada | O merge só libera com o CI verde |
+| ↳ caixa de busca de status checks | Procure por `Estilo` e selecione **Estilo, análise e testes** | Diz qual verificação é obrigatória |
+| **Do not allow bypassing the above settings** | Marcada | As regras valem também para você, que é administrador |
+
+Clique em **Create** (ou **Save changes**).
+
+Se a busca por `Estilo` não encontrar nada, é porque o CI ainda não rodou nenhuma vez em um Pull
+Request deste repositório. Abra um Pull Request qualquer, espere o CI rodar e volte.
+
+**Para conferir que a proteção vale**, no seu computador, na `master` atualizada:
+
+```
+git commit --allow-empty -m "teste de protecao"
+git push
+```
+
+O push deve ser recusado, com uma mensagem como `protected branch hook declined`. Desfaça o
+commit de teste com `git reset HEAD~1`, que remove só ele e não mexe nos seus arquivos.
+
+### 17. Voltar para uma versão anterior (rollback)
+
+Use quando um deploy colocou no ar algo quebrado. Há dois caminhos, e eles se completam: o
+primeiro apaga o incêndio em segundos, o segundo conserta de verdade.
+
+**A. Pelo servidor, em segundos**
+
+1. Descubra o identificador da versão boa. Na aba **Actions** do GitHub, abra a execução do
+   **Deploy** anterior à que quebrou; o identificador do commit aparece no topo. Copie os 40
+   caracteres (o botão de copiar ao lado dele faz isso).
+2. Entre na VM e suba essa versão:
+
+   ```
+   ssh -i ~/.ssh/landing-deploy deploy@<IP>
+   IMAGE_TAG=<identificador> docker compose -p site-prod -f /srv/landing-page/docker-compose.prod.yml up -d --no-build --wait
+   ```
+
+O site volta em alguns segundos. Se a versão tiver sido publicada há menos de uma semana, a
+imagem ainda está na VM; se não, o Docker a baixa de novo do GHCR, o que leva um pouco mais.
+
+**Atenção:** este caminho não muda a `master`. O código quebrado continua lá, e o próximo merge
+publicaria tudo de novo, com o defeito. Por isso o caminho B vem em seguida.
+
+**B. Pelo GitHub, desfazendo o merge**
+
+1. No GitHub, abra o Pull Request que causou o problema (aba **Pull requests → Closed**).
+2. Perto do fim da página, clique em **Revert**. O GitHub cria um Pull Request novo que desfaz
+   aquelas alterações.
+3. Espere o CI ficar verde e faça o merge. O deploy roda sozinho e publica a versão sem o defeito.
+
+Este caminho leva o tempo de um deploy normal (cerca de dez minutos), mas deixa a `master` igual
+ao que está no ar. Depois, com calma, você corrige o problema em uma branch nova.
+
+| | A. Pelo servidor | B. Revert no GitHub |
+|---|---|---|
+| Tempo | Segundos | Cerca de dez minutos |
+| Muda a `master`? | Não | Sim |
+| Precisa de SSH? | Sim | Não |
+| Quando usar | O site está fora do ar ou muito quebrado | Sempre, sozinho ou depois do A |
+
+Se o problema for pequeno (um erro de digitação, um link errado), nem precisa de rollback:
+corrija em uma branch nova e publique pelo caminho normal.
 
 ## Se algo não funcionar
 
