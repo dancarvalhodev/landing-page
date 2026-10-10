@@ -1,14 +1,15 @@
 // Mantém o tema dos comentários (Giscus) em sincronia com o tema do site.
 // O Giscus aceita uma URL de CSS no lugar do nome de um tema pronto; usamos as folhas de estilo
 // com as cores da marca (precisa ser https:// — não funciona em http://localhost, só após o deploy).
-const themeUrl = (name) => `${window.location.origin}/assets/css/giscus-${name}.css`;
+// As URLs vêm do template (data-light e data-dark), já com o ?v= que fura o cache de um ano.
+const themeUrls = document.currentScript.dataset;
 
 const currentTheme = () => {
     const html = document.documentElement;
     const isDark = html.classList.contains('dark')
         || (!html.classList.contains('light') && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-    return themeUrl(isDark ? 'dark' : 'light');
+    return isDark ? themeUrls.dark : themeUrls.light;
 };
 
 const sendGiscusTheme = () => {

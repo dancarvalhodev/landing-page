@@ -3,7 +3,7 @@
 Resumo para continuar o desenvolvimento em outro computador (ou voltar a este). Quem terminar uma
 sessão atualiza este arquivo antes do último commit; quem começar lê este arquivo primeiro.
 
-Última atualização: 2026-10-09.
+Última atualização: 2026-10-10.
 
 ## Onde paramos
 
@@ -112,7 +112,8 @@ O plano tem o detalhe; aqui só o que mais pesa ao continuar.
   `hl-*` em `app.css`) nas cores da identidade, não um dos temas prontos do pacote.
 - **Giscus** (etapa 6f) está configurado com o repositório real
   `dancarvalhodev/landing-page-comments`. O tema customizado
-  (`www/public/assets/css/giscus-{light,dark}.css`) não funcionou em produção — ver "Pendências".
+  (`www/public/assets/css/giscus-{light,dark}.css`) depende de um cabeçalho de CORS no Caddy —
+  ver "Pendências".
 - **`SITE_URL` e `APP_ENV` são obrigatórios** no `.env`; o app não sobe sem eles. Ver
   `.claude/arch-explain/site-url.md`.
 - **`CanonicalPathMiddleware`** (barra final e barras duplicadas) foi mantido de propósito em vez
@@ -122,10 +123,12 @@ O plano tem o detalhe; aqui só o que mais pesa ao continuar.
 
 O que não funciona como esperado ou é provisório:
 
-- **Tema do Giscus (etapa 6f): não funcionou em produção.** Com o site no ar em HTTPS
-  (2026-10-09), o tema customizado (`giscus-{light,dark}.css`) não foi aplicado. O dev abriu uma
-  issue no GitHub e corrige depois; não mexer sem ele pedir. Em `http://localhost` o Giscus
-  ignora o CSS customizado de qualquer forma, então só dá para testar em produção.
+- **Tema do Giscus (etapa 6f): corrigido em 2026-10-10 na branch `bug/giscus`, falta conferir em
+  produção.** A causa era o Caddy entregar `giscus-{light,dark}.css` sem
+  `Access-Control-Allow-Origin` (ver `.claude/arch-explain/caddy.md`). Em `http://localhost` o
+  Giscus ignora o CSS customizado, então o visual só dá para conferir depois do deploy. Os dois
+  CSS definem só parte das variáveis `--color-*` do Giscus; se sobrar algum elemento sem cor,
+  comparar com o `custom_example.css` oficial.
 - **Os artigos do blog no ar são de exemplo** (`ola-mundo.md` e `hello-world.md`). Foram
   publicados no primeiro deploy e devem dar lugar a artigos reais.
 - **O `infra/cloud-init.yaml` corrigido nunca rodou em uma VM.** Na VM atual ele não foi aplicado
