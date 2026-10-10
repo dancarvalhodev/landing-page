@@ -7,7 +7,8 @@ sessão atualiza este arquivo antes do último commit; quem começar lê este ar
 
 ## Onde paramos
 
-- **Branch:** `feat/site-foundation`, já enviada ao GitHub (`origin`). Um commit por etapa.
+- **Branch:** a `feat/site-foundation` foi mesclada na `master` em 2026-10-09 e o site está no
+  ar. Um commit por etapa; cada alteração nova em uma branch nova, a partir da `master`.
 - **Plano:** `.claude/plans/arquitetura-landing-page.md`. A seção "Progresso", no fim do arquivo,
   marca o que está confirmado.
 - **Confirmadas:** etapas 1 a 10 inteiras. A 8 (descrições profissionais) foi feita em 8a-8c; a 9
@@ -15,18 +16,20 @@ sessão atualiza este arquivo antes do último commit; quem começar lê este ar
   (`cloud-init.yaml` e `infra/README.md`). Conceito e código estão em
   `.claude/arch-explain/producao.md` e `.claude/arch-explain/infra.md`.
 - **Próxima:** etapa 11 — CI/CD, dividida em 11a (`ci.yml`), 11b (`deploy.yml`, secrets, Pull
-  Request para a `master` e primeiro deploy) e 11c (proteção da `master` e rollback). A 11a está
-  confirmada. A 11b está entregue, aguardando conferência: os workflows foram escritos e
-  simulados no computador, mas o primeiro deploy ainda não aconteceu. Ele depende de o dev
-  seguir os passos 9 a 15 do `infra/README.md` (`.env` na VM, três secrets, repositório público,
-  merge do Pull Request e tornar as imagens públicas no GHCR). Ver
-  `.claude/arch-explain/ci-cd.md`. Decisões já tomadas pelo dev: a VM é ARM, o repositório e as imagens no GHCR serão
+  Request para a `master` e primeiro deploy) e 11c (proteção da `master` e rollback). A 11a e a
+  11b estão confirmadas: **o site está no ar**, publicado pelo `deploy.yml` no merge da
+  `feat/site-foundation` na `master` (2026-10-09). O repositório é público. A 11c (proteção da `master` e rollback) está entregue,
+  aguardando conferência: o dev precisa configurar a proteção no GitHub (passo 16 do
+  `infra/README.md`). Ver `.claude/arch-explain/ci-cd.md`.
+- **Atenção ao git:** a `feat/site-foundation` já foi mesclada. Toda alteração nova começa de uma
+  branch criada a partir da `master` atualizada e vai por Pull Request; com a `master` protegida,
+  push direto é recusado. Decisões já tomadas pelo dev: a VM é ARM, o repositório e as imagens no GHCR serão
   públicos (a VM baixa sem token) e a `feat/site-foundation` vai para a `master` por Pull
   Request, com passo a passo escrito para ele.
 
 ## Como retomar em um computador novo
 
-1. `git pull` na branch `feat/site-foundation`.
+1. `git switch master` e `git pull`; o trabalho novo começa de uma branch criada a partir dela.
 2. `cp env-example .env` e ajustar `HOST_UID` e `HOST_GID` para a saída de `id -u` e `id -g`.
 3. `docker compose up -d --build`.
 4. `docker compose exec php composer install` (a pasta `vendor/` não vai para o git).
@@ -134,8 +137,10 @@ O plano tem o detalhe; aqui só o que mais pesa ao continuar.
   Atualizar os dois juntos.
 - **Artigos do blog** (`ola-mundo.md`, `hello-world.md`) ainda são de exemplo; saem antes do
   deploy se não houver artigo real.
-- **Tema do Giscus (etapa 6f):** só confirmável visualmente depois do deploy com HTTPS (etapas
-  9+) — em `http://localhost`, o Giscus ignora o CSS customizado e usa o visual padrão do GitHub.
+- **Tema do Giscus (etapa 6f): não funcionou em produção.** Com o site no ar em HTTPS
+  (2026-10-09), o tema customizado (`giscus-{light,dark}.css`) não foi aplicado. O dev abriu uma
+  issue no GitHub e corrige depois; não mexer sem ele pedir. Em `http://localhost` o Giscus
+  ignora o CSS customizado de qualquer forma, então só dá para testar em produção.
 - **`robots.txt` (etapa 7e):** libera tudo (`Allow: /`), sem bloquear páginas de tag nem de busca.
   Foi uma decisão consciente, não uma pendência técnica — fica pra o dev revisitar se quiser
   restringir depois.

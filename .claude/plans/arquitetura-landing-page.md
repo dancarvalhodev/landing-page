@@ -332,8 +332,8 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 10b. Infra — preparar a VM: cloud-init.yaml e README com o passo a passo OCI + DNS (antigas 10b e 10c, juntadas) — confirmada em 2026-10-09, com a VM criada e o roteiro executado pelo dev. O cloud-init não foi aplicado na primeira VM (um acento no arquivo foi corrompido ao colar); os passos foram feitos à mão e o arquivo corrigido para só ASCII
 - [x] 10. Infra (todas as subetapas) — confirmada em 2026-10-09
 - [x] 11a. CI/CD — ci.yml (estilo, análise e testes) — confirmada em 2026-10-09
-- [ ] 11b. CI/CD — deploy.yml, secrets, Pull Request para a master e primeiro deploy — entregue, aguardando conferência (simulado no computador; o envio ao GHCR e o SSH só se confirmam no primeiro merge, seguindo os passos 9 a 15 do infra/README.md)
-- [ ] 11c. CI/CD — proteção da master e rollback
+- [x] 11b. CI/CD — deploy.yml, secrets, Pull Request para a master e primeiro deploy — confirmada em 2026-10-09, com o site no ar. O tema customizado do Giscus não funcionou em produção; o dev abriu uma issue no GitHub e corrige depois
+- [ ] 11c. CI/CD — proteção da master e rollback — entregue, aguardando conferência (o rollback pelo servidor foi simulado no computador; a proteção é configurada pelo dev no GitHub, seguindo o passo 16 do infra/README.md)
 - [ ] 11. CI/CD (todas as subetapas)
 - [ ] 12. Documentação
 - [ ] 13. Revisão da documentação

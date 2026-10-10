@@ -1,7 +1,8 @@
 # CI/CD — testes e publicação automáticos
 
 Arquivos explicados: `.github/workflows/ci.yml` e `.github/workflows/deploy.yml`. Uma seção por
-subetapa da etapa 11. O roteiro do primeiro deploy está na Parte 2 do `infra/README.md`. Para as
+subetapa da etapa 11. Os roteiros estão no `infra/README.md`: o primeiro deploy na Parte 2, a
+proteção da `master` e o rollback na Parte 3. Para as
 imagens, ver `producao.md`; para o servidor, ver `infra.md`.
 
 ## A ideia geral
@@ -441,9 +442,104 @@ No computador:
   o `.env`: os contêineres subiram sem build, o `SITE_URL` veio do `.env` e o `?v=` saiu com a
   etiqueta. Isso confirma que a VM não precisa do código.
 
-Só dá para confirmar no GitHub, no primeiro merge:
+Só dava para confirmar no GitHub, no primeiro merge: o runner ARM, o envio das imagens ao GHCR
+com o `GITHUB_TOKEN` e a conexão SSH com os três secrets. O primeiro deploy foi feito pelo dev em
+2026-10-09 e o site está no ar.
 
-- o runner ARM (`ubuntu-24.04-arm`) disponível para o repositório;
-- o envio das imagens ao GHCR com o `GITHUB_TOKEN`;
-- a conexão SSH com os três secrets;
-- se as imagens nascem mesmo privadas e o job 3 precisa da segunda tentativa.
+## 11c — Proteção da `master` e rollback
+
+Não há arquivo novo nesta subetapa. A proteção é uma configuração feita no painel do GitHub, e o
+rollback é um procedimento. Os dois estão na Parte 3 do `infra/README.md` (passos 16 e 17); aqui
+fica o porquê.
+
+### Por que proteger a `master`
+
+Desde a subetapa 11b, a `master` é o botão de publicar: tudo o que chega nela vai para o ar em
+minutos. Sem proteção, um `git push` na branch errada publica código que nenhum teste viu.
+
+Pense na **porta de uma sala limpa**: ninguém entra direto do corredor; todo mundo passa pela
+antecâmara. A proteção obriga toda alteração a passar pela antecâmara, que é o Pull Request com o
+CI verde.
+
+| Regra | O que impede |
+|---|---|
+| Exigir Pull Request | Um `git push` direto na `master`, inclusive por engano |
+| Exigir o CI verde | O merge de um Pull Request com teste falhando, código fora do padrão ou conteúdo incompleto |
+| Valer também para administradores | Você mesmo pulando as duas regras acima |
+
+### Por que zero aprovações
+
+A regra "exigir Pull Request" tem um número de aprovações necessárias. O GitHub não deixa uma
+pessoa aprovar o próprio Pull Request, então, trabalhando sozinho, qualquer valor acima de zero
+trancaria a `master` para sempre. Com zero, o Pull Request continua obrigatório, e quem "aprova"
+é o CI.
+
+### O nome da verificação obrigatória
+
+A regra do CI pede o nome da verificação. É o `name` do job no `ci.yml`: **Estilo, análise e
+testes**. Se esse nome mudar no arquivo, a regra passa a esperar uma verificação que não existe
+mais, e todo Pull Request fica travado em "aguardando". Ao renomear o job, atualize a regra junto.
+
+O GitHub só oferece na busca as verificações que já rodaram pelo menos uma vez no repositório.
+
+### Rollback: dois caminhos que se completam
+
+**A. Pelo servidor.** O mesmo comando do deploy, com a etiqueta de uma versão anterior:
+
+```
+IMAGE_TAG=<identificador> docker compose -p site-prod -f /srv/landing-page/docker-compose.prod.yml up -d --no-build --wait
+```
+
+Funciona porque cada versão publicada é uma imagem com nome próprio, guardada no GHCR (ver
+`producao.md`, "Por que `ghcr.io` se o site roda na Oracle"). Voltar atrás é só apontar para
+outra imagem; nada é reconstruído. E como o `?v=` dos arquivos estáticos está gravado dentro da
+imagem (subetapa 9c), o CSS antigo volta junto com o rótulo antigo.
+
+**B. Pelo GitHub.** O botão **Revert** de um Pull Request já mesclado cria um Pull Request novo
+que desfaz aquelas alterações. O merge dele dispara um deploy normal.
+
+Por que não basta o A: ele muda o que está no ar, mas não a `master`. O código com defeito
+continua lá, e o próximo merge, mesmo de algo sem relação, publicaria tudo de novo. O B é o que
+deixa a `master` igual ao que está no ar. O A existe para os minutos em que o site está quebrado
+e dez minutos de espera são demais.
+
+| | A. Pelo servidor | B. Revert no GitHub |
+|---|---|---|
+| Tempo | Segundos | Cerca de dez minutos |
+| Muda a `master`? | Não | Sim |
+| Quando usar | Site fora do ar ou muito quebrado | Sempre, sozinho ou depois do A |
+
+### De onde vem o identificador da versão
+
+É o `github.sha` do commit que foi publicado, o mesmo valor em quatro lugares: no topo da
+execução do Deploy na aba Actions, na etiqueta das duas imagens no GHCR, no `?v=` do código-fonte
+do site e no histórico de commits da `master`.
+
+Na VM, `docker images ghcr.io/dancarvalhodev/landing-page-php` lista as versões que ainda estão
+no disco (as da última semana); as mais antigas são baixadas do GHCR quando pedidas.
+
+### O que o rollback não desfaz
+
+- **O arquivo de compose na VM** continua sendo o do último deploy. Só importa se a versão com
+  defeito mudou o próprio `docker-compose.prod.yml`; nesse caso, use o caminho B.
+- **O `.env` da VM e o Caddy de borda** não fazem parte do deploy, então também não voltam.
+
+### O fluxo de trabalho depois da proteção
+
+Com a `master` protegida, toda alteração segue o mesmo caminho, inclusive documentação:
+
+1. `git switch master` e `git pull`.
+2. `git switch -c <nome-da-branch>`.
+3. Alterar, conferir em `localhost:8080`, commit e `git push`.
+4. Abrir o Pull Request, esperar o CI ficar verde e fazer o merge.
+
+Uma branch já mesclada não é reaproveitada: a próxima alteração começa de uma branch nova, criada
+a partir da `master` atualizada.
+
+### O que foi testado e o que não foi
+
+No computador, simulei o caminho A: subi uma etiqueta, depois subi a anterior com o mesmo
+comando. Os dois contêineres foram recriados com a imagem antiga e o `ASSET_VERSION` voltou junto.
+
+A proteção da `master` e o botão Revert são do painel do GitHub e não puderam ser testados daqui.
+O roteiro traz uma conferência para a proteção: um push direto na `master` precisa ser recusado.
