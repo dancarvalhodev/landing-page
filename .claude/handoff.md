@@ -11,21 +11,18 @@ sessão atualiza este arquivo antes do último commit; quem começar lê este ar
   ar. Um commit por etapa; cada alteração nova em uma branch nova, a partir da `master`.
 - **Plano:** `.claude/plans/arquitetura-landing-page.md`. A seção "Progresso", no fim do arquivo,
   marca o que está confirmado.
-- **Confirmadas:** etapas 1 a 10 inteiras. A 8 (descrições profissionais) foi feita em 8a-8c; a 9
-  (imagens de produção) em 9a-9d; a 10 (infra) em 10a (Caddy de borda e rede `edge`) e 10b
-  (`cloud-init.yaml` e `infra/README.md`). Conceito e código estão em
-  `.claude/arch-explain/producao.md` e `.claude/arch-explain/infra.md`.
-- **Próxima:** etapa 11 — CI/CD, dividida em 11a (`ci.yml`), 11b (`deploy.yml`, secrets, Pull
-  Request para a `master` e primeiro deploy) e 11c (proteção da `master` e rollback). A 11a e a
-  11b estão confirmadas: **o site está no ar**, publicado pelo `deploy.yml` no merge da
-  `feat/site-foundation` na `master` (2026-10-09). O repositório é público. A 11c (proteção da `master` e rollback) está entregue,
-  aguardando conferência: o dev precisa configurar a proteção no GitHub (passo 16 do
-  `infra/README.md`). Ver `.claude/arch-explain/ci-cd.md`.
-- **Atenção ao git:** a `feat/site-foundation` já foi mesclada. Toda alteração nova começa de uma
-  branch criada a partir da `master` atualizada e vai por Pull Request; com a `master` protegida,
-  push direto é recusado. Decisões já tomadas pelo dev: a VM é ARM, o repositório e as imagens no GHCR serão
-  públicos (a VM baixa sem token) e a `feat/site-foundation` vai para a `master` por Pull
-  Request, com passo a passo escrito para ele.
+- **Confirmadas:** etapas 1 a 11 inteiras. **O site está no ar**, publicado pelo `deploy.yml` no
+  merge na `master`. A 8 (descrições profissionais) foi feita em 8a-8c; a 9 (imagens de produção)
+  em 9a-9d; a 10 (infra) em 10a-10b; a 11 (CI/CD) em 11a (`ci.yml`), 11b (`deploy.yml` e primeiro
+  deploy) e 11c (proteção da `master` e rollback). Conceito e código estão em
+  `.claude/arch-explain/producao.md`, `infra.md` e `ci-cd.md`.
+- **Entregue, aguardando conferência:** etapa 12 — documentação (`README.md` e `CLAUDE.md`
+  reescritos).
+- **Próximas:** etapa 13 (revisão da documentação) e etapa 14 (spec do projeto).
+- **Decisões de infraestrutura:** a VM é ARM (`VM.Standard.A1.Flex`); o repositório e as imagens
+  no GHCR são públicos, então a VM baixa as imagens sem token.
+- **Atenção ao git:** a `master` publica e deve estar protegida. Toda alteração nova começa de uma
+  branch criada a partir da `master` atualizada e vai por Pull Request.
 
 ## Como retomar em um computador novo
 
@@ -144,6 +141,5 @@ O plano tem o detalhe; aqui só o que mais pesa ao continuar.
 - **`robots.txt` (etapa 7e):** libera tudo (`Allow: /`), sem bloquear páginas de tag nem de busca.
   Foi uma decisão consciente, não uma pendência técnica — fica pra o dev revisitar se quiser
   restringir depois.
-- **Etapa 12:** reescrever o `CLAUDE.md` com comandos e arquitetura completos.
 - **Etapa 13:** depois da 12, revisar a documentação escrita (e os `.claude/arch-explain/`) antes
   da etapa de spec, a pedido do dev.

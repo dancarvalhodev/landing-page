@@ -333,8 +333,8 @@ Uma etapa só é marcada `[x]` depois da confirmação do dev.
 - [x] 10. Infra (todas as subetapas) — confirmada em 2026-10-09
 - [x] 11a. CI/CD — ci.yml (estilo, análise e testes) — confirmada em 2026-10-09
 - [x] 11b. CI/CD — deploy.yml, secrets, Pull Request para a master e primeiro deploy — confirmada em 2026-10-09, com o site no ar. O tema customizado do Giscus não funcionou em produção; o dev abriu uma issue no GitHub e corrige depois
-- [ ] 11c. CI/CD — proteção da master e rollback — entregue, aguardando conferência (o rollback pelo servidor foi simulado no computador; a proteção é configurada pelo dev no GitHub, seguindo o passo 16 do infra/README.md)
-- [ ] 11. CI/CD (todas as subetapas)
-- [ ] 12. Documentação
+- [x] 11c. CI/CD — proteção da master e rollback — confirmada em 2026-10-09
+- [x] 11. CI/CD (todas as subetapas) — confirmada em 2026-10-09
+- [ ] 12. Documentação — entregue, aguardando conferência (feita de uma vez, sem subetapas: são dois arquivos, README.md e CLAUDE.md)
 - [ ] 13. Revisão da documentação
 - [ ] 14. Spec do projeto
