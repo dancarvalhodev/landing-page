@@ -3,25 +3,25 @@
 Resumo para continuar o desenvolvimento em outro computador (ou voltar a este). Quem terminar uma
 sessão atualiza este arquivo antes do último commit; quem começar lê este arquivo primeiro.
 
-Última atualização: 2026-10-06.
+Última atualização: 2026-10-09.
 
 ## Onde paramos
 
-- **Branch:** a `feat/site-foundation` foi mesclada na `master` em 2026-10-09 e o site está no
-  ar. Um commit por etapa; cada alteração nova em uma branch nova, a partir da `master`.
-- **Plano:** `.claude/plans/arquitetura-landing-page.md`. A seção "Progresso", no fim do arquivo,
-  marca o que está confirmado.
-- **Confirmadas:** etapas 1 a 11 inteiras. **O site está no ar**, publicado pelo `deploy.yml` no
-  merge na `master`. A 8 (descrições profissionais) foi feita em 8a-8c; a 9 (imagens de produção)
-  em 9a-9d; a 10 (infra) em 10a-10b; a 11 (CI/CD) em 11a (`ci.yml`), 11b (`deploy.yml` e primeiro
-  deploy) e 11c (proteção da `master` e rollback). Conceito e código estão em
-  `.claude/arch-explain/producao.md`, `infra.md` e `ci-cd.md`.
-- **Confirmada também a etapa 12** (documentação: `README.md` e `CLAUDE.md` reescritos).
-- **Entregue, aguardando conferência:** etapa 13 — revisão da documentação. Doze correções em
-  oito documentos, conferidas contra o código.
-- **Próxima:** etapa 14 (spec do projeto, em `.claude/specs/`).
-- **Decisões de infraestrutura:** a VM é ARM (`VM.Standard.A1.Flex`); o repositório e as imagens
-  no GHCR são públicos, então a VM baixa as imagens sem token.
+- **O plano está concluído e o site está no ar.** As etapas 1 a 13 de
+  `.claude/plans/arquitetura-landing-page.md` estão confirmadas. A etapa 14 (spec do projeto) foi
+  retirada em 2026-10-09, por decisão do dev: seria redundante com o `README.md`, o `CLAUDE.md` e
+  os documentos de `.claude/arch-explain/`.
+- **Não há próxima etapa planejada.** O trabalho daqui em diante é manutenção: artigos novos,
+  ajustes e as pendências listadas no fim deste arquivo. Um trabalho maior pede um plano novo, em
+  etapas, aprovado pelo dev antes de começar.
+- **Para o estado real do projeto**, ler o `README.md` e o `CLAUDE.md`. O plano é um registro
+  histórico e difere do código em alguns pontos, listados no fim dele.
+- **Publicação:** cada merge na `master` roda os testes, constrói as imagens e atualiza a VM
+  (`.github/workflows/deploy.yml`). O roteiro de servidor, primeiro deploy, proteção da `master` e
+  rollback é o `infra/README.md`.
+- **Decisões de infraestrutura:** a VM é ARM (`VM.Standard.A1.Flex`), na Oracle Cloud; o DNS fica
+  no Squarespace; o repositório e as imagens no GHCR são públicos, então a VM baixa as imagens sem
+  token.
 - **Atenção ao git:** a `master` publica e deve estar protegida. Toda alteração nova começa de uma
   branch criada a partir da `master` atualizada e vai por Pull Request.
 
@@ -55,8 +55,12 @@ projeto.
   começar, perguntando ao dev como prefere dividir. Foi feito com a etapa 5 (Home → 5a-5d), a 6
   (Blog → 6a-6f), a 7 (SEO → 7a-7f), a 8 (8a-8c), a 9 (9a-9d), a 10 (10a-10b) e a 11 (11a-11c).
   **Registrar a divisão no plano e neste arquivo antes de escrever qualquer arquivo da etapa**: o
-  dev interrompeu a 11a porque a divisão ainda não estava registrada. Cuidado ao reaproveitar uma letra já usada em outro lugar do
-  plano (ex.: a 6b já existia reservada quando a 7 foi dividida).
+  dev interrompeu a 11a porque a divisão ainda não estava registrada. Cuidado ao reaproveitar uma
+  letra já usada em outro lugar do plano (ex.: a 6b já existia reservada quando a 7 foi dividida).
+- **Questionar o que o plano pede quando não vale o custo.** O dev retirou a prévia (etapa 10a) e
+  a spec (etapa 14) depois de perguntar se eram necessárias. A regra a seguir é interpretação do
+  Claude a partir dessas duas decisões, não um pedido literal dele: ao chegar em uma etapa cara e
+  de pouco retorno para um projeto deste tamanho, dizer isso antes de começar, com a recomendação.
 - **MVP sempre.** O mínimo de arquivos e classes que resolve a etapa de hoje; nada antecipado
   (cache, validadores, camadas "para o futuro"). A etapa 4b foi refeita porque a primeira versão
   tocou 57 arquivos.
@@ -108,7 +112,7 @@ O plano tem o detalhe; aqui só o que mais pesa ao continuar.
   `hl-*` em `app.css`) nas cores da identidade, não um dos temas prontos do pacote.
 - **Giscus** (etapa 6f) está configurado com o repositório real
   `dancarvalhodev/landing-page-comments`. O tema customizado
-  (`www/public/assets/css/giscus-{light,dark}.css`) só funciona com HTTPS — ver "Pendências".
+  (`www/public/assets/css/giscus-{light,dark}.css`) não funcionou em produção — ver "Pendências".
 - **`SITE_URL` e `APP_ENV` são obrigatórios** no `.env`; o app não sobe sem eles. Ver
   `.claude/arch-explain/site-url.md`.
 - **`CanonicalPathMiddleware`** (barra final e barras duplicadas) foi mantido de propósito em vez
@@ -116,32 +120,43 @@ O plano tem o detalhe; aqui só o que mais pesa ao continuar.
 
 ## Pendências conhecidas
 
-- **Texto do projeto "Landing Page"** (`content/projects/{pt,en}/landing-page.md`): já afirma a
-  hospedagem na Oracle Cloud e a publicação pelo GitHub Actions, que dependem das etapas 10 e 11. Rever antes do deploy se algo mudar. O repositório também precisa
-  estar público quando o site for ao ar, senão o link do cartão dá 404.
-- **A VM já existe na Oracle** (criada pelo dev em 2026-10-09), com Docker, usuário `deploy`,
-  rede `edge`, portas abertas, DNS no Squarespace e o Caddy de borda no ar. O cloud-init não foi
-  aplicado nessa VM: um acento no arquivo foi corrompido ao colar no painel, e os passos foram
-  feitos à mão por SSH. O `infra/cloud-init.yaml` corrigido (só ASCII) ainda não rodou em uma VM
-  de verdade. Ver `.claude/arch-explain/infra.md`.
-- **Etapa 11:** o build de produção exige `IMAGE_TAG` (que também vira o `ASSET_VERSION`); o
-  workflow deve passar o identificador do commit. O projeto do Compose precisa se chamar
-  `site-prod` (`-p`), porque o Caddyfile de borda usa esse nome.
-- **A prévia (`preview.<domínio>`) foi retirada em 2026-10-06, por decisão do dev:** o projeto é
-  simples e a conferência é feita no ambiente local. Não existe `preview.yml` na etapa 11. O
-  valor `preview` continua aceito em `APP_ENV` (`Config` e testes), sem uso. Como recolocar:
-  `.claude/arch-explain/infra.md`.
-- **Versão do Tailwind em dois lugares:** `bin/tailwind/Dockerfile` e `bin/caddy/Dockerfile`.
-  Atualizar os dois juntos.
-- **Artigos do blog** (`ola-mundo.md`, `hello-world.md`) ainda são de exemplo; saem antes do
-  deploy se não houver artigo real.
+O que não funciona como esperado ou é provisório:
+
 - **Tema do Giscus (etapa 6f): não funcionou em produção.** Com o site no ar em HTTPS
   (2026-10-09), o tema customizado (`giscus-{light,dark}.css`) não foi aplicado. O dev abriu uma
   issue no GitHub e corrige depois; não mexer sem ele pedir. Em `http://localhost` o Giscus
   ignora o CSS customizado de qualquer forma, então só dá para testar em produção.
+- **Os artigos do blog no ar são de exemplo** (`ola-mundo.md` e `hello-world.md`). Foram
+  publicados no primeiro deploy e devem dar lugar a artigos reais.
+- **O `infra/cloud-init.yaml` corrigido nunca rodou em uma VM.** Na VM atual ele não foi aplicado
+  (um acento foi corrompido ao colar no painel) e os passos foram feitos à mão por SSH. Os
+  comandos são os mesmos, mas o arquivo só será provado na próxima VM. Ver
+  `.claude/arch-explain/infra.md`.
+
+O que nunca foi verificado:
+
+- **Lighthouse** (performance, acessibilidade e SEO acima de 95), previsto na verificação do plano.
+- **O JSON-LD no Rich Results Test e a prévia do link no LinkedIn Post Inspector.**
+- **A proteção da `master` e o rollback pelo botão Revert**, que são do painel do GitHub. O
+  rollback pelo servidor foi simulado no computador.
+- **Se as regras de `iptables` do cloud-init são necessárias**, já que o Docker cria as próprias.
+
+Decisões conscientes, para revisitar se o contexto mudar:
+
+- **A prévia (`preview.<domínio>`) foi retirada em 2026-10-06:** o projeto é simples e a
+  conferência é feita no ambiente local. O valor `preview` continua aceito em `APP_ENV` (`Config`
+  e testes), sem uso. Como recolocar: `.claude/arch-explain/infra.md`.
+- **A spec do projeto (etapa 14) foi retirada em 2026-10-09.** Vale reconsiderar se o projeto for
+  passado a outra pessoa ou reescrito em outra tecnologia.
 - **`robots.txt` (etapa 7e):** libera tudo (`Allow: /`), sem bloquear páginas de tag nem de busca.
-  Foi uma decisão consciente, não uma pendência técnica — fica pra o dev revisitar se quiser
-  restringir depois.
-- **Etapa 14:** escrever a spec a partir do que foi construído, não do plano. O plano difere do
-  código em vários pontos (prévia retirada, registro `SSH_KNOWN_HOSTS`, `.env` na VM) e não foi
-  reescrito de propósito.
+- **O deploy não tem cache de build** e deixa o site fora por um ou dois segundos a cada
+  publicação.
+
+Cuidados permanentes (também no `CLAUDE.md`, seção "Armadilhas"):
+
+- **Versão do Tailwind em dois lugares:** `bin/tailwind/Dockerfile` e `bin/caddy/Dockerfile`.
+- **O projeto do Compose no servidor precisa se chamar `site-prod`,** porque o Caddyfile de borda
+  usa esse nome.
+- **O texto do projeto "Landing Page"** (`content/projects/{pt,en}/landing-page.md`) afirma a
+  hospedagem na Oracle Cloud e a publicação pelo GitHub Actions. Se uma das duas mudar, o texto
+  muda junto.
