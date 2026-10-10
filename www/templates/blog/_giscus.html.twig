@@ -1,10 +1,10 @@
 {# Valores gerados em https://giscus.app, a partir do repositório dancarvalhodev/landing-page-comments.
    data-lang usa locale.value ('pt'/'en'), não htmlLang ('pt-BR'/'en'): o Giscus não reconhece
    "pt-BR" e falha (404 ao montar o iframe) só na versão em português.
-   data-theme começa em "preferred_color_scheme" (tema do sistema); giscus-theme.js corrige
-   pra claro/escuro assim que a página carrega, seguindo a escolha salva no site. #}
+   Aqui ficam só as configurações: quem carrega o client.js do Giscus é o giscus-theme.js, para
+   já pedir os comentários com o tema certo (data-theme) em vez de corrigir depois. #}
 <section class="mt-12">
-    <script src="https://giscus.app/client.js"
+    <div class="giscus"
         data-repo="dancarvalhodev/landing-page-comments"
         data-repo-id="R_kgDOU6lhqw"
         data-category="General"
@@ -14,9 +14,6 @@
         data-reactions-enabled="1"
         data-emit-metadata="0"
         data-input-position="bottom"
-        data-theme="preferred_color_scheme"
-        data-lang="{{ i18n.locale.value }}"
-        crossorigin="anonymous"
-        async>
-    </script>
+        data-lang="{{ i18n.locale.value }}">
+    </div>
 </section>
