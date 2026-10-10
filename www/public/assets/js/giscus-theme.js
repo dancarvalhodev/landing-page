@@ -22,9 +22,10 @@ const sendGiscusTheme = () => {
     iframe.contentWindow.postMessage({ giscus: { setConfig: { theme: currentTheme() } } }, 'https://giscus.app');
 };
 
-// Giscus avisa quando terminou de carregar; manda o tema certo assim que ele aparecer.
+// Qualquer mensagem do Giscus (a altura do iframe, por exemplo) mostra que ele já está ouvindo.
+// Não dá para esperar a mensagem "discussion": ela só vem com data-emit-metadata="1".
 window.addEventListener('message', (event) => {
-    if (event.origin === 'https://giscus.app' && event.data?.giscus?.discussion) {
+    if (event.origin === 'https://giscus.app' && event.data?.giscus) {
         sendGiscusTheme();
     }
 });

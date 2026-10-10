@@ -3,8 +3,6 @@
    paleta mudar. O Giscus roda num documento à parte (iframe), por isso não dá pra usar
    var(--page) etc. direto — essas variáveis não existem nesse documento. */
 :root {
-    color-scheme: light;
-
     --color-canvas-default: #fff8f1;
     --color-canvas-overlay: #ffffff;
     --color-canvas-inset: #ffedd5;
