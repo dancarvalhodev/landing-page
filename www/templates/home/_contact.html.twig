@@ -1,0 +1,12 @@
+<section id="contato" class="bg-page px-6 py-16 text-ink" data-reveal>
+    <div class="mx-auto max-w-2xl">
+        <h2 class="text-3xl">{{ i18n.text('home.contact.title') }}</h2>
+
+        <div class="mt-6 flex flex-wrap gap-3">
+            <a href="mailto:{{ site.email }}" class="bg-brand rounded-box px-5 py-2.5 font-bold text-white">{{ i18n.text('home.contact.email') }}</a>
+            {% for link in site.social %}
+                <a href="{{ link.url }}" class="rounded-box px-5 py-2.5 font-bold ring-2 ring-line ring-inset">{{ link.label }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</section>

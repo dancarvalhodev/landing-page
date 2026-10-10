@@ -1,0 +1,73 @@
+name: Deploy
+
+on:
+    push:
+        branches: [master]
+
+concurrency:
+    group: deploy
+    cancel-in-progress: false
+
+env:
+    IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+    testes:
+        uses: ./.github/workflows/ci.yml
+
+    imagens:
+        name: Construir e enviar as imagens
+        needs: testes
+        # A VM é ARM; construir em um runner ARM evita emulação, que seria várias vezes mais lenta.
+        runs-on: ubuntu-24.04-arm
+        permissions:
+            contents: read
+            packages: write
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Entrar no GHCR
+              env:
+                  GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: echo "$GHCR_TOKEN" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
+
+            - name: Construir as imagens
+              run: docker compose -f docker-compose.prod.yml build
+
+            - name: Enviar as imagens
+              run: docker compose -f docker-compose.prod.yml push
+
+    publicar:
+        name: Publicar na VM
+        needs: imagens
+        runs-on: ubuntu-24.04
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Preparar o SSH
+              env:
+                  SSH_KEY: ${{ secrets.SSH_KEY }}
+                  SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+              run: |
+                  mkdir -p ~/.ssh
+                  echo "$SSH_KEY" > ~/.ssh/id_ed25519
+                  chmod 600 ~/.ssh/id_ed25519
+                  echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+            - name: Enviar o arquivo de compose
+              env:
+                  SSH_HOST: ${{ secrets.SSH_HOST }}
+              run: scp docker-compose.prod.yml "deploy@$SSH_HOST:/srv/landing-page/docker-compose.prod.yml"
+
+            - name: Subir a nova versão
+              env:
+                  SSH_HOST: ${{ secrets.SSH_HOST }}
+              # O IMAGE_TAG é preenchido aqui, no runner, antes de o comando ir para a VM.
+              run: |
+                  # shellcheck disable=SC2029
+                  ssh "deploy@$SSH_HOST" "IMAGE_TAG=$IMAGE_TAG docker compose -p site-prod -f /srv/landing-page/docker-compose.prod.yml up -d --no-build --wait"
+
+            - name: Apagar imagens antigas da VM
+              env:
+                  SSH_HOST: ${{ secrets.SSH_HOST }}
+              run: ssh "deploy@$SSH_HOST" "docker image prune --all --force --filter until=168h"

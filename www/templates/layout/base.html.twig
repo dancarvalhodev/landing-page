@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="{{ i18n.htmlLang }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{{ site.name }}{% endblock %}</title>
+    <meta name="description" content="{% block description %}{{ profile.intro }}{% endblock %}">
+    <link rel="canonical" href="{{ canonical }}">
+    {% if altUrl is defined and altUrl %}
+        <link rel="alternate" hreflang="{{ i18n.htmlLang }}" href="{{ canonical }}">
+        <link rel="alternate" hreflang="{{ i18n.switchHtmlLang }}" href="{{ altUrl }}">
+    {% endif %}
+
+    {# Cartão de prévia ao colar o link (WhatsApp, LinkedIn, Slack...). Reaproveita os blocos de
+       cima: o texto do cartão social é sempre o mesmo que já aparece na busca do Google. #}
+    <meta property="og:site_name" content="{{ site.name }}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:title" content="{{ block('title') }}">
+    <meta property="og:description" content="{{ block('description') }}">
+    <meta property="og:url" content="{{ canonical }}">
+    <meta property="og:locale" content="{{ i18n.locale.ogLocale }}">
+    {% if altUrl is defined and altUrl %}
+        <meta property="og:locale:alternate" content="{{ i18n.locale.other.ogLocale }}">
+    {% endif %}
+    {% if block('og_type') == 'article' %}
+        <meta property="article:published_time" content="{% block article_published_time %}{% endblock %}">
+    {% endif %}
+    <meta property="og:image" content="{{ asset_absolute('img/og-image.png') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ block('title') }}">
+    <meta name="twitter:description" content="{{ block('description') }}">
+    <meta name="twitter:image" content="{{ asset_absolute('img/og-image.png') }}">
+
+    {# Dados estruturados (schema.org) pro Google entender quem é o dono do site — só na home. #}
+    {% block json_ld %}{% endblock %}
+
+    <script src="{{ asset('js/theme-init.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+</head>
+<body>
+<header class="bg-page flex items-center justify-between gap-4 px-6 py-4 text-sm">
+    <nav class="flex items-center gap-4 font-bold">
+        <a href="{{ i18n.url('/') }}">{{ i18n.text('nav.home') }}</a>
+        <a href="{{ i18n.url('/blog') }}">{{ i18n.text('nav.blog') }}</a>
+    </nav>
+    <div class="flex items-center gap-4">
+        <button type="button" data-theme-toggle aria-label="{{ i18n.text('theme.toggle') }}" class="text-lg leading-none">🌙</button>
+        <a href="{{ switchUrl|default(i18n.switchUrl) }}" hreflang="{{ i18n.switchHtmlLang }}" lang="{{ i18n.switchHtmlLang }}" class="font-bold text-accent">{{ i18n.text('language.switch') }}</a>
+    </div>
+</header>
+{% block content %}{% endblock %}
+<script defer src="{{ asset('js/theme-toggle.js') }}"></script>
+</body>
+</html>

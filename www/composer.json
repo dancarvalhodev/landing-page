@@ -1,0 +1,43 @@
+{
+    "name": "dancarvalhodev/landing-page",
+    "description": "Portfólio e blog pessoal",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.5",
+        "league/commonmark": "^2.10",
+        "php-di/php-di": "^7",
+        "php-di/slim-bridge": "^3",
+        "slim/psr7": "^1",
+        "slim/slim": "^4",
+        "slim/twig-view": "^3",
+        "symfony/yaml": "^8.1",
+        "tempest/highlight": "^2.28",
+        "twig/twig": "^3"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/",
+            "App\\Bootstrap\\": "bootstrap/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "stan": "phpstan analyse --memory-limit=512M",
+        "cs": "php-cs-fixer fix --dry-run --diff",
+        "cs:fix": "php-cs-fixer fix"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "phpstan/phpstan": "^2.2",
+        "phpunit/phpunit": "^13.3"
+    }
+}

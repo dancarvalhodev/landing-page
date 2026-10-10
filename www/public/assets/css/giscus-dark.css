@@ -1,0 +1,44 @@
+/* Tema do Giscus (comentários) nos tons da identidade "Pôr do sol" — escuro.
+   Valores duplicados de www/resources/css/app.css (.dark); atualizar os dois juntos se a
+   paleta mudar. O Giscus roda num documento à parte (iframe), por isso não dá pra usar
+   var(--dark-page) etc. direto — essas variáveis não existem nesse documento. */
+:root {
+    color-scheme: dark;
+
+    --color-canvas-default: #1a0d0a;
+    --color-canvas-overlay: #2a1612;
+    --color-canvas-inset: #4a2413;
+    --color-canvas-subtle: #2a1612;
+
+    --color-border-default: #4a2a20;
+    --color-border-muted: #4a2a20;
+    --color-neutral-muted: rgba(74, 42, 32, 0.4);
+
+    --color-accent-fg: #fdba74;
+    --color-accent-emphasis: #fdba74;
+    --color-accent-muted: rgba(253, 186, 116, 0.4);
+    --color-accent-subtle: #4a2413;
+
+    --color-fg-default: #fff4ec;
+    --color-fg-muted: #c9aa9b;
+    --color-fg-subtle: #c9aa9b;
+    /* --color-accent-emphasis aqui é claro (#fdba74), então o texto por cima precisa ser escuro. */
+    --color-fg-on-emphasis: #1a0d0a;
+
+    --color-btn-text: #fff4ec;
+    --color-btn-bg: #2a1612;
+    --color-btn-border: #4a2a20;
+    --color-btn-hover-bg: #4a2413;
+    --color-btn-hover-border: #4a2a20;
+    --color-btn-active-bg: #4a2413;
+    --color-btn-active-border: #4a2a20;
+    --color-btn-selected-bg: #4a2413;
+
+    /* Fixo (não muda com o tema), igual ao botão de CTA do site (bg-brand + texto branco). */
+    --color-btn-primary-text: #ffffff;
+    --color-btn-primary-bg: #c2410c;
+    --color-btn-primary-border: #c2410c;
+    --color-btn-primary-hover-bg: #be123c;
+    --color-btn-primary-hover-border: #be123c;
+    --color-btn-primary-selected-bg: #be123c;
+}

@@ -1,0 +1,24 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}{{ post.title }} · {{ site.name }}{% endblock %}
+{% block description %}{{ post.description }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block article_published_time %}{{ post.date|date('c') }}{% endblock %}
+
+{% block content %}
+<main class="mx-auto max-w-2xl px-6 py-16 text-ink">
+    <p><a href="{{ i18n.url('/blog') }}" class="text-sm font-bold text-accent">← {{ i18n.text('blog.back') }}</a></p>
+
+    <h1 class="mt-4 text-3xl">{{ post.title }}</h1>
+    <time datetime="{{ post.date|date('Y-m-d') }}" class="mt-2 block text-sm text-muted">
+        {{ post.date|date(i18n.locale.value == 'pt' ? 'd/m/Y' : 'M j, Y') }}
+    </time>
+
+    {{ include('blog/_tags.html.twig', {tags: post.tags, i18n: i18n}) }}
+
+    <div class="article mt-6 text-ink">{{ post.html|raw }}</div>
+
+    {{ include('blog/_giscus.html.twig', {i18n: i18n}) }}
+</main>
+<script defer src="{{ asset('js/giscus-theme.js') }}"></script>
+{% endblock %}

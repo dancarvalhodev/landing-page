@@ -1,0 +1,12 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}{{ tag }} · {{ i18n.text('blog.title') }} · {{ site.name }}{% endblock %}
+
+{% block content %}
+<main class="mx-auto max-w-2xl px-6 py-16 text-ink">
+    <p><a href="{{ i18n.url('/blog') }}" class="text-sm font-bold text-accent">← {{ i18n.text('blog.back') }}</a></p>
+    <h1 class="mt-4 text-3xl">{{ i18n.text('blog.tag.title') }} {{ tag }}</h1>
+
+    {{ include('blog/_posts.html.twig', {posts: posts, i18n: i18n}) }}
+</main>
+{% endblock %}

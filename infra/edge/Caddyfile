@@ -1,0 +1,7 @@
+{$DOMAIN} {
+	reverse_proxy site-prod:80
+}
+
+www.{$DOMAIN} {
+	redir https://{$DOMAIN}{uri} permanent
+}

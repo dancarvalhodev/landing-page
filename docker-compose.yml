@@ -1,0 +1,38 @@
+services:
+    caddy:
+        build:
+            context: .
+            dockerfile: bin/caddy/Dockerfile
+            target: dev
+        container_name: ${CONTAINER_NAME}caddy
+        ports:
+            - ${PORT_CADDY}:80
+        volumes:
+            - ./www:/app
+            - ./config/caddy/Caddyfile:/etc/caddy/Caddyfile
+        depends_on:
+            - php
+        restart: unless-stopped
+    php:
+        build:
+            context: .
+            dockerfile: bin/php/Dockerfile
+            target: dev
+        container_name: ${CONTAINER_NAME}php
+        user: ${HOST_UID}:${HOST_GID}
+        environment:
+            APP_ENV: ${APP_ENV}
+            SITE_URL: ${SITE_URL}
+            COMPOSER_HOME: /tmp/composer
+        volumes:
+            - ./www:/app
+            - ./config/php/php.ini:/usr/local/etc/php/php.ini
+        restart: unless-stopped
+    tailwind:
+        build:
+            context: bin/tailwind
+        container_name: ${CONTAINER_NAME}tailwind
+        user: ${HOST_UID}:${HOST_GID}
+        volumes:
+            - ./www:/app
+        restart: unless-stopped

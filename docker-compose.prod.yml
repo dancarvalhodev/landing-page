@@ -1,0 +1,41 @@
+services:
+    caddy:
+        image: ghcr.io/dancarvalhodev/landing-page-caddy:${IMAGE_TAG:?informe IMAGE_TAG}
+        build:
+            context: .
+            dockerfile: bin/caddy/Dockerfile
+            target: prod
+        networks:
+            default:
+            edge:
+                aliases:
+                    - ${COMPOSE_PROJECT_NAME}
+        depends_on:
+            - php
+        restart: unless-stopped
+        logging:
+            driver: json-file
+            options:
+                max-size: 10m
+                max-file: "3"
+    php:
+        image: ghcr.io/dancarvalhodev/landing-page-php:${IMAGE_TAG:?informe IMAGE_TAG}
+        build:
+            context: .
+            dockerfile: bin/php/Dockerfile
+            target: prod
+            args:
+                ASSET_VERSION: ${IMAGE_TAG}
+        environment:
+            APP_ENV: ${APP_ENV}
+            SITE_URL: ${SITE_URL}
+        restart: unless-stopped
+        logging:
+            driver: json-file
+            options:
+                max-size: 10m
+                max-file: "3"
+
+networks:
+    edge:
+        external: true

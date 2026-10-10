@@ -1,0 +1,13 @@
+.git
+.env
+.idea
+.claude
+.codegraph
+logs
+
+www/vendor
+www/var
+www/tests
+www/.phpunit.cache
+www/.php-cs-fixer.cache
+www/public/assets/css/app.css

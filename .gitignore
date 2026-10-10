@@ -1,0 +1,13 @@
+.env
+
+logs/*
+!logs/.gitkeep
+
+www/vendor/
+www/var/
+www/public/assets/css/app.css
+www/.phpunit.cache/
+www/.php-cs-fixer.cache
+
+.DS_Store
+.idea/
