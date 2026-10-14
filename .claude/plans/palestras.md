@@ -126,4 +126,4 @@ Para cada uma das duas palestras:
 
 - [x] 1. Dados e textos — confirmada em 2026-10-14
 - [x] 2. Seção na home — confirmada em 2026-10-14
-- [ ] 3. Documentação — entregue, aguardando conferência
+- [x] 3. Documentação — confirmada em 2026-10-14
