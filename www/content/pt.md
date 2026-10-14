@@ -94,6 +94,18 @@ certifications:
   - Comunicação Eficaz e Relações Humanas – Dale Carnegie Training – 08/2023
   - "OKR: Metodologia e Aplicação – Udemy – 04/2023"
 
+talks:
+  - title: Castelo de Mentiras
+    event: Agile21
+    date: fev. 2025
+    language: pt
+    youtube: njfZug0GYjI
+  - title: Flow no trabalho
+    event: Agile21
+    date: fev. 2025
+    language: pt
+    youtube: s7u2uvgYQz8
+
 testimonials: []
 ---
 

@@ -24,7 +24,13 @@ sessão atualiza este arquivo antes do último commit; quem começar lê este ar
   token.
 - **Atenção ao git:** a `master` publica e deve estar protegida. Toda alteração nova começa de uma
   branch criada a partir da `master` atualizada e vai por Pull Request.
-- **Última sessão (2026-10-14, branch `refactor/text`, ainda sem commit):** os textos do site
+- **Seção de palestras (2026-10-14, branch `feature/palestras`):** plano em
+  `.claude/plans/palestras.md`, com as três etapas executadas. A home mostra as duas palestras do
+  Agile21 (lista `talks` no perfil) depois de Projetos. Os vídeos estão no canal do evento, então cada palestra tem uma capa no degradê do site, e o
+  `talk-player.js` troca a capa pelo player só no clique. As palestras são em português; em
+  `/en` aparecem com a etiqueta "In Portuguese". **Nunca conferido no navegador pelo Claude:** o
+  clique e o vídeo tocando, os temas claro e escuro e o layout no celular.
+- **Sessão anterior do mesmo dia (branch `refactor/text`):** os textos do site
   foram reescritos com o dev, em português e inglês (cargo, título, introdução, "Sobre",
   experiência, habilidades, certificações, projetos e o link do LinkedIn). Mudanças de estrutura
   que vieram junto:
@@ -49,7 +55,7 @@ sessão atualiza este arquivo antes do último commit; quem começar lê este ar
 2. `cp env-example .env` e ajustar `HOST_UID` e `HOST_GID` para a saída de `id -u` e `id -g`.
 3. `docker compose up -d --build`.
 4. `docker compose exec php composer install` (a pasta `vendor/` não vai para o git).
-5. Conferir: `docker compose exec php composer test` (40 testes passando) e
+5. Conferir: `docker compose exec php composer test` (41 testes passando) e
    `http://localhost:8080`.
 6. O índice do CodeGraph (`.codegraph/`) não vai inteiro para o git; se quiser usá-lo, rode
    `codegraph init` no projeto.

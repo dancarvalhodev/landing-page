@@ -94,6 +94,18 @@ certifications:
   - Comunicação Eficaz e Relações Humanas (Effective Communication and Human Relations) – Dale Carnegie Training – 08/2023
   - "OKR: Metodologia e Aplicação (OKR: Methodology and Application) – Udemy – 04/2023"
 
+talks:
+  - title: Castle of Lies
+    event: Agile21
+    date: Feb 2025
+    language: pt
+    youtube: njfZug0GYjI
+  - title: Flow at Work
+    event: Agile21
+    date: Feb 2025
+    language: pt
+    youtube: s7u2uvgYQz8
+
 testimonials: []
 ---
 

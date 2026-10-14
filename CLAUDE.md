@@ -88,6 +88,9 @@ Etiqueta YAML no topo e Markdown embaixo. `site.md`; `pt.md` e `en.md` (perfil; 
   `date` do Twig.
 - HTML dentro do Markdown é escapado (`html_input: escape`).
 - Para criar um artigo, use a skill `novo-post` (`.claude/skills/novo-post/SKILL.md`).
+- Palestras: lista `talks` em `pt.md`/`en.md` (`title`, `event`, `date` em texto, `language` em
+  que foi dada e `youtube`). O `youtube` guarda só o ID do vídeo, nunca a URL: o template monta
+  os endereços. A seção some se a lista estiver vazia.
 
 ### Front-end
 
@@ -96,7 +99,9 @@ Etiqueta YAML no topo e Markdown embaixo. `site.md`; `pt.md` e `en.md` (perfil; 
 - CSS: a entrada é `www/resources/css/app.css` (tokens em `@theme`, direção "Pôr do sol"). O
   `public/assets/css/app.css` é **gerado** pelo contêiner `tailwind` e não vai para o git.
 - JS puro em `www/public/assets/js/`, um arquivo por função (tema, filtro de projetos, animação ao
-  rolar, tema do Giscus).
+  rolar, tema do Giscus, player das palestras).
+- Palestras não mostram a thumbnail do YouTube (os vídeos são do canal do evento): a capa é um
+  link no degradê do site, e o `talk-player.js` troca a capa pelo player só no clique.
 
 ### Docker
 
