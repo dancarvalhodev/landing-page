@@ -125,6 +125,5 @@ Para cada uma das duas palestras:
 ## Progresso
 
 - [x] 1. Dados e textos — confirmada em 2026-10-14
-- [ ] 2. Seção na home — capa própria no lugar da thumbnail, entregue de novo, aguardando
-  conferência
-- [ ] 3. Documentação
+- [x] 2. Seção na home — confirmada em 2026-10-14
+- [ ] 3. Documentação — entregue, aguardando conferência
