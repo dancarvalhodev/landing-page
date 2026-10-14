@@ -30,6 +30,10 @@ return [
     'home.experience.education' => 'Formação',
     'home.experience.certifications' => 'Certificações',
 
+    'home.talks.title' => 'Palestras',
+    'home.talks.language.pt' => 'Em português',
+    'home.talks.language.en' => 'Em inglês',
+
     'home.testimonials.title' => 'Depoimentos',
 
     'home.contact.title' => 'Contato',

@@ -54,6 +54,18 @@ final class ContentRepositoryTest extends TestCase
         }
     }
 
+    public function testEveryTalkHasTheFieldsThePagesNeed(): void
+    {
+        foreach (Locale::cases() as $locale) {
+            foreach ($this->content->profile($locale)['talks'] ?? [] as $index => $talk) {
+                self::assertArrayHasKey('title', $talk, "palestra {$index} ({$locale->value}) sem title");
+                self::assertArrayHasKey('event', $talk, "palestra {$index} ({$locale->value}) sem event");
+                self::assertArrayHasKey('language', $talk, "palestra {$index} ({$locale->value}) sem language");
+                self::assertArrayHasKey('youtube', $talk, "palestra {$index} ({$locale->value}) sem youtube");
+            }
+        }
+    }
+
     public function testHtmlWrittenInMarkdownIsShownAsText(): void
     {
         $rootDir = sys_get_temp_dir() . '/landing-page-test-' . uniqid();
