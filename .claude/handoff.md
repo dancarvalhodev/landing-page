@@ -3,7 +3,7 @@
 Resumo para continuar o desenvolvimento em outro computador (ou voltar a este). Quem terminar uma
 sessão atualiza este arquivo antes do último commit; quem começar lê este arquivo primeiro.
 
-Última atualização: 2026-10-10.
+Última atualização: 2026-10-14.
 
 ## Onde paramos
 
@@ -24,6 +24,24 @@ sessão atualiza este arquivo antes do último commit; quem começar lê este ar
   token.
 - **Atenção ao git:** a `master` publica e deve estar protegida. Toda alteração nova começa de uma
   branch criada a partir da `master` atualizada e vai por Pull Request.
+- **Última sessão (2026-10-14, branch `refactor/text`, ainda sem commit):** os textos do site
+  foram reescritos com o dev, em português e inglês (cargo, título, introdução, "Sobre",
+  experiência, habilidades, certificações, projetos e o link do LinkedIn). Mudanças de estrutura
+  que vieram junto:
+  - `pt.md` e `en.md` ganharam o campo `description`, que alimenta a `<meta name="description">`
+    da home (antes era o `intro`); ver `.claude/arch-explain/seo.md`.
+  - Os empregos aceitam um campo opcional `highlights` (lista de tópicos abaixo da descrição).
+  - As certificações viraram uma lista simples, sem as "pílulas".
+  - Os projetos não têm mais corpo: o texto do card é só o `summary`, porque o corpo não aparecia
+    em nenhum lugar.
+  - `ContentRepositoryTest` não confere mais a primeira frase do "Sobre", só que ele vira HTML.
+  - O site ganhou favicon: `favicon.ico`, `favicon.svg`, `apple-touch-icon.png`,
+    `android-chrome-{192x192,512x512}.png` e `site.webmanifest`, na raiz de `www/public/` (é lá
+    que os navegadores procuram), ligados por quatro `<link>` no `layout/base.html.twig`. Fora
+    de `/assets/`, não recebem o cache de um ano nem o `?v=`.
+- **Skills do projeto** (`.claude/skills/`): `modo-codando` (executar um plano, uma etapa por
+  vez; atualizada em 2026-10-14 com as preferências abaixo) e `novo-post` (criar um artigo do
+  blog perguntando um campo por vez, com tradução).
 
 ## Como retomar em um computador novo
 
@@ -130,7 +148,8 @@ O que não funciona como esperado ou é provisório:
   também definem só parte das variáveis `--color-*` do Giscus; se algum elemento aparecer sem
   cor, comparar com o `custom_example.css` oficial. Ver `.claude/arch-explain/giscus.md`.
 - **Os artigos do blog no ar são de exemplo** (`ola-mundo.md` e `hello-world.md`). Foram
-  publicados no primeiro deploy e devem dar lugar a artigos reais.
+  publicados no primeiro deploy e devem dar lugar a artigos reais; a skill `novo-post` pergunta
+  se o dev quer removê-los quando criar o primeiro artigo de verdade.
 - **O `infra/cloud-init.yaml` corrigido nunca rodou em uma VM.** Na VM atual ele não foi aplicado
   (um acento foi corrompido ao colar no painel) e os passos foram feitos à mão por SSH. Os
   comandos são os mesmos, mas o arquivo só será provado na próxima VM. Ver
@@ -160,6 +179,8 @@ Cuidados permanentes (também no `CLAUDE.md`, seção "Armadilhas"):
 - **Versão do Tailwind em dois lugares:** `bin/tailwind/Dockerfile` e `bin/caddy/Dockerfile`.
 - **O projeto do Compose no servidor precisa se chamar `site-prod`,** porque o Caddyfile de borda
   usa esse nome.
-- **O texto do projeto "Landing Page"** (`content/projects/{pt,en}/landing-page.md`) afirma a
-  hospedagem na Oracle Cloud e a publicação pelo GitHub Actions. Se uma das duas mudar, o texto
-  muda junto.
+- **O resumo e as etiquetas do projeto "Landing page"** (`content/projects/{pt,en}/landing-page.md`)
+  afirmam a hospedagem na Oracle Cloud e a publicação pelo GitHub Actions. Se uma das duas mudar,
+  o texto muda junto.
+- **Os textos do perfil repetem a pilha** (introdução, "Sobre", habilidades e etiquetas dos
+  projetos). Ao trocar uma tecnologia, conferir os quatro lugares.

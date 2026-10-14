@@ -40,8 +40,8 @@ página — vem (quase sempre) do `<meta name="description">`. Sem ele, o Google
 pegando um pedaço qualquer do texto da página, o que fica feio e pouco convidativo.
 
 ```twig
-{# base.html.twig — padrão: a frase de apresentação do pt.md/en.md #}
-<meta name="description" content="{% block description %}{{ profile.intro }}{% endblock %}">
+{# base.html.twig — padrão: o campo description do pt.md/en.md (até ~160 caracteres) #}
+<meta name="description" content="{% block description %}{{ profile.description }}{% endblock %}">
 ```
 ```twig
 {# blog/show.html.twig — o artigo sobrescreve com a própria descrição #}
