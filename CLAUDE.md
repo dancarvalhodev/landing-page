@@ -87,6 +87,7 @@ Etiqueta YAML no topo e Markdown embaixo. `site.md`; `pt.md` e `en.md` (perfil; 
 - `date` chega aos templates como timestamp (inteiro), não como texto: formatar com o filtro
   `date` do Twig.
 - HTML dentro do Markdown é escapado (`html_input: escape`).
+- Para criar um artigo, use a skill `novo-post` (`.claude/skills/novo-post/SKILL.md`).
 
 ### Front-end
 

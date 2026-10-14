@@ -1,7 +1,13 @@
 ---
-role: Software Engineer · Full Stack
-headline: Transformo ideias em soluções.
-intro: Desenvolvedor full stack em Itaúna (MG), trabalhando com HTML, CSS, JavaScript, PHP, MySQL, Docker e Linux, além de frameworks como Laminas e Zend Framework 2.
+role: Desenvolvedor Full Stack PHP Pleno
+headline: "Do código ao deploy: sistemas feitos para durar."
+intro: >-
+  Desenvolvedor full stack com mais de 5 anos de experiência em PHP, focado em sistemas
+  corporativos, modernização de código legado e integrações via APIs REST e SOAP, XML e padrão
+  FEBRABAN.
+description: >-
+  Desenvolvedor full stack PHP com mais de 5 anos de experiência em sistemas corporativos,
+  modernização de código legado e integrações via APIs.
 location: Itaúna, Minas Gerais
 
 jobs:
@@ -9,40 +15,64 @@ jobs:
     company: P21 Sistemas
     period: abr. 2022 — atual
     description: >-
-      Desenvolvedor full stack em empresa que desenvolve sistemas para cartórios de protesto,
-      responsável por uma arquitetura baseada em PHP, MySQL e Redis, com camadas de cache e
-      persistência otimizadas para desempenho e escalabilidade. Infraestrutura totalmente containerizada e projetada para
-      alta disponibilidade, com conhecimentos em orquestração via Kubernetes. Qualidade das
-      entregas assegurada por uma suíte abrangente de testes automatizados e pela melhoria
-      contínua com práticas ágeis como Scrum e Kanban. Automação de todo o ciclo de
-      desenvolvimento (backup, planejamento, desenvolvimento, code review, homologação e deploy),
-      com uso de Inteligência Artificial (Claude Code) para acelerar a produtividade, apoiar
-      revisões de código e elevar a qualidade das entregas.
+      Desenvolvimento e manutenção de sistemas web voltados para o protesto de títulos, com PHP,
+      Laminas, MySQL, Redis e Docker.
+    highlights:
+      - Integração com sistemas externos via APIs SOAP e processamento de arquivos XML e do padrão FEBRABAN
+      - Modernização de sistemas legados, melhoria de performance e evolução da arquitetura
+      - Criação de API REST interna com PHP 8, Slim e Eloquent, com foco em alta disponibilidade e baixo tempo de resposta
+      - Infraestrutura das aplicações em servidores Linux e Docker, com provisionamento automatizado via Ansible
+      - Qualidade de código com SonarQube e testes automatizados
+      - Priorização de demandas e decisões técnicas junto ao time
   - role: Desenvolvedor de software
     company: Cubo Comunicação e Marketing
     period: dez. 2020 — abr. 2022
     description: >-
-      Atuação como desenvolvedor full stack em empresa de plataforma de vagas de emprego, com foco
-      no desenvolvimento e na manutenção de funcionalidades em PHP e MySQL. Durante o período, a
-      responsabilidade foi a implementação de novas funcionalidades, a correção de bugs e a
-      otimização de consultas ao banco de dados, o que contribuiu para a estabilidade e a evolução
-      da plataforma.
+      Desenvolvimento de software com foco em back-end, utilizando PHP e MySQL no padrão MVC, além
+      de front-end com HTML, CSS, JavaScript e Bootstrap.
   - role: Suporte técnico
     company: PROBO Informática
     period: out. 2018 — nov. 2020
-    description: Atendimento ao cliente, mapeamento de computadores, resolução de problemas com o ERP, análise de erros do sistema e testes do sistema e do banco de dados.
+    description: >-
+      Atendimento ao cliente e resolução de problemas do sistema, além de testes de desempenho, de
+      funcionalidades e de integridade do banco de dados.
 
 skills:
   - group: Back-end
-    items: [PHP, Laminas, Zend Framework 2, Slim, PHP-DI, Twig, Doctrine DBAL, MySQL, PostgreSQL, Redis, Integração de APIs]
+    items:
+      - PHP (5.6 a 8.5)
+      - Laminas
+      - Slim Framework
+      - Doctrine ORM
+      - Doctrine DBAL
+      - Eloquent ORM
+      - Twig
+      - PHP-DI
+      - APIs REST e SOAP
+      - parsers de XML e de arquivos no padrão FEBRABAN
+      - MVC
   - group: Front-end
-    items: [HTML, CSS, JavaScript (ES6+), jQuery, Bootstrap]
-  - group: DevOps
-    items: [Docker, Docker Compose, Linux, Kubernetes, Nginx, Shell Script]
-  - group: Práticas
-    items: [Refatoração, Testes automatizados, PHPUnit, Scrum, Kanban, OKR, NCTs]
-  - group: Soft skills
-    items: [Comunicação, Trabalho em equipe, Estratégia]
+    items: [JavaScript, HTML5, CSS, Tailwind CSS, jQuery, Bootstrap, UI/UX]
+  - group: Banco de dados
+    items: [MySQL (alta disponibilidade), PostgreSQL, Redis]
+  - group: Testes e qualidade
+    items:
+      - testes automatizados com PHPUnit e Codeception
+      - PHPStan
+      - PHP-CS-Fixer
+      - SonarQube
+      - Clean Code
+      - refatoração de sistemas legados
+  - group: Infraestrutura e DevOps
+    items: [Docker, Linux, Nginx, Caddy, Oracle Cloud, AWS S3, Kubernetes (básico)]
+  - group: Automação
+    items:
+      - provisionamento de servidores com Ansible
+      - automação de deploy e pipelines de CI/CD com GitHub Actions
+  - group: Ferramentas
+    items: [Git, GitHub, Claude Code]
+  - group: Metodologias
+    items: [Scrum, Kanban, OKR]
 
 education:
   - course: Tecnólogo em Análise e Desenvolvimento de Sistemas
@@ -56,16 +86,16 @@ education:
     period: 2014 — 2015
 
 certifications:
-  - Scrum Gathering Rio 2024 (participação)
-  - "OKR: Metodologia e Aplicação"
-  - Integrando e-commerce PHP com API Cielo
-  - Comunicação Eficaz e Relações Humanas
-  - Web Design Completo
+  - Kubernetes for the Absolute Beginners – Hands-on – Udemy – 12/2025
+  - Dive Into Refactoring – Refactoring Guru – 12/2025
+  - "Docker: Do Básico ao Avançado – Udemy – 11/2025"
+  - Fundamentos de Redes para DevOps – Udemy – 10/2025
+  - Equipes de Alto Desempenho – Dale Carnegie Training – 12/2023
+  - Comunicação Eficaz e Relações Humanas – Dale Carnegie Training – 08/2023
+  - "OKR: Metodologia e Aplicação – Udemy – 04/2023"
 
 testimonials: []
 ---
 
-Sou um desenvolvedor web apaixonado por tecnologia e por transformar ideias em soluções reais.
-Acredito no aprendizado contínuo e na melhoria constante como parte essencial do crescimento
-profissional. Cada novo projeto é uma oportunidade de evoluir — como pessoa (ouvindo quem usa o
-sistema) e como desenvolvedor (aprimorando tech skills).
+Trabalho com Laminas (antigo Zend Framework), Slim, MySQL, Redis e Docker, além de
+infraestrutura Linux com Ansible e qualidade de código com SonarQube e testes automatizados.

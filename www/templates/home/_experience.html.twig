@@ -8,6 +8,13 @@
                     <p class="text-xs font-semibold text-muted">{{ job.period }}</p>
                     <h3 class="mt-1 text-lg">{{ job.role }} · {{ job.company }}</h3>
                     <p class="mt-1 text-sm text-muted">{{ job.description }}</p>
+                    {% if job.highlights is defined %}
+                        <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-muted">
+                            {% for highlight in job.highlights %}
+                                <li>{{ highlight }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </li>
             {% endfor %}
         </ol>
@@ -34,9 +41,9 @@
 
         {% if profile.certifications is not empty %}
             <h3 class="mt-10 text-xl">{{ i18n.text('home.experience.certifications') }}</h3>
-            <ul class="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-accent">
+            <ul class="mt-4 space-y-3">
                 {% for certification in profile.certifications %}
-                    <li class="rounded-full bg-accent-soft px-3 py-1">{{ certification }}</li>
+                    <li class="text-sm">{{ certification }}</li>
                 {% endfor %}
             </ul>
         {% endif %}
