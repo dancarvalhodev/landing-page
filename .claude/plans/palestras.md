@@ -79,12 +79,21 @@ idioma, e assim o template não precisa de exceção.
 A seção entra **depois de Projetos e antes de Experiência**: palestras mostram trabalho, assim
 como os projetos. Se o dev preferir outro lugar, basta mudar uma linha no `home/index.html.twig`.
 
-## Alternativa descartada (por enquanto)
+## Mudança durante a etapa 2: capa própria no lugar da thumbnail (2026-10-14)
 
-**Fachada ("lite embed"):** mostrar só a miniatura com um botão de play e trocar pelo player no
-clique. É mais leve (cerca de 30 KB contra 1 MB), mas exige um arquivo JS a mais e a miniatura
-vinda do YouTube. Com `loading="lazy"`, o custo só aparece para quem rola até a seção; voltar a
-pensar nisso se o Lighthouse reclamar.
+Ao conferir a etapa 2, o dev optou por usar thumbnail próprias. Decisão: não mostrar a thumbnail do YouTube. O player
+descrito acima deixa de aparecer direto na página e passa a ser criado só no clique ("fachada").
+
+- **A capa:** um link 16:9 no degradê do site (laranja → rosa → roxo, as cores do favicon), com
+  um botão de play e o título da palestra. Usa as classes do Tailwind com os tokens
+  `brand-orange`, `brand-rose` e `brand-purple`, sem CSS novo e sem imagens.
+- **O clique:** um arquivo novo, `www/public/assets/js/talk-player.js`, troca a capa pelo
+  `iframe` do player, com `autoplay=1` (o `allow` ganha `autoplay`), então o vídeo começa a
+  tocar no mesmo clique.
+- **Sem JS:** a capa é um link comum para `youtube.com/watch?v=<ID>`. Se o JS não carregar, o
+  clique abre o vídeo no YouTube.
+- **Efeito extra:** a página fica mais leve, porque o player do YouTube (cerca de 1 MB) só é
+  baixado no clique.
 
 ## O que preciso do dev antes da etapa 1
 
@@ -105,7 +114,9 @@ Para cada uma das duas palestras:
    `youtube`, como já é feito com os artigos. Verificar: `composer test`, `stan` e `cs`.
 2. **Seção na home.** Criar `home/_talks.html.twig` (título da seção, depois um card por
    palestra com o player, o título, o evento, a data e a etiqueta de idioma quando couber) e
-   incluí-la em `home/index.html.twig` com o mesmo `if` dos depoimentos. Verificar no navegador:
+   incluí-la em `home/index.html.twig` com o mesmo `if` dos depoimentos. Ajuste pedido na
+   conferência: capa no degradê do site no lugar da thumbnail, com `talk-player.js` criando o
+   player no clique (ver "Mudança durante a etapa 2"). Verificar no navegador:
    `/` sem etiqueta e `/en` com "In Portuguese", tema claro e escuro, largura de celular e
    desktop, e se o vídeo toca.
 3. **Documentação.** Registrar o campo `talks` na seção "Conteúdo" do `CLAUDE.md` (onde fica
@@ -113,6 +124,7 @@ Para cada uma das duas palestras:
 
 ## Progresso
 
-- [ ] 1. Dados e textos — entregue, aguardando conferência
-- [ ] 2. Seção na home
+- [x] 1. Dados e textos — confirmada em 2026-10-14
+- [ ] 2. Seção na home — capa própria no lugar da thumbnail, entregue de novo, aguardando
+  conferência
 - [ ] 3. Documentação

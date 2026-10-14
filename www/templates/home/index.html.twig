@@ -11,6 +11,9 @@
     {{ include('home/_hero.html.twig', {profile: profile, i18n: i18n}) }}
     {{ include('home/_about.html.twig', {profile: profile, i18n: i18n}) }}
     {{ include('home/_projects.html.twig', {projects: projects, categories: projectCategories, i18n: i18n}) }}
+    {% if profile.talks is not empty %}
+        {{ include('home/_talks.html.twig', {talks: profile.talks, i18n: i18n}) }}
+    {% endif %}
     {{ include('home/_experience.html.twig', {profile: profile, i18n: i18n}) }}
     {% if profile.testimonials is not empty %}
         {{ include('home/_testimonials.html.twig', {testimonials: profile.testimonials, i18n: i18n}) }}
@@ -19,4 +22,5 @@
 </main>
 <script defer src="{{ asset('js/project-filter.js') }}"></script>
 <script defer src="{{ asset('js/scroll-reveal.js') }}"></script>
+<script defer src="{{ asset('js/talk-player.js') }}"></script>
 {% endblock %}
