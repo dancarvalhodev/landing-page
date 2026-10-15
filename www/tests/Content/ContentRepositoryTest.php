@@ -70,7 +70,7 @@ final class ContentRepositoryTest extends TestCase
     {
         $rootDir = sys_get_temp_dir() . '/landing-page-test-' . uniqid();
         $file = $rootDir . '/content/blog/pt/teste.md';
-        mkdir(dirname($file), 0o777, true);
+        mkdir(dirname($file), 0o700, true);
         file_put_contents($file, "<img src=x onerror=alert(1)>\n\n[perigoso](javascript:alert(1)) [seguro](https://exemplo.com)");
 
         try {
@@ -91,9 +91,23 @@ final class ContentRepositoryTest extends TestCase
 
     public function testPostBodyBecomesHtml(): void
     {
-        $post = $this->content->posts(Locale::Pt)[0];
+        $rootDir = sys_get_temp_dir() . '/landing-page-test-' . uniqid();
+        $file = $rootDir . '/content/blog/pt/teste.md';
+        mkdir(dirname($file), 0o700, true);
+        file_put_contents($file, "```php\nfinal class Config {}\n```");
 
-        self::assertSame('ola-mundo', $post['slug']);
+        try {
+            $content = new ContentRepository(new Config($rootDir, 'production', 'https://meusite.com'));
+            $post = $content->posts(Locale::Pt)[0];
+        } finally {
+            unlink($file);
+            rmdir(dirname($file));
+            rmdir(dirname($file, 2));
+            rmdir(dirname($file, 3));
+            rmdir($rootDir);
+        }
+
+        self::assertSame('teste', $post['slug']);
         self::assertStringContainsString('<pre data-lang="php"', (string) $post['html']);
         self::assertStringContainsString('<span class="hl-keyword">class</span>', (string) $post['html']);
     }
