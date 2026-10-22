@@ -25,8 +25,8 @@ outro. É como uma receita com uma massa básica e duas coberturas:
 
 | Estágio | Parte de | O que tem |
 |---|---|---|
-| `base` | `php:8.5-fpm-alpine` | PHP, extensões, Composer e Xdebug (a cópia do Dockerfile do dev) |
-| `dev` | `base` | Nada a mais; o código entra pela pasta compartilhada |
+| `base` | `ubuntu:24.04` | PHP 8.5 da PPA `ondrej/php`, extensões, Composer e o `fpm.conf` |
+| `dev` | `base` | Só o Xdebug; o código entra pela pasta compartilhada |
 | `prod` | `base` | Sem Xdebug, com `php.prod.ini`, o código copiado e as dependências instaladas |
 
 Quem escolhe o estágio é o `target`. O `docker-compose.yml` de desenvolvimento pede `target: dev`;
@@ -57,9 +57,10 @@ definição: um estágio precisa aparecer antes de quem o usa no `FROM`.
 
 ### O que o estágio `prod` faz, na ordem
 
-1. **Desliga o Xdebug**, apagando o arquivo que o carrega. O Xdebug deixa o PHP mais lento e não
-   tem uso fora do desenvolvimento.
-2. **Troca o `php.ini`** pelo `php.prod.ini` (ver abaixo).
+1. **Não tem Xdebug**, porque ele só é instalado no estágio `dev`. O Xdebug deixa o PHP mais
+   lento e não tem uso fora do desenvolvimento.
+2. **Acrescenta o `php.prod.ini`** como `99-app.ini` no `conf.d` do FPM e do CLI (ver abaixo). O
+   Ubuntu lê os arquivos dessa pasta em ordem alfabética, então o `99` vence os padrões dele.
 3. **Copia `www/`** para `/app`.
 4. **Roda `composer install --no-dev --classmap-authoritative`.** `--no-dev` deixa de fora
    PHPUnit, PHPStan e PHP-CS-Fixer. `--classmap-authoritative` gera uma lista fechada de onde

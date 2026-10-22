@@ -1,31 +1,39 @@
-# O estágio base é cópia de dancarvalhodev/dockerfile-php-alpine (8.5/Dockerfile); só o WORKDIR muda.
-FROM php:8.5-fpm-alpine AS base
+FROM ubuntu:24.04 AS base
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /app
 
-RUN apk update && apk upgrade
-RUN apk add build-base linux-headers wget curl git nano zip bash
-RUN apk add libzip-dev icu-dev libcurl curl-dev libxml2 libxml2-dev oniguruma-dev libpng-dev autoconf
+# Um RUN só: o catálogo do apt e o software-properties-common somem na mesma camada em que nasceram.
+# O nome do mantenedor (Ondřej) quebra o add-apt-repository fora de um locale UTF-8.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends software-properties-common ca-certificates curl wget git nano zip unzip \
+    && LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php \
+    && apt-get install -y --no-install-recommends php8.5-fpm php8.5-cli php8.5-mysql php8.5-zip php8.5-intl php8.5-curl php8.5-xml php8.5-mbstring php8.5-gd php8.5-redis \
+    && apt-get purge -y --auto-remove software-properties-common \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install mysqli pdo pdo_mysql zip intl sockets curl xml mbstring gd
-RUN docker-php-ext-enable pdo_mysql zip intl
-
-RUN pecl install xdebug redis
-RUN docker-php-ext-enable xdebug redis
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN apk cache clean
+COPY config/php/fpm.conf /etc/php/8.5/fpm/pool.d/zz-docker.conf
 
-CMD ["php-fpm"]
+# SIGQUIT deixa o PHP-FPM terminar as requisições em andamento antes de parar.
+STOPSIGNAL SIGQUIT
+EXPOSE 9000
+CMD ["php-fpm8.5", "-F"]
 
 FROM base AS dev
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends php8.5-xdebug \
+    && rm -rf /var/lib/apt/lists/*
 
 FROM base AS prod
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-RUN rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-COPY config/php/php.prod.ini /usr/local/etc/php/php.ini
+COPY config/php/php.prod.ini /etc/php/8.5/fpm/conf.d/99-app.ini
+COPY config/php/php.prod.ini /etc/php/8.5/cli/conf.d/99-app.ini
 
 COPY www/ ./
 RUN composer install --no-dev --classmap-authoritative --no-interaction

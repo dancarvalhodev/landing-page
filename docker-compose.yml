@@ -26,7 +26,8 @@ services:
             COMPOSER_HOME: /tmp/composer
         volumes:
             - ./www:/app
-            - ./config/php/php.ini:/usr/local/etc/php/php.ini
+            - ./config/php/php.ini:/etc/php/8.5/fpm/conf.d/99-app.ini
+            - ./config/php/php.ini:/etc/php/8.5/cli/conf.d/99-app.ini
         restart: unless-stopped
     tailwind:
         build:
