@@ -107,8 +107,8 @@ Etiqueta YAML no topo e Markdown embaixo. `site.md`; `pt.md` e `en.md` (perfil; 
 
 - `docker-compose.yml` (desenvolvimento): `caddy`, `php` e `tailwind`, com `./www` compartilhado.
   `php` e `caddy` constroem a partir da raiz, com `target: dev`.
-- `bin/php/Dockerfile`: estágios `base`, `dev` e `prod`. O `prod` exige
-  `--build-arg ASSET_VERSION`.
+- `bin/php/Dockerfile`: estágios `base` (Ubuntu + PPA do Ondřej), `dev` (acrescenta o Xdebug) e
+  `prod`. O `prod` exige `--build-arg ASSET_VERSION`.
 - `bin/caddy/Dockerfile`: estágios `dev`, `assets` (gera o CSS minificado) e `prod`.
 - `docker-compose.prod.yml` (produção): só `caddy` e `php`, no estágio `prod`; exige `IMAGE_TAG`,
   que é a etiqueta das imagens e o `ASSET_VERSION`. O Caddy do app não publica porta: entra na
@@ -133,8 +133,10 @@ Etiqueta YAML no topo e Markdown embaixo. `site.md`; `pt.md` e `en.md` (perfil; 
   `grep -nP "[^\x00-\x7F]" infra/cloud-init.yaml`.
 - **A versão do Tailwind está em dois lugares**: `bin/tailwind/Dockerfile` e
   `bin/caddy/Dockerfile`. Atualizar os dois juntos.
-- **`bin/php/Dockerfile` (estágio `base`) é cópia** de `dancarvalhodev/dockerfile-php-alpine`;
-  mudanças lá precisam ser replicadas aqui.
+- **O PHP vem da PPA `ondrej/php` sobre `ubuntu:24.04`.** Os caminhos são os do Ubuntu
+  (`/etc/php/8.5/{fpm,cli}/`, binário `php-fpm8.5`). O `php.ini` do projeto entra como
+  `conf.d/99-app.ini` nos dois, e `config/php/fpm.conf` faz o FPM escutar na porta 9000 e manter as
+  variáveis de ambiente (`clear_env = no`); sem ele o app não enxerga `APP_ENV` nem `SITE_URL`.
 - **O `name` do job no `ci.yml`** ("Estilo, análise e testes") é exigido pela proteção da
   `master`. Renomear trava todo Pull Request até a regra ser atualizada no GitHub.
 - **Mudou o Caddyfile? Reinicie o Caddy.** A API de administração está desligada, então
