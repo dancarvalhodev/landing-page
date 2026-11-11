@@ -6,6 +6,6 @@ summary: >-
 category: DevOps
 technologies: [Ansible, Debian, Nginx, Docker, AWS CLI]
 repository: https://github.com/dancarvalhodev/ansible-lab
-order: 3
+order: 4
 translation_key: ansible-lab
 ---

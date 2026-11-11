@@ -5,6 +5,6 @@ summary: >-
 category: DevOps
 technologies: [Docker, Docker Compose, Alpine Linux, PHP, Composer, Xdebug]
 repository: https://github.com/dancarvalhodev/dockerfile-php-alpine
-order: 4
+order: 5
 translation_key: templates-docker-php
 ---

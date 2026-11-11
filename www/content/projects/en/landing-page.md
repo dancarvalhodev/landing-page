@@ -7,6 +7,6 @@ summary: >-
 category: Web
 technologies: [PHP, Slim, Twig, PHP-DI, Tailwind CSS, PHPUnit, PHPStan, Caddy, Docker, GitHub Actions, Oracle Cloud]
 repository: https://github.com/dancarvalhodev/landing-page
-order: 1
+order: 3
 translation_key: landing-page
 ---
