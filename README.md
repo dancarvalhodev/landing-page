@@ -28,16 +28,16 @@ Feito em PHP, sem banco de dados: todo o conteúdo são arquivos Markdown neste 
 
 ## Rodar no computador
 
-Só é preciso ter Docker e Docker Compose. PHP, Composer e Node não precisam estar instalados.
+É preciso ter Docker, Docker Compose e o [`just`](https://github.com/casey/just). PHP, Composer e
+Node não precisam estar instalados.
 
 ```
-cp env-example .env
-docker compose up -d --build
-docker compose exec php composer install
+just install
 ```
 
-No `.env`, ajuste `HOST_UID` e `HOST_GID` para a saída de `id -u` e `id -g`, se forem diferentes
-de 1000. O site abre em `http://localhost:8080`.
+O `install` cria o `.env` a partir do `env-example`, sobe os contêineres e roda o
+`composer install`. O `just` passa o seu `id -u` e `id -g` ao Compose, então não é preciso
+ajustar `HOST_UID` e `HOST_GID` no `.env`. O site abre em `http://localhost:8080`.
 
 São três contêineres: `caddy` (servidor web), `php` (PHP-FPM) e `tailwind`, que regenera o CSS a
 cada mudança nos templates. O código entra por pasta compartilhada, então salvar um arquivo já
@@ -45,20 +45,27 @@ muda o site.
 
 ## Comandos do dia a dia
 
+`just` sem argumentos lista todas as receitas.
+
 | Para | Comando |
 |---|---|
-| Rodar os testes | `docker compose exec php composer test` |
-| Rodar um teste só | `docker compose exec php vendor/bin/phpunit --filter <nome>` |
-| Análise estática | `docker compose exec php composer stan` |
-| Conferir o estilo do código | `docker compose exec php composer cs` |
-| Corrigir o estilo do código | `docker compose exec php composer cs:fix` |
-| Ver os logs | `docker compose logs -f php` |
-| Reiniciar o Caddy depois de mudar o Caddyfile | `docker compose restart caddy` |
-| Derrubar tudo | `docker compose down` |
+| Subir os contêineres | `just up` |
+| Rodar os testes | `just test` |
+| Rodar um teste só | `just test <nome>` |
+| Análise estática | `just stan` |
+| Conferir o estilo do código | `just cs` |
+| Corrigir o estilo do código | `just cs-fix` |
+| As três conferências do CI | `just check` |
+| Validar os workflows | `just actionlint` |
+| Ver os logs | `just logs` (ou `just logs php`) |
+| Abrir um shell no contêiner | `just shell` |
+| Reiniciar o Caddy depois de mudar o Caddyfile | `just restart-caddy` |
+| Derrubar tudo | `just stop` |
 
 ## Como o projeto é organizado
 
 ```
+justfile                  atalhos para os comandos do dia a dia
 docker-compose.yml        ambiente de desenvolvimento
 docker-compose.prod.yml   produção: as duas imagens, sem pasta compartilhada
 bin/                      um Dockerfile por serviço (php, caddy, tailwind)

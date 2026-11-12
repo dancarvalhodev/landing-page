@@ -25,24 +25,26 @@ Actions em uma VM ARM na Oracle Cloud.
 
 ## Comandos
 
-Tudo roda nos contêineres; PHP, Composer e Node não existem no host.
+Tudo roda nos contêineres; PHP, Composer e Node não existem no host. O `justfile` da raiz
+embrulha os comandos do Compose; `just` sem argumentos lista as receitas.
 
 | Para | Comando |
 |---|---|
-| Subir o ambiente | `docker compose up -d --build` |
-| Instalar dependências | `docker compose exec php composer install` |
-| Testes | `docker compose exec php composer test` |
-| Um teste só | `docker compose exec php vendor/bin/phpunit --filter <nome>` |
-| Análise estática | `docker compose exec php composer stan` |
-| Estilo (conferir / corrigir) | `docker compose exec php composer cs` / `composer cs:fix` |
-| Reiniciar o Caddy (mudou o Caddyfile) | `docker compose restart caddy` |
-| Validar os workflows | `docker run --rm -v .:/repo:ro --workdir /repo rhysd/actionlint:latest` |
+| Primeira vez (`.env`, contêineres e `composer install`) | `just install` |
+| Subir o ambiente | `just up` |
+| Composer | `just composer <args>` |
+| Testes / um teste só | `just test` / `just test <nome>` |
+| Análise estática | `just stan` |
+| Estilo (conferir / corrigir) | `just cs` / `just cs-fix` |
+| As três conferências do CI | `just check` |
+| Reiniciar o Caddy (mudou o Caddyfile) | `just restart-caddy` |
+| Validar os workflows | `just actionlint` |
 
 O site de desenvolvimento fica em `http://localhost:8080`. Ao rodar comandos por ferramenta, use
-`docker compose -f /caminho/absoluto/docker-compose.yml exec -T php ...`.
+`just --justfile /caminho/absoluto/justfile --working-directory /caminho/absoluto <receita>`.
 
-Antes de entregar uma alteração em PHP, rode os três: `composer test`, `composer stan` e
-`composer cs`. São os mesmos que o CI roda.
+Antes de entregar uma alteração em PHP, rode `just check` (estilo, análise e testes): são as
+mesmas conferências que o CI roda.
 
 ## Arquitetura
 
