@@ -8,6 +8,7 @@ summary: >-
 category: Web
 technologies: [PHP, Laravel, Blade, MySQL, Redis, Tailwind CSS, Vite, Pest, Larastan, Caddy, Docker, GitHub Actions, Oracle Cloud]
 repository: https://github.com/dancarvalhodev/ceu-de-hoje
+url: https://ceudehoje.danielcarvalho.dev
 order: 1
 translation_key: ceu-de-hoje
 ---

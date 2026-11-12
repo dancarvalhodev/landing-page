@@ -28,16 +28,16 @@ Feito em PHP, sem banco de dados: todo o conteúdo são arquivos Markdown neste 
 
 ## Rodar no computador
 
-Só é preciso ter Docker e Docker Compose. PHP, Composer e Node não precisam estar instalados.
+É preciso ter Docker, Docker Compose e o [`just`](https://github.com/casey/just). PHP, Composer e
+Node não precisam estar instalados.
 
 ```
-cp env-example .env
-docker compose up -d --build
-docker compose exec php composer install
+just install
 ```
 
-No `.env`, ajuste `HOST_UID` e `HOST_GID` para a saída de `id -u` e `id -g`, se forem diferentes
-de 1000. O site abre em `http://localhost:8080`.
+O `install` cria o `.env` a partir do `env-example`, sobe os contêineres e roda o
+`composer install`. O `just` passa o seu `id -u` e `id -g` ao Compose, então não é preciso
+ajustar `HOST_UID` e `HOST_GID` no `.env`. O site abre em `http://localhost:8080`.
 
 São três contêineres: `caddy` (servidor web), `php` (PHP-FPM) e `tailwind`, que regenera o CSS a
 cada mudança nos templates. O código entra por pasta compartilhada, então salvar um arquivo já
@@ -45,20 +45,27 @@ muda o site.
 
 ## Comandos do dia a dia
 
+`just` sem argumentos lista todas as receitas.
+
 | Para | Comando |
 |---|---|
-| Rodar os testes | `docker compose exec php composer test` |
-| Rodar um teste só | `docker compose exec php vendor/bin/phpunit --filter <nome>` |
-| Análise estática | `docker compose exec php composer stan` |
-| Conferir o estilo do código | `docker compose exec php composer cs` |
-| Corrigir o estilo do código | `docker compose exec php composer cs:fix` |
-| Ver os logs | `docker compose logs -f php` |
-| Reiniciar o Caddy depois de mudar o Caddyfile | `docker compose restart caddy` |
-| Derrubar tudo | `docker compose down` |
+| Subir os contêineres | `just up` |
+| Rodar os testes | `just test` |
+| Rodar um teste só | `just test <nome>` |
+| Análise estática | `just stan` |
+| Conferir o estilo do código | `just cs` |
+| Corrigir o estilo do código | `just cs-fix` |
+| As três conferências do CI | `just check` |
+| Validar os workflows | `just actionlint` |
+| Ver os logs | `just logs` (ou `just logs php`) |
+| Abrir um shell no contêiner | `just shell` |
+| Reiniciar o Caddy depois de mudar o Caddyfile | `just restart-caddy` |
+| Derrubar tudo | `just stop` |
 
 ## Como o projeto é organizado
 
 ```
+justfile                  atalhos para os comandos do dia a dia
 docker-compose.yml        ambiente de desenvolvimento
 docker-compose.prod.yml   produção: as duas imagens, sem pasta compartilhada
 bin/                      um Dockerfile por serviço (php, caddy, tailwind)
@@ -150,6 +157,43 @@ envia ao GHCR e manda a VM atualizar. O `ci.yml` roda as mesmas conferências em
 
 - **Montar o servidor do zero, fazer o primeiro deploy, proteger a `master` e voltar para uma
   versão anterior:** [`infra/README.md`](infra/README.md).
+
+## Pendências
+
+O que não funciona como esperado:
+
+- **O tema do Giscus só dá para conferir em produção.** Em `http://localhost` o iframe não
+  consegue baixar o nosso CSS, então o script usa os temas prontos `light` e `dark`. Os dois CSS
+  também definem só parte das variáveis `--color-*` do Giscus; se algum elemento aparecer sem cor,
+  comparar com o `custom_example.css` oficial. Ver `.claude/arch-explain/giscus.md`.
+- **O `infra/cloud-init.yaml` corrigido nunca rodou em uma VM.** Na VM atual os passos foram
+  feitos à mão por SSH; o arquivo só será provado na próxima VM. Ver `.claude/arch-explain/infra.md`.
+
+O que nunca foi verificado:
+
+- Lighthouse (performance, acessibilidade e SEO acima de 95).
+- O JSON-LD no Rich Results Test e a prévia do link no LinkedIn Post Inspector.
+- A proteção da `master` e o rollback pelo botão Revert, que são do painel do GitHub. O rollback
+  pelo servidor foi simulado no computador.
+- Se as regras de `iptables` do cloud-init são necessárias, já que o Docker cria as próprias.
+- Na seção de palestras: o clique e o vídeo tocando, os temas claro e escuro e o layout no celular.
+
+Decisões conscientes, para revisitar se o contexto mudar:
+
+- **Não há ambiente de prévia** (`preview.<domínio>`): a conferência é feita no computador. O
+  valor `preview` continua aceito em `APP_ENV`, sem uso. Como recolocar:
+  `.claude/arch-explain/infra.md`.
+- **O `robots.txt` libera tudo**, sem bloquear páginas de tag nem de busca.
+- **O deploy não tem cache de build** e deixa o site fora por um ou dois segundos a cada
+  publicação.
+
+Cuidados ao mudar o conteúdo:
+
+- O resumo e as etiquetas do projeto "Landing page" (`www/content/projects/{pt,en}/landing-page.md`)
+  afirmam a hospedagem na Oracle Cloud e a publicação pelo GitHub Actions. Se uma das duas mudar,
+  o texto muda junto.
+- Os textos do perfil repetem a pilha (introdução, "Sobre", habilidades e etiquetas dos projetos).
+  Ao trocar uma tecnologia, conferir os quatro lugares.
 
 ## Documentação
 

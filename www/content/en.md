@@ -1,13 +1,13 @@
 ---
-role: Mid-level Full Stack PHP Developer
+role: "Mid-level Full Stack PHP Developer | Laravel"
 headline: "From code to deploy: systems built to last."
 intro: >-
-  Full stack developer with over 5 years of experience in PHP, focused on enterprise systems,
-  legacy code modernisation and integrations through REST and SOAP APIs, XML and the FEBRABAN
-  standard.
+  Full stack developer with over 5 years of experience in PHP, with Laravel, Laminas and Slim,
+  focused on enterprise systems, legacy code modernisation and integrations through REST and SOAP
+  APIs, XML and the FEBRABAN standard.
 description: >-
-  Full stack PHP developer with over 5 years of experience in enterprise systems, legacy code
-  modernisation and API integrations.
+  Full stack PHP developer with over 5 years of experience, with Laravel, Laminas and Slim, in
+  enterprise systems, legacy code modernisation and API integrations.
 location: Itaúna, Minas Gerais, Brazil
 
 jobs:
@@ -41,11 +41,16 @@ skills:
   - group: Back end
     items:
       - PHP (5.6 to 8.5)
+      - Laravel
+      - Eloquent ORM
+      - queues and Jobs
+      - Scheduler
+      - Form Requests
+      - Policies
       - Laminas
       - Slim Framework
       - Doctrine ORM
       - Doctrine DBAL
-      - Eloquent ORM
       - Twig
       - PHP-DI
       - REST and SOAP APIs
@@ -57,8 +62,9 @@ skills:
     items: [MySQL (high availability), PostgreSQL, Redis]
   - group: Testing and quality
     items:
-      - automated testing with PHPUnit and Codeception
+      - automated testing with PHPUnit, Pest and Codeception
       - PHPStan
+      - Larastan
       - PHP-CS-Fixer
       - SonarQube
       - Clean Code
@@ -109,5 +115,7 @@ talks:
 testimonials: []
 ---
 
-I work with Laminas (formerly Zend Framework), Slim, MySQL, Redis and Docker, as well as Linux
+With Laravel, I built and shipped Céu de Hoje, using Eloquent, queues and Jobs, scheduling, Form
+Requests, Policies, tests with Pest and automated deployment on Docker. Day to day, I work with
+Laminas (formerly Zend Framework) and Slim, MySQL, Redis and Docker, as well as Linux
 infrastructure with Ansible and code quality with SonarQube and automated tests.

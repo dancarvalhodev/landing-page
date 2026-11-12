@@ -50,6 +50,10 @@ final class ContentRepositoryTest extends TestCase
                 self::assertArrayHasKey('title', $project, "projeto {$project['slug']} sem title");
                 self::assertArrayHasKey('summary', $project, "projeto {$project['slug']} sem summary");
                 self::assertArrayHasKey('order', $project, "projeto {$project['slug']} sem order");
+
+                if (isset($project['url'])) {
+                    self::assertStringStartsWith('https://', (string) $project['url'], "projeto {$project['slug']} com url inválida");
+                }
             }
         }
     }
