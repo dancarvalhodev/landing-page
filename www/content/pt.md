@@ -32,7 +32,7 @@ jobs:
       de front-end com HTML, CSS, JavaScript e Bootstrap.
   - role: Suporte técnico
     company: PROBO Informática
-    period: out. 2018 — nov. 2020
+    period: nov. 2018 — nov. 2020
     description: >-
       Atendimento ao cliente e resolução de problemas do sistema, além de testes de desempenho, de
       funcionalidades e de integridade do banco de dados.

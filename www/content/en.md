@@ -32,7 +32,7 @@ jobs:
       well as front end work with HTML, CSS, JavaScript and Bootstrap.
   - role: Technical Support
     company: PROBO Informática
-    period: Oct 2018 — Nov 2020
+    period: Nov 2018 — Nov 2020
     description: >-
       Customer support and troubleshooting of the system, as well as performance, functional and
       database integrity testing.
