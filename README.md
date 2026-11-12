@@ -151,6 +151,43 @@ envia ao GHCR e manda a VM atualizar. O `ci.yml` roda as mesmas conferências em
 - **Montar o servidor do zero, fazer o primeiro deploy, proteger a `master` e voltar para uma
   versão anterior:** [`infra/README.md`](infra/README.md).
 
+## Pendências
+
+O que não funciona como esperado:
+
+- **O tema do Giscus só dá para conferir em produção.** Em `http://localhost` o iframe não
+  consegue baixar o nosso CSS, então o script usa os temas prontos `light` e `dark`. Os dois CSS
+  também definem só parte das variáveis `--color-*` do Giscus; se algum elemento aparecer sem cor,
+  comparar com o `custom_example.css` oficial. Ver `.claude/arch-explain/giscus.md`.
+- **O `infra/cloud-init.yaml` corrigido nunca rodou em uma VM.** Na VM atual os passos foram
+  feitos à mão por SSH; o arquivo só será provado na próxima VM. Ver `.claude/arch-explain/infra.md`.
+
+O que nunca foi verificado:
+
+- Lighthouse (performance, acessibilidade e SEO acima de 95).
+- O JSON-LD no Rich Results Test e a prévia do link no LinkedIn Post Inspector.
+- A proteção da `master` e o rollback pelo botão Revert, que são do painel do GitHub. O rollback
+  pelo servidor foi simulado no computador.
+- Se as regras de `iptables` do cloud-init são necessárias, já que o Docker cria as próprias.
+- Na seção de palestras: o clique e o vídeo tocando, os temas claro e escuro e o layout no celular.
+
+Decisões conscientes, para revisitar se o contexto mudar:
+
+- **Não há ambiente de prévia** (`preview.<domínio>`): a conferência é feita no computador. O
+  valor `preview` continua aceito em `APP_ENV`, sem uso. Como recolocar:
+  `.claude/arch-explain/infra.md`.
+- **O `robots.txt` libera tudo**, sem bloquear páginas de tag nem de busca.
+- **O deploy não tem cache de build** e deixa o site fora por um ou dois segundos a cada
+  publicação.
+
+Cuidados ao mudar o conteúdo:
+
+- O resumo e as etiquetas do projeto "Landing page" (`www/content/projects/{pt,en}/landing-page.md`)
+  afirmam a hospedagem na Oracle Cloud e a publicação pelo GitHub Actions. Se uma das duas mudar,
+  o texto muda junto.
+- Os textos do perfil repetem a pilha (introdução, "Sobre", habilidades e etiquetas dos projetos).
+  Ao trocar uma tecnologia, conferir os quatro lugares.
+
 ## Documentação
 
 Em `.claude/arch-explain/` há um documento por assunto, com o porquê de cada decisão, explicado

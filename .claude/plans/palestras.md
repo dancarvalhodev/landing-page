@@ -120,7 +120,7 @@ Para cada uma das duas palestras:
    `/` sem etiqueta e `/en` com "In Portuguese", tema claro e escuro, largura de celular e
    desktop, e se o vídeo toca.
 3. **Documentação.** Registrar o campo `talks` na seção "Conteúdo" do `CLAUDE.md` (onde fica
-   cada coisa e por que o campo guarda só o ID) e atualizar o `.claude/handoff.md`.
+   cada coisa e por que o campo guarda só o ID).
 
 ## Progresso
 

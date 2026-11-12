@@ -353,4 +353,4 @@ o `README.md`, o `CLAUDE.md` e `.claude/arch-explain/`. Onde o plano e o código
 - não há cache de build no deploy nem a pasta `public/media/blog/` prevista para imagens de
   artigos.
 
-O que ficou pendente está em `.claude/handoff.md`, seção "Pendências conhecidas".
+O que ficou pendente está no `README.md`, seção "Pendências".
