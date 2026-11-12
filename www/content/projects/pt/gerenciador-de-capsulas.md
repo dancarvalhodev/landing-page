@@ -7,6 +7,7 @@ summary: >-
 category: Web
 technologies: [JavaScript, HTML, CSS, Firebase Authentication, Firestore, GitHub Pages]
 repository: https://github.com/dancarvalhodev/gerenciador-de-capsulas
+url: https://dancarvalhodev.github.io/gerenciador-de-capsulas/
 order: 6
 translation_key: gerenciador-de-capsulas
 ---

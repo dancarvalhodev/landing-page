@@ -22,8 +22,15 @@
                         {% endfor %}
                     </ul>
 
-                    {% if project.repository %}
-                        <a href="{{ project.repository }}" class="mt-3 inline-block font-mono text-sm text-accent">{{ i18n.text('home.projects.repository') }}</a>
+                    {% if project.repository is defined or project.url is defined %}
+                        <div class="mt-3 flex flex-wrap gap-x-5 gap-y-1">
+                            {% if project.repository is defined %}
+                                <a href="{{ project.repository }}" class="font-mono text-sm text-accent">{{ i18n.text('home.projects.repository') }}</a>
+                            {% endif %}
+                            {% if project.url is defined %}
+                                <a href="{{ project.url }}" class="font-mono text-sm text-accent">{{ i18n.text('home.projects.live') }}</a>
+                            {% endif %}
+                        </div>
                     {% endif %}
                 </article>
             {% endfor %}

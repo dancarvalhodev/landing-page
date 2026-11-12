@@ -1,13 +1,13 @@
 ---
-role: Desenvolvedor Full Stack PHP Pleno
+role: "Desenvolvedor Full Stack PHP Pleno | Laravel"
 headline: "Do código ao deploy: sistemas feitos para durar."
 intro: >-
-  Desenvolvedor full stack com mais de 5 anos de experiência em PHP, focado em sistemas
-  corporativos, modernização de código legado e integrações via APIs REST e SOAP, XML e padrão
-  FEBRABAN.
+  Desenvolvedor full stack com mais de 5 anos de experiência em PHP, com Laravel, Laminas e Slim,
+  focado em sistemas corporativos, modernização de código legado e integrações via APIs REST e
+  SOAP, XML e padrão FEBRABAN.
 description: >-
-  Desenvolvedor full stack PHP com mais de 5 anos de experiência em sistemas corporativos,
-  modernização de código legado e integrações via APIs.
+  Desenvolvedor full stack PHP com mais de 5 anos de experiência, com Laravel, Laminas e Slim, em
+  sistemas corporativos, modernização de código legado e integrações via APIs.
 location: Itaúna, Minas Gerais
 
 jobs:
@@ -41,11 +41,16 @@ skills:
   - group: Back-end
     items:
       - PHP (5.6 a 8.5)
+      - Laravel
+      - Eloquent ORM
+      - filas e Jobs
+      - Scheduler
+      - Form Requests
+      - Policies
       - Laminas
       - Slim Framework
       - Doctrine ORM
       - Doctrine DBAL
-      - Eloquent ORM
       - Twig
       - PHP-DI
       - APIs REST e SOAP
@@ -57,8 +62,9 @@ skills:
     items: [MySQL (alta disponibilidade), PostgreSQL, Redis]
   - group: Testes e qualidade
     items:
-      - testes automatizados com PHPUnit e Codeception
+      - testes automatizados com PHPUnit, Pest e Codeception
       - PHPStan
+      - Larastan
       - PHP-CS-Fixer
       - SonarQube
       - Clean Code
@@ -109,5 +115,6 @@ talks:
 testimonials: []
 ---
 
-Trabalho com Laminas (antigo Zend Framework), Slim, MySQL, Redis e Docker, além de
-infraestrutura Linux com Ansible e qualidade de código com SonarQube e testes automatizados.
+Trabalho com Laminas (antigo Zend Framework), Slim e Laravel, MySQL, Redis e Docker, além de
+infraestrutura Linux com Ansible e qualidade de código com SonarQube e testes automatizados. Em
+Laravel, desenvolvi e publiquei o Céu de Hoje, com filas, agendamento, testes e deploy automatizado.

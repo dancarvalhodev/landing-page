@@ -24,6 +24,7 @@ return [
     'home.projects.title' => 'Projects',
     'home.projects.all' => 'All',
     'home.projects.repository' => 'View repository',
+    'home.projects.live' => 'Live demo',
 
     'home.experience.title' => 'Experience',
     'home.experience.skills' => 'Skills',
