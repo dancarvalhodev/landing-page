@@ -115,6 +115,7 @@ talks:
 testimonials: []
 ---
 
-I work with Laminas (formerly Zend Framework), Slim and Laravel, MySQL, Redis and Docker, as well
-as Linux infrastructure with Ansible and code quality with SonarQube and automated tests. With
-Laravel, I built and shipped Céu de Hoje, with queues, scheduling, tests and automated deployment.
+With Laravel, I built and shipped Céu de Hoje, using Eloquent, queues and Jobs, scheduling, Form
+Requests, Policies, tests with Pest and automated deployment on Docker. Day to day, I work with
+Laminas (formerly Zend Framework) and Slim, MySQL, Redis and Docker, as well as Linux
+infrastructure with Ansible and code quality with SonarQube and automated tests.

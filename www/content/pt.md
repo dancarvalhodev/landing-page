@@ -115,6 +115,7 @@ talks:
 testimonials: []
 ---
 
-Trabalho com Laminas (antigo Zend Framework), Slim e Laravel, MySQL, Redis e Docker, além de
-infraestrutura Linux com Ansible e qualidade de código com SonarQube e testes automatizados. Em
-Laravel, desenvolvi e publiquei o Céu de Hoje, com filas, agendamento, testes e deploy automatizado.
+Em Laravel, desenvolvi e publiquei o Céu de Hoje, com Eloquent, filas e Jobs, agendamento, Form
+Requests, Policies, testes com Pest e deploy automatizado em Docker. No dia a dia, trabalho com
+Laminas (antigo Zend Framework) e Slim, MySQL, Redis e Docker, além de infraestrutura Linux com
+Ansible e qualidade de código com SonarQube e testes automatizados.
