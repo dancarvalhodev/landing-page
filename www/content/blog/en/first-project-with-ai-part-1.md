@@ -72,4 +72,4 @@ While executing the steps, it's normal for new ideas to come up to improve the p
 
 Another very important detail in creating the plan, and any documentation, was defining writing guidelines. They set the tone, the level of formality, the amount of jargon and the target audience of the texts. My personal touch is always to put readability and clarity ahead of grammatical rigor, so I included that criterion too. The result was clear, objective texts of the right length, which cuts the time spent reading and reviewing the documentation, one of the main causes of delay in co-development with AI.
 
-In Part 2, which is yet to be published, I'll cover the execution phase and how it connects directly with the architecture and planning phase.
+In [Part 2](/en/blog/first-project-with-ai-part-2), I cover the execution phase and how it connects directly with the architecture and planning phase.
