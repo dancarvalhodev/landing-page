@@ -72,4 +72,4 @@ Durante a execução das etapas, é normal surgirem novas ideias para melhorar o
 
 Outro detalhe importantíssimo na criação do plano, e de qualquer documentação, foi definir diretrizes de texto. Elas orientaram o tom, o nível de formalidade, a quantidade de jargões e o público-alvo dos textos. Meu toque pessoal é sempre priorizar a legibilidade e a clareza em vez do rigor gramatical, então incluí esse critério também. O resultado foram textos claros, objetivos e do tamanho certo, o que reduz o tempo de leitura e revisão da documentação, um dos principais motivos de demora no codesenvolvimento com IA.
 
-Na Parte 2, que ainda será publicada, vou abordar a fase de execução e como ela se conecta diretamente com a fase de arquitetura e plano.
+Na [Parte 2](/blog/primeiro-projeto-com-ia-parte-2), abordo a fase de execução e como ela se conecta diretamente com a fase de arquitetura e plano.
